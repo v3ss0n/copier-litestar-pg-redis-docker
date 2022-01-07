@@ -1,16 +1,11 @@
-import databases
-import sqlalchemy
-import datetime
-
-from typing import UUID4
+from pydantic import UUID4
 
 import ormar
+import uuid
 
 from app.db.session import SessionLocal
-from mixins import DateFieldsMixins
-
-metadata = sqlalchemy.MetaData()
-database = SessionLocal()
+from app.db.db import database, metadata
+from .mixins import DateFieldsMixins
 
 
 class Base(ormar.Model, DateFieldsMixins):
@@ -19,4 +14,4 @@ class Base(ormar.Model, DateFieldsMixins):
         database = database
         metadata = metadata
 
-    id: UUID4 = ormar.UUID(primary_key=True)
+    id: UUID4 = ormar.UUID(primary_key=True, default=uuid.uuid4)

@@ -13,15 +13,16 @@ class UserController(Controller):
 
     @post()
     async def create_user(self, data: UserDB) -> User:
+        return User(username="test")
 
     @get()
     async def list_users(self) -> List[User]:
-        pass
+        return User(username="test")
 
     @put(path="/{user_id:uuid}")
     async def update_user(self, user_id: UUID4, data: Partial[UserDB]) -> User:
-        pass
+        return User(username="test")
 
     @delete(path="/{user_id:uuid}")
     async def delete_user(self, user_id: UUID4) -> User:
-        pass
+        return User(username="test")

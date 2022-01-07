@@ -27,6 +27,8 @@ services:
       - db
     env_file:
       - ./.env
+    environment:
+      - 'POSTGRES_SERVER=db'
 
   pgadmin:
     container_name: pgadmin

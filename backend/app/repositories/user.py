@@ -1,12 +1,12 @@
 from typing import Optional
 
-from base import BaseRepository
+from .base import BaseRepository
 from app.core.security import get_password_hash, verify_password
 from app.models.user import User, UserDB, UserCreate
 
 
 class UserRepository(BaseRepository[User, UserDB]):
-    @self.database.transaction()
+    # @self.database.transaction()
     async def create(self, obj_in: UserCreate) -> Optional[User]:
         try:
             db_obj = await UserDB.objects.create(
@@ -18,7 +18,7 @@ class UserRepository(BaseRepository[User, UserDB]):
         else:
             return self.get(id=db_obj.id)
 
-    @self.database.transaction()
+    # @self.database.transaction()
     async def authenticate(self, username: str, password: str) -> Optional[User]:
         user = await UserDB.objects.get(username=username)
         if not user:

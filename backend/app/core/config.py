@@ -4,10 +4,10 @@ import os
 
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, PostgresDsn, validator
 
-# from dotenv import load_dotenv # todo
+from dotenv import load_dotenv
 
 # Load env vars
-# load_dotenv() # todo
+load_dotenv()
 
 
 class Settings(BaseSettings):
