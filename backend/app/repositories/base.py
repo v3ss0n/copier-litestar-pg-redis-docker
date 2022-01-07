@@ -19,7 +19,7 @@ class BaseRepository(Generic[ModelType, DBType]):
         else:
             self.db_model = model
 
-    @self.database.transaction()
+    @self.database.transaction()  # todo: best way to handle this? unsure how to pass transaction decorator around; also seems repetative
     async def get(self, id: Any) -> Optional[ModelType]:
         obj = await ModelType.objects.get(id=id)
         return obj

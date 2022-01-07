@@ -5,13 +5,14 @@ from starlite import Controller, Partial, get, post, put, patch, delete
 
 from app.models import User, UserDB
 
+from app import models, repositories as repos
+
 
 class UserController(Controller):
     path = "/users"
 
     @post()
     async def create_user(self, data: UserDB) -> User:
-        pass
 
     @get()
     async def list_users(self) -> List[User]:

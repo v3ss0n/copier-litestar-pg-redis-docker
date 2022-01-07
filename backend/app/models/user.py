@@ -14,3 +14,10 @@ class User(Base):
 
 class UserDB(User):
     hashed_password: str = ormar.String(max_length=256)
+
+
+class UserCreate(User):
+    class Meta(ormar.ModelMeta):
+        abstract = True
+
+    password: str = ormar.String(max_length=30)
