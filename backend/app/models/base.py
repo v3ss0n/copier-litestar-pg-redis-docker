@@ -8,10 +8,13 @@ from app.db.db import database, metadata
 from .mixins import DateFieldsMixins
 
 
-class Base(ormar.Model, DateFieldsMixins):
-    class Meta:
-        abstract = True
-        database = database
-        metadata = metadata
+class BaseMeta(ormar.ModelMeta):
+    database = database
+    metadata = metadata
 
-    id: UUID4 = ormar.UUID(primary_key=True, default=uuid.uuid4)
+
+class Base(ormar.Model, DateFieldsMixins):
+    class Meta(BaseMeta):
+        abstract = True
+
+    id: UUID4 = ormar.String(primary_key=True, default=uuid.uuid4, max_length=32)

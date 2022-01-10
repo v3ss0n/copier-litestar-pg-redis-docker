@@ -499,7 +499,7 @@ full = ["itsdangerous", "jinja2", "python-multipart", "pyyaml", "requests"]
 
 [[package]]
 name = "starlite"
-version = "0.1.5"
+version = "0.1.6"
 description = "Light-weight and flexible ASGI API Framework"
 category = "main"
 optional = false
@@ -1094,8 +1094,8 @@ starlette = [
     {file = "starlette-0.17.1.tar.gz", hash = "sha256:57eab3cc975a28af62f6faec94d355a410634940f10b30d68d31cb5ec1b44ae8"},
 ]
 starlite = [
-    {file = "starlite-0.1.5-py3-none-any.whl", hash = "sha256:e0a25e6770bb3a98dbce8f4551166ba67332cda98b4d99ea6eb8ca782567d2bb"},
-    {file = "starlite-0.1.5.tar.gz", hash = "sha256:34ba13d36a49cc0ff3116db4f76e594e873d1165154af96524f458420515bf36"},
+    {file = "starlite-0.1.6-py3-none-any.whl", hash = "sha256:b34de7dfd3d7dbfe98afa1c1aa3dfbdb9cbdcd2eef0f496623019d8a9878c31a"},
+    {file = "starlite-0.1.6.tar.gz", hash = "sha256:68f3c14ac66d934ede134c53f47758503c7fe227ba5411fecfb1bbd1e85acf67"},
 ]
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
