@@ -10,11 +10,9 @@ WORKDIR /backend/
 
 # Install dependencies
 RUN python3 -m pip install "poetry==${POETRY_VERSION}"
-COPY poetry.lock pyproject.toml /backend/
-RUN poetry install
+COPY poetry.lock pyproject.toml .env /backend/
+RUN poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
 
 COPY ./backend /backend/
-
-RUN alembic upgrade head
 
 EXPOSE 8000

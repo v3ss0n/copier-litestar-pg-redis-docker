@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: bash -c "uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    command: bash -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     volumes:
       - ./backend/:/backend/
     ports:
@@ -26,7 +26,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env
+      - .env
     environment:
       - 'POSTGRES_SERVER=db'
 
