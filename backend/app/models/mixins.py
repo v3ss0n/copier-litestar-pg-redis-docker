@@ -1,8 +1,7 @@
 import datetime
-
-import ormar
+from sqlalchemy import Column, DateTime
 
 
 class DateFieldsMixins:
-    created_date: datetime.datetime = ormar.DateTime(default=datetime.datetime.now)
-    updated_date: datetime.datetime = ormar.DateTime(default=datetime.datetime.now)
+    created_date: datetime.datetime = Column(DateTime, default=datetime.datetime.now)
+    updated_date: datetime.datetime = Column(DateTime, default=datetime.datetime.now)

@@ -1,17 +1,14 @@
-from typing import Optional, Union, Dict, ForwardRef
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
-import ormar
-
-from .base import Base, BaseMeta
-from .user import User, UserDB
+from .base import Base
+from .mixins import DateFieldsMixins
 
 
-class Item(Base):
-    class Meta(BaseMeta):
-        tablename = "items"
+class Item(DateFieldsMixins, Base):
+    name: str = Column(String(64), nullable=False)
+    owner_id: uuid.UUID = Column(UUID(as_uuid=True), ForeignKey("user.id"))
 
-    name: str = ormar.String(max_length=50, unique=True, index=True)
-    # owner: Optional[Union[User, Dict]] = ormar.ForeignKey(
-    #     UserDB,
-    #     related_name="items",
-    # )
+    owner = relationship("User", back_populates="items")

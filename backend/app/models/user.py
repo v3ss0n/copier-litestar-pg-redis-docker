@@ -1,26 +1,13 @@
-import ormar
+from sqlalchemy import Column, String, Boolean
+from sqlalchemy.orm import relationship
 
-from .base import Base, BaseMeta
-
-
-class User(Base):
-    class Meta(BaseMeta):
-        abstract = True
-        tablename = "users"
-
-    username: str = ormar.String(max_length=50, unique=True, index=True)
-    is_active: bool = ormar.Boolean(default=True)
+from .base import Base
+from .mixins import DateFieldsMixins
 
 
-class UserDB(User):
-    class Meta(BaseMeta):
-        tablename = "users"
+class User(DateFieldsMixins, Base):
+    username: str = Column(String(64), nullable=False)
+    is_active: bool = Column(Boolean(), default=True)
+    hashed_password: str = Column(String(256), nullable=False)
 
-    hashed_password: str = ormar.String(max_length=256)
-
-
-class UserCreate(User):
-    class Meta:
-        abstract = True
-
-    password: str = ormar.String(max_length=30)
+    items = relationship("Item", back_populates="owner_id")

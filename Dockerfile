@@ -11,7 +11,7 @@ WORKDIR /backend/
 # Install dependencies
 RUN python3 -m pip install "poetry==${POETRY_VERSION}"
 COPY poetry.lock pyproject.toml .env /backend/
-RUN poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
+RUN poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi --no-dev
 
 COPY ./backend /backend/
 

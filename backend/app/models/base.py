@@ -1,20 +1,17 @@
-from pydantic import UUID4
+from typing import Optional
 
-import ormar
+from sqlalchemy.orm.decl_api import as_declarative, declared_attr
+from sqlalchemy import Column
+from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
-from app.db.session import SessionLocal
-from app.db.db import database, metadata
-from .mixins import DateFieldsMixins
 
+@as_declarative()
+class Base:
+    @declared_attr
+    def __tablename__(cls) -> str:
+        return cls.__name__.lower()
 
-class BaseMeta(ormar.ModelMeta):
-    database = database
-    metadata = metadata
-
-
-class Base(ormar.Model, DateFieldsMixins):
-    class Meta(BaseMeta):
-        abstract = True
-
-    id: UUID4 = ormar.String(primary_key=True, default=uuid.uuid4, max_length=32)
+    id: Optional[uuid.UUID] = Column(
+        UUID(as_uuid=True), default=uuid.uuid4, primary_key=True
+    )
