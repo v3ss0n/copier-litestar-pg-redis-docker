@@ -16,10 +16,11 @@ class User(DateFieldsMixins, Base):
     items = relationship("Item", back_populates="owner")
 
 
-UserCreate = UserDTOFactory(
-    "UserCreate",
+UserCreateDTO = UserDTOFactory(
+    "UserCreateDTO",
     User,
+    exclude=["created_date", "updated_date", "items", "id"],
     field_mapping={"hashed_password": ("password", str)},
 )
 
-UserRead = UserDTOFactory("UserRead", User, exclude=["hashed_password"])
+UserReadDTO = UserDTOFactory("UserReadDTO", User, exclude=["hashed_password"])

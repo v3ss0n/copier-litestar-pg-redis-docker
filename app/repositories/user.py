@@ -3,7 +3,7 @@ from typing import Any, cast
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.models.user import User, UserCreate
+from app.models.user import User, UserCreateDTO
 from app.utils.security import get_password_hash, verify_password
 
 from ..exceptions import RepositoryException
@@ -14,9 +14,10 @@ class UserRepository(AbstractBaseRepository[User]):
     model = User
 
     @classmethod
-    async def create(cls, data: UserCreate) -> User | None:
+    async def create(cls, data: UserCreateDTO) -> User | None:
         try:
-            data.update(hashed_password=get_password_hash(cast(Any, data).password))
+            data = data.dict()
+            data.update(hashed_password=get_password_hash(data["password"]))
             return await super().create(data=data)
         except (TypeError, ValueError) as e:
             raise RepositoryException from e

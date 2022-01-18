@@ -1,0 +1,1 @@
+USER_CONTROLLER_PATH = "/users"

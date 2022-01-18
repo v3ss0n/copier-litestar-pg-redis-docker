@@ -45,13 +45,15 @@ class AbstractBaseRepository(ABC, Generic[T]):
     async def create(cls, data: BaseModel | dict[str, Any]) -> T | None:
         try:
             async with cls.session_maker() as async_session:
-                if isinstance(data, BaseModel):
-                    data = data.dict()
-                instance = cls.model(**data)
-                async_session.add(instance)
-                await async_session.commit()
-                await async_session.refresh(instance)
-                return cast(T, instance)
+                async with async_session.begin():
+                    if isinstance(data, BaseModel):
+                        data = data.dict()
+                    instance = cls.model(**data)
+                    async_session.add(instance)
+                    await async_session.commit()
+                    await async_session.refresh(instance)
+                    await async_session.dispose()
+                    return cast(T, instance)
         except SQLAlchemyError as e:
             raise RepositoryException("Unable to create instance") from e
 
