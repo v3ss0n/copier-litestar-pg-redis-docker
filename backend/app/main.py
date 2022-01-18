@@ -6,7 +6,7 @@ from app.api.router import router as api_router
 
 @get(path="/")
 def health_check() -> str:
-    return "healthy"
+    return {"status": "healthy"}
 
 
 app = Starlite(
