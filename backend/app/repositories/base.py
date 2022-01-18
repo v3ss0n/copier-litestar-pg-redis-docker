@@ -1,10 +1,9 @@
-from typing import Generic, TypeVar, Type, Any, Optional, List, Union, Dict
+from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
-from sqlalchemy import select, insert, update, delete
-from sqlalchemy.orm import Session
-
-from app.models.base import Base
 from app.db.session import get_db
+from app.models.base import Base
+from sqlalchemy import delete, insert, select, update
+from sqlalchemy.orm import Session
 
 ModelType = TypeVar("ModelType", bound=Base)
 
@@ -20,15 +19,11 @@ class BaseRepository(Generic[ModelType]):
         obj = await db.execute(select(ModelType).where(ModelType.id == id)).first()
         return obj
 
-    async def get_multi(
-        self, *, offset: int = 0, limit: int = 100, db: Session = get_db
-    ) -> List[ModelType]:
+    async def get_multi(self, *, offset: int = 0, limit: int = 100, db: Session = get_db) -> List[ModelType]:
         objs = await db.execute(select(ModelType).offset(offset).limit(limit)).all()
         return objs
 
-    async def create(
-        self, obj_in: ModelType, db: Session = get_db
-    ) -> Optional[ModelType]:
+    async def create(self, obj_in: ModelType, db: Session = get_db) -> Optional[ModelType]:
         try:
             obj = self.model(**obj_in)
             db.add(obj)

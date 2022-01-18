@@ -1,7 +1,6 @@
-from starlite import Starlite, OpenAPIConfig, get
-from starlite.plugins.sql_alchemy import SQLAlchemyPlugin
-
 from app.api.router import router as api_router
+from starlite import OpenAPIConfig, Starlite, get
+from starlite.plugins.sql_alchemy import SQLAlchemyPlugin
 
 
 @get(path="/")

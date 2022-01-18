@@ -1,11 +1,9 @@
 from typing import List, Optional
 
-from pydantic import UUID4
-from starlite import Controller, Partial, get, post, put, patch, delete
-
-from app.models import User, UserRead, UserCreate
-
 from app import repositories as repos
+from app.models import User, UserCreate, UserRead
+from pydantic import UUID4
+from starlite import Controller, Partial, delete, get, patch, post, put
 
 
 class UserController(Controller):
@@ -24,9 +22,7 @@ class UserController(Controller):
         return await repos.user.get(id=id)
 
     @put(path="/{user_id:uuid}")
-    async def update_user(
-        self, user_id: UUID4, data: Partial[UserCreate]
-    ) -> Optional[UserRead]:
+    async def update_user(self, user_id: UUID4, data: Partial[UserCreate]) -> Optional[UserRead]:
         return await repos.user.update(id=user_id, obj_in=data)
 
     @delete(path="/{user_id:uuid}")

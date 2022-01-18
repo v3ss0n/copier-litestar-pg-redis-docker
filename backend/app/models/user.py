@@ -1,7 +1,7 @@
+from sqlalchemy import Boolean, Column, String
+from sqlalchemy.orm import relationship
 from starlite import DTOFactory
 from starlite.plugins.sql_alchemy import SQLAlchemyPlugin
-from sqlalchemy import Column, String, Boolean
-from sqlalchemy.orm import relationship
 
 from .base import Base
 from .item import Item
