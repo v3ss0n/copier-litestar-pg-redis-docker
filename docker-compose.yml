@@ -1,9 +1,8 @@
-version: '3.8'
-
+version: '3.9'
 services:
   db:
     container_name: backend_db
-    image: postgres:11
+    image: postgres:latest
     volumes:
       - postgres_data:/var/lib/postrgresql/data/
     ports:
@@ -12,7 +11,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=pg_pass
       - POSTGRES_DB=backend
-
   app:
     container_name: app
     build:
@@ -20,7 +18,8 @@ services:
       dockerfile: Dockerfile
     command: bash -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     volumes:
-      - ./backend/:/backend/
+      - ./app:/app/app/:cached
+      - ./alembic:/app/alembic/:cached
     ports:
       - '8000:8000'
     depends_on:
@@ -29,7 +28,6 @@ services:
       - .env
     environment:
       - 'POSTGRES_SERVER=db'
-
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
