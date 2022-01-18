@@ -1,8 +1,12 @@
 from typing import Optional
 
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from .base import BaseRepository
 from app.core.security import get_password_hash, verify_password
 from app.models.user import User
+from app.db.session import get_db
 
 
 class UserRepository(BaseRepository[User]):
@@ -23,17 +27,21 @@ class UserRepository(BaseRepository[User]):
         else:
             return await db_obj
 
+    async def get_by_username(
+        self, username: str, db: Session = get_db
+    ) -> Optional[User]:
+        return await db.execute(select(User).where(User.username == username)).first()
+
     # @self.database.transaction()
-    async def authenticate(self, username: str, password: str) -> Optional[User]:
-        user = await User.objects.get(username=username)
+    async def authenticate(
+        self, username: str, password: str
+    ) -> Optional[User]:  # todo remove hashed_pass
+        user = await self.get_by_username(username=username)
         if not user:
             return None
         if not verify_password(password, user.hashed_password):
-            return None
+            return None  # todo unauth
         return user
-        # return await User.objects.get(
-        #     id=user.id
-        # )  # todo: do I need to do this or will framework try to wrap data to the return type? (do I need to clean out the password)
 
 
 user = UserRepository(User)
