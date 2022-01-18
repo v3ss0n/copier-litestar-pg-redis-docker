@@ -4,7 +4,6 @@ from starlite import DTOFactory
 from starlite.plugins.sql_alchemy import SQLAlchemyPlugin
 
 from .base import Base
-from .item import Item
 from .mixins import DateFieldsMixins
 
 UserDTOFactory = DTOFactory(plugins=[SQLAlchemyPlugin()])
@@ -21,8 +20,7 @@ class User(DateFieldsMixins, Base):
 UserCreate = UserDTOFactory(
     "UserCreate",
     User,
-    exclude=["hashed_password"],
-    field_mapping={"password": ("password", str)},
+    field_mapping={"hashed_password": ("password", str)},
 )
 
 UserRead = UserDTOFactory("UserRead", User, exclude=["hashed_password"])

@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import cast
 
 from sqlalchemy import Column
 from sqlalchemy.dialects.postgresql import UUID
@@ -10,6 +10,6 @@ from sqlalchemy.orm.decl_api import as_declarative, declared_attr
 class Base:
     @declared_attr
     def __tablename__(cls) -> str:
-        return cls.__name__.lower()
+        return cast(str, cls.__name__).lower()  # type: ignore
 
-    id: Optional[uuid.UUID] = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True)
+    id: uuid.UUID | None = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True)
