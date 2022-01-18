@@ -13,7 +13,6 @@ class User(DateFieldsMixins, Base):
     username: str = Column(String(64), nullable=False)
     is_active: bool = Column(Boolean(), default=True)
     hashed_password: str = Column(String(256), nullable=False)
-
     items = relationship("Item", back_populates="owner")
 
 

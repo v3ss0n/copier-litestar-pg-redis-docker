@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "backend"
+name = "starlite-example-api"
 version = "0.1.0"
 description = "An containerized example backend stack using starlite and postgres"
 authors = ["yudjinn <yudjinncoding@gmail.com>"]
@@ -10,6 +10,7 @@ python = "^3.10"
 alembic = "*"
 asyncpg = "*"
 passlib = {extras = ["bcrypt"], version = "*"}
+psycopg2 = "*"
 python-dotenv = "*"
 sqlalchemy = "*"
 starlite = "*"

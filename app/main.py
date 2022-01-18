@@ -12,8 +12,8 @@ def health_check() -> dict:
 
 app = Starlite(
     route_handlers=[health_check, v1_router],
-    openapi_config=OpenAPIConfig(title="Starlite Postgres Example API", version="1.0.0"),
     plugins=[SQLAlchemyPlugin()],
     on_startup=[get_postgres_connection],
     on_shutdown=[close_postgres_connection],
+    openapi_config=OpenAPIConfig(title="Starlite Postgres Example API", version="1.0.0"),
 )

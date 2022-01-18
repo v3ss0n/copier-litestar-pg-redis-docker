@@ -1,11 +1,10 @@
 from typing import cast
 
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
-from starlette.datastructures import State
 
 from app.config import settings
 
-state = State()
+state: dict[str, AsyncEngine] = {}
 
 
 def get_postgres_connection() -> AsyncEngine:
