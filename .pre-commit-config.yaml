@@ -22,7 +22,7 @@ repos:
     rev: 21.12b0
     hooks:
       - id: black
-        args: [ --config=./pyproject.toml ]
+        args: [ "--quiet" ]
   - repo: https://github.com/asottile/blacken-docs
     rev: v1.12.0
     hooks:
