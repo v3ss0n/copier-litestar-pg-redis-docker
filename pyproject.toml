@@ -61,4 +61,14 @@ ignored-argument-names = "args|kwargs|_|__"
 good-names = "_,i,e,v,T"
 
 [tool.coverage.run]
-omit = ["*/tests/*"]
+branch = true
+omit = []
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    'if TYPE_CHECKING:',
+    'pragma: no cover',
+    "if __name__ == '__main__':",
+]
