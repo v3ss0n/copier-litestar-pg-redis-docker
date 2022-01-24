@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "starlite-example-api"
 version = "0.1.0"
-description = "An containerized example backend stack using starlite and postgres"
+description = "A containerized example backend stack using starlite and postgres"
 authors = ["yudjinn <yudjinncoding@gmail.com>"]
 license = "MIT"
 
