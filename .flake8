@@ -2,3 +2,8 @@
 max-line-length = 120
 max-complexity = 12
 ignore = E501, C408, B008, B009, W503
+type-checking-pydantic-enabled = True
+type-checking-fastapi-enabled = True
+type-checking-pydantic-enabled-baseclass-passlist = NamedTuple, TypedDict, Protocol
+type-checking-exempt-modules = typing
+enable-extensions = TC, TC2
