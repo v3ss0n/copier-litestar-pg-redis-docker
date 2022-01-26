@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "starlite-example-api"
 version = "0.1.0"
-description = "An containerized example backend stack using starlite and postgres"
+description = "A containerized example backend stack using starlite and postgres"
 authors = ["yudjinn <yudjinncoding@gmail.com>"]
 license = "MIT"
 
@@ -29,6 +29,7 @@ line-length = 120
 include = '\.pyi?$'
 
 [tool.isort]
+line_length = 120
 profile = "black"
 multi_line_output = 3
 
@@ -61,4 +62,14 @@ ignored-argument-names = "args|kwargs|_|__"
 good-names = "_,i,e,v,T"
 
 [tool.coverage.run]
-omit = ["*/tests/*"]
+branch = true
+omit = []
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    'if TYPE_CHECKING:',
+    'pragma: no cover',
+    "if __name__ == '__main__':",
+]
