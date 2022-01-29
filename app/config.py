@@ -1,4 +1,3 @@
-import os
 import secrets
 from typing import Any
 
@@ -11,10 +10,8 @@ class Settings(BaseSettings):
         env_file_encoding = "utf-8"
         case_sensitive = True
 
-    API_V1_STR: str = "/api/v1"
-    FILE_STORAGE_ROUTE: str = os.path.abspath("app") + "/files/"
     SECRET_KEY: str = secrets.token_urlsafe(32)
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 1 day in minutes
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24
     SERVER_NAME: str
     SERVER_HOST: AnyHttpUrl
 
@@ -35,7 +32,6 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
-    DATABASE_URI: PostgresDsn | None = None
 
     @validator("DATABASE_URI", pre=True)
     def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> Any:

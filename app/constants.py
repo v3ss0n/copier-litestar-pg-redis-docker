@@ -1,1 +1,3 @@
+MESSAGE_HEALTHY = "healthy"
+
 USER_CONTROLLER_PATH = "/users"
