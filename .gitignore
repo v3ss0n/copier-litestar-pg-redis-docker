@@ -1,4 +1,7 @@
 # folders
+.run/
+.idea/
+.vscode/
 .pytest_cache/
 .hypothesis/
 .mypy_cache/

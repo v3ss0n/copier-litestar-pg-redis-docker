@@ -15,8 +15,8 @@ python-dotenv = "*"
 sqlalchemy = "*"
 starlite = "*"
 uvicorn = "*"
-aioredis = "^2.0.1"
-gunicorn = "^20.1.0"
+aioredis = "*"
+gunicorn = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
