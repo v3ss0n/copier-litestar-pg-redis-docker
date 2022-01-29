@@ -17,8 +17,7 @@ assert MIN_WORKERS > 0
 if web_concurrency := os.getenv('GUNICORN_WORKER_COUNT'):
     web_concurrency = max(int(web_concurrency), MIN_WORKERS)
 else:
-    # If there's no value set, let's infer (multiplier * cores)
-    # Gunicorn docs recommend ~2-4 * cores, while the Heroku docs seem to suggest 1-1.5x.
+    # If there's no value set, infer (multiplier * cores)
     web_concurrency = max(int(MULTIPLIER * cores), MIN_WORKERS)
 
 if MAX_WORKERS:

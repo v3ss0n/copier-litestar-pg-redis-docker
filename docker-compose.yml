@@ -17,9 +17,10 @@ services:
     ports:
       - '5432:5432'
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=pg_pass
-      - POSTGRES_DB=backend
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pg_pass
+      POSTGRES_DB: backend
+
   app:
     container_name: app
     build:
@@ -27,28 +28,34 @@ services:
       dockerfile: Dockerfile
       args:
         INSTALL_ARGS: "--no-root"
-    command: bash -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    entrypoint: scripts/entrypoint.sh
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
-      - ./app:/app/app/:cached
-      - ./alembic:/app/alembic/:cached
+      - '.:/app:cached'
+      - './alembic:/app/alembic/:cached'
     ports:
       - '8000:8000'
     depends_on:
       - db
+      - cache
     env_file:
       - .env
     environment:
-      - 'POSTGRES_SERVER=db'
+      POSTGRES_SERVER: db
+      DATABASE_URL: "postgresql+asyncpg://postgres:pg_pass@backend_db/backend"
+      REDIS_URL: "redis://backend_cache"
+
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@star.lite
-      - PGADMIN_DEFAULT_PASSWORD=admin
+      PGADMIN_DEFAULT_EMAIL: admin@star.lite
+      PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - '5050:80'
     depends_on:
-      - db
+      - app
+
 
 volumes:
   postgres_data:

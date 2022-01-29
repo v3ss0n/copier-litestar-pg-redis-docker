@@ -8,5 +8,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN python3 -m pip install "poetry==${POETRY_VERSION}"
 COPY ./app ./app
 COPY ./alembic ./alembic
+COPY ./gunicorn.conf.py ./
+COPY ./scripts ./scripts
 COPY alembic.ini pyproject.toml .env ./
 RUN poetry config virtualenvs.create false && poetry install $INSTALL_ARGS
