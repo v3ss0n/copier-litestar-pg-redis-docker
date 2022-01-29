@@ -1,5 +1,14 @@
 version: '3.9'
 services:
+  cache:
+    container_name: backend_cache
+    image: redis:6.2.5-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - cache_data:/var/lib/redis/data
+    ports:
+      - '6379:6379'
+
   db:
     container_name: backend_db
     image: postgres:latest
@@ -43,3 +52,4 @@ services:
 
 volumes:
   postgres_data:
+  cache_data:
