@@ -17,6 +17,7 @@ starlite = "*"
 uvicorn = "*"
 aioredis = "*"
 gunicorn = "*"
+greenlet = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
