@@ -32,8 +32,9 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
+    DATABASE_URI: PostgresDsn | None = None
 
-    @validator("DATABASE_URI", pre=True)
+    @validator("DATABASE_URI", pre=True, check_fields=False)
     def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
