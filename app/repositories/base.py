@@ -6,9 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import sessionmaker
 
-from app.db import get_postgres_connection
 from app.exceptions import RepositoryException
 from app.models.base import Base
 
