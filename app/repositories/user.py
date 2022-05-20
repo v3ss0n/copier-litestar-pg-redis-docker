@@ -1,6 +1,5 @@
 from typing import cast
 
-from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 

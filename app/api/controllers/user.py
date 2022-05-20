@@ -4,7 +4,6 @@ from starlite import Controller, Provide, delete, get, post, put
 from app.constants import USER_CONTROLLER_PATH
 from app.models import UserCreateDTO, UserReadDTO
 from app.repositories import UserRepository
-from app.utils import get_password_hash
 
 
 class UserController(Controller):
