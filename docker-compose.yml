@@ -21,7 +21,6 @@ services:
   app:
     build:
       context: .
-    restart: on-failure
     depends_on:
       - db
       - cache
