@@ -1,4 +1,3 @@
 [flake8]
-exclude = .git,__pycache__,alembic
 max-line-length = 88
 ignore = E,W
