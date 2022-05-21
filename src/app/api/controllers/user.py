@@ -12,15 +12,21 @@ class UserController(Controller):
     dependencies = {"user_repository": Provide(UserRepository)}
 
     @post()
-    async def create_user(self, data: UserCreateDTO, user_repository: UserRepository) -> UserReadDTO | None:
+    async def create_user(
+        self, data: UserCreateDTO, user_repository: UserRepository
+    ) -> UserReadDTO | None:
         return await user_repository.create(data=data)
 
     @get()
-    async def list_users(self, user_repository: UserRepository, offset: int = 0, limit: int = 100) -> list[UserReadDTO]:
+    async def list_users(
+        self, user_repository: UserRepository, offset: int = 0, limit: int = 100
+    ) -> list[UserReadDTO]:
         return await user_repository.get_many(offset=offset, limit=limit)
 
     @get(path="/{user_id:uuid}")
-    async def get_user(self, user_id: UUID4, user_repository: UserRepository) -> UserReadDTO | None:
+    async def get_user(
+        self, user_id: UUID4, user_repository: UserRepository
+    ) -> UserReadDTO | None:
         return await user_repository.get_one(instance_id=user_id)
 
     @put(path="/{user_id:uuid}")
@@ -30,5 +36,7 @@ class UserController(Controller):
         return await user_repository.partial_update(instance_id=user_id, data=data)
 
     @delete(path="/{user_id:uuid}")
-    async def delete_user(self, user_id: UUID4, user_repository: UserRepository) -> UserReadDTO | None:
+    async def delete_user(
+        self, user_id: UUID4, user_repository: UserRepository
+    ) -> UserReadDTO | None:
         return await user_repository.delete(instance_id=user_id)

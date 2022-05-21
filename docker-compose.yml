@@ -1,62 +1,36 @@
 version: '3.9'
 services:
   cache:
-    container_name: backend_cache
-    image: redis:6.2.5-alpine
-    command: redis-server --appendonly yes
-    volumes:
-      - cache_data:/var/lib/redis/data
+    image: redis:alpine
+    restart: on-failure
     ports:
-      - '6379:6379'
+      - '6380:6379'
+    volumes:
+      - cache:/data
 
   db:
-    container_name: backend_db
     image: postgres:latest
     volumes:
-      - postgres_data:/var/lib/postrgresql/data/
+      - db:/var/lib/postrgresql/data/
     ports:
-      - '5432:5432'
+      - '5433:5432'
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: pg_pass
-      POSTGRES_DB: backend
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: example-pg-docker
 
   app:
-    container_name: app
     build:
       context: .
-      dockerfile: Dockerfile
-      args:
-        INSTALL_ARGS: "--no-root"
-    entrypoint: scripts/entrypoint.sh
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    volumes:
-      - '.:/app:cached'
-      - './alembic:/app/alembic/:cached'
-    ports:
-      - '8000:8000'
     depends_on:
       - db
       - cache
+    ports:
+      - '8000:8000'
     env_file:
       - .env
-    environment:
-      POSTGRES_SERVER: db
-      DATABASE_URL: "postgresql+asyncpg://postgres:pg_pass@backend_db/backend"
-      REDIS_URL: "redis://backend_cache"
-
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@star.lite
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - '5050:80'
-    depends_on:
-      - app
-
+    volumes:
+      - .:/workspace
 
 volumes:
-  postgres_data:
-  cache_data:
+  db: {}
+  cache: {}

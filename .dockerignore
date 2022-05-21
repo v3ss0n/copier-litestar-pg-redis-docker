@@ -1,11 +1,8 @@
+.git/
 __pycache__/
-.pytest_cache/
 .mypy_cache/
+.pytest_cache/
 .idea/
 .vscode/
-
 *.env*
-!.env.example
 .coverage
-.dmypy.json
-.DS_Store
