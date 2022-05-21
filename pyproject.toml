@@ -1,78 +1,64 @@
-[tool.poetry]
-name = "starlite-example-api"
-version = "0.1.0"
-description = "A containerized example backend stack using starlite and postgres"
-authors = ["yudjinn <yudjinncoding@gmail.com>"]
-license = "MIT"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-alembic = "*"
-asyncpg = "*"
-passlib = {extras = ["bcrypt"], version = "*"}
-psycopg2 = "*"
-python-dotenv = "*"
-sqlalchemy = "*"
-starlite = "*"
-uvicorn = "*"
-aioredis = "*"
-gunicorn = "*"
-greenlet = "*"
-
-[tool.poetry.dev-dependencies]
-pytest = "*"
-pytest-dotenv = "*"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.black]
-line-length = 120
-include = '\.pyi?$'
-
 [tool.isort]
-line_length = 120
 profile = "black"
-multi_line_output = 3
-
-[tool.pylint.MESSAGE_CONTROL]
-disable = [
-    "fixme",
-    "missing-module-docstring",
-    "missing-class-docstring",
-    "line-too-long",
-    "missing-function-docstring",
-    "no-self-use",
-    "not-async-context-manager",
-    "no-self-argument",
-    "too-few-public-methods",
-    "no-member"
-]
-enable = "useless-suppression"
-
-[tool.pylint.REPORTS]
-msg-template = "{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"
-reports = "no"
-
-[tool.pylint.FORMAT]
-max-line-length = "120"
-
-[tool.pylint.VARIABLES]
-ignored-argument-names = "args|kwargs|_|__"
-
-[tool.pylint.BASIC]
-good-names = "_,i,e,v,T"
-
-[tool.coverage.run]
-branch = true
-omit = []
+overwrite_in_place = true
 
 [tool.coverage.report]
-show_missing = true
-skip_covered = true
 exclude_lines = [
     'if TYPE_CHECKING:',
     'pragma: no cover',
     "if __name__ == '__main__':",
 ]
+
+[tool.coverage.run]
+omit = ["tests/*"]
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+show_error_codes = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_ignores = true
+plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=app -v --doctest-modules --doctest-glob=*.md"
+
+[tool.poetry]
+name = "starlite-example-api"
+version = "0.1.0"
+description = "A containerized example backend stack using starlite and postgres"
+authors = ["yudjinn <yudjinncoding@gmail.com>"]
+packages = [
+    { include = "app", from = "src" },
+]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+alembic = "^1.7"
+asyncpg = "^0.25"
+sqlalchemy = "^1.4"
+starlite = "^1.3"
+uvicorn = "^0.17"
+gunicorn = "^20.1"
+passlib = "^1.7.4"
+aioredis = "^2.0.1"
+psycopg2 = "^2.9.3"
+
+[tool.poetry.dev-dependencies]
+black = "*"
+coverage = {extras = ["toml"], version = "*"}
+flake8 = "*"
+isort = "*"
+mypy = "*"
+pytest = "*"
+pytest-cov = "*"
+sqlalchemy2-stubs = "*"
+types-passlib = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

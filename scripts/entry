@@ -13,11 +13,12 @@ import asyncio
 import sys
 
 from aioredis import Redis
+from app.config import cache_settings
 
 
 async def c():
     try:
-        redis = Redis.from_url("${REDIS_URL}", db=0)
+        redis = Redis.from_url(cache_settings.URL)
         await redis.ping()
     except ConnectionError:
         sys.exit(-1)
@@ -33,12 +34,12 @@ postgres_ready() {
 import asyncio
 import sys
 from asyncpg import connect
+from app.config import db_settings
 
 
 async def c():
-    database_url = "${DATABASE_URL}".replace('+asyncpg','')
     try:
-        await connect(dsn=f"{database_url}")
+        await connect(dsn=db_settings.sync_database_uri)
     except ConnectionRefusedError:
         sys.exit(-1)
 
@@ -68,4 +69,4 @@ echo >&2 "PostgreSQL is available"
 # Run migrations
 alembic upgrade head
 
-exec "$@"
+gunicorn app.main:app

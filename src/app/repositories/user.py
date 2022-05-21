@@ -24,12 +24,16 @@ class UserRepository(AbstractBaseRepository[User]):
     async def get_by_username(self, username: str) -> User | None:
         try:
             async with self.async_session as async_session:
-                results = await async_session.execute(select(User).where(User.username == username))
+                results = await async_session.execute(
+                    select(User).where(User.username == username)
+                )
                 return cast(User | None, results.first())
         except SQLAlchemyError as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
-    async def authenticate(self, username: str, password: str) -> User | None:  # todo remove hashed_pass
+    async def authenticate(
+        self, username: str, password: str
+    ) -> User | None:  # todo remove hashed_pass
         user = await self.get_by_username(username=username)
         if not user or not verify_password(password, user.hashed_password):
             return None
