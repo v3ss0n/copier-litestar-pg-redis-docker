@@ -21,6 +21,18 @@ Warning this example project is a WIP.
 - [ ] Make the database session commit scope outside of request handling scope
 - [ ] CI?
 
+### Post Fork
+Things to do to project after I fork off for internal use.
+
+- [ ] explicitly include any dirs/files into docker and remove .dockerignore
+- [ ] add pre-commit (I'll just make as equivalent as possible to the original pre-commit config in this project)
+- [ ] configure pyupgrade for only --py310-plus
+- [ ] use the Dockerfile from https://gist.github.com/Goldziher/942f4a027a7fa1e2cafaa35e0333b6dc
+- [ ] remove black and isort from alembic hooks
+- [ ] map docker ports to service defaults
+- [ ] add pylint into tooling
+- [ ] black and isort settings as per original
+
 ## Starlite
 
 Starlite is a light and flexible ASGI API framework. 
