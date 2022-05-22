@@ -2,6 +2,7 @@ from starlite import LoggingConfig, MediaType, OpenAPIConfig, Provide, Starlite,
 from starlite.plugins.sql_alchemy import SQLAlchemyPlugin
 
 from app.api import v1_router
+from app.config import app_settings
 from app.constants import MESSAGE_HEALTHY
 from app.db import (
     close_postgres_connection,
@@ -26,4 +27,5 @@ app = Starlite(
         title="Starlite Postgres Example API", version="1.0.0"
     ),
     dependencies={"async_session": Provide(create_async_session)},
+    debug=app_settings.DEBUG,
 )
