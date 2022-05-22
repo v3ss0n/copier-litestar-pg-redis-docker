@@ -40,7 +40,7 @@ class AbstractBaseRepository(ABC, Generic[T]):
         except SQLAlchemyError as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
-    async def create(self, data: DTOProtocol | dict[str, Any]) -> T | None:
+    async def create(self, data: DTOProtocol | dict[str, Any]) -> T:
         unstructured = unstructure(data)
         try:
             async with self.async_session as async_session:

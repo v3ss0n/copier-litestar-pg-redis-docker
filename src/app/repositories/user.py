@@ -15,7 +15,7 @@ from .base import AbstractBaseRepository
 class UserRepository(AbstractBaseRepository[User]):
     model = User
 
-    async def create(self, data: DTOProtocol | dict[str, Any]) -> User | None:
+    async def create(self, data: DTOProtocol | dict[str, Any]) -> User:
         unstructured = unstructure(data)
         try:
             unstructured.update(
