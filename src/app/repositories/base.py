@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Any, Generic, TypeVar, cast
+from typing import Any, Generic, TypeVar
 from uuid import UUID
 
 from sqlalchemy import select
@@ -26,7 +26,7 @@ class AbstractBaseRepository(ABC, Generic[T]):
                 results = await async_session.execute(
                     select(self.model).offset(offset).limit(limit)
                 )
-                return cast(list[T], results.all())
+                return list(results.scalars())
         except SQLAlchemyError as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
@@ -36,7 +36,7 @@ class AbstractBaseRepository(ABC, Generic[T]):
                 results = await async_session.execute(
                     select(self.model).where(self.model.id == instance_id)
                 )
-                return cast(T | None, results.first())
+                return results.scalar()
         except SQLAlchemyError as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
@@ -54,18 +54,20 @@ class AbstractBaseRepository(ABC, Generic[T]):
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
     async def partial_update(self, instance_id: UUID, data: DTOProtocol) -> T:
+        # TODO: what is the difference between this method and `get_one()`
+        # TODO: such that type:ignore[no-any-return] is necessary here...?
         try:
             async with self.async_session as async_session:
                 results = await async_session.execute(
                     select(self.model).where(self.model.id == instance_id)
                 )
-                instance = results.first()
+                instance = results.scalar_one()
                 for key, value in data.dict().items():
                     setattr(instance, key, value)
                 async_session.add(instance)
-                await async_session.commit()
+                await async_session.flush()
                 await async_session.refresh(instance)
-                return cast(T, instance)
+                return instance  # type:ignore[no-any-return]
         except SQLAlchemyError as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
