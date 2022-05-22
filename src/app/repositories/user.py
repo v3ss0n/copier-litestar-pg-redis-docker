@@ -21,7 +21,7 @@ class UserRepository(AbstractBaseRepository[User]):
             unstructured.update(
                 hashed_password=get_password_hash(unstructured.pop("password"))
             )
-            return await super().create(data=data)
+            return await super().create(data=unstructured)
         except (TypeError, ValueError, AttributeError) as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
