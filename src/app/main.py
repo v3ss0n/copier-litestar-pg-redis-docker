@@ -9,6 +9,7 @@ from app.db import (
     create_async_session,
     get_postgres_connection,
 )
+from app.utils.response import UUIDResponse
 
 
 @get(path="/health-check", media_type=MediaType.TEXT)
@@ -19,13 +20,14 @@ def health_check() -> str:
 logger = LoggingConfig(loggers={"app": {"level": "DEBUG", "handlers": ["console"]}})
 
 app = Starlite(
-    route_handlers=[health_check, v1_router],
-    plugins=[SQLAlchemyPlugin()],
-    on_startup=[logger.configure, get_postgres_connection],
+    debug=app_settings.DEBUG,
+    dependencies={"async_session": Provide(create_async_session)},
     on_shutdown=[close_postgres_connection],
+    on_startup=[logger.configure, get_postgres_connection],
     openapi_config=OpenAPIConfig(
         title="Starlite Postgres Example API", version="1.0.0"
     ),
-    dependencies={"async_session": Provide(create_async_session)},
-    debug=app_settings.DEBUG,
+    plugins=[SQLAlchemyPlugin()],
+    response_class=UUIDResponse,
+    route_handlers=[health_check, v1_router],
 )
