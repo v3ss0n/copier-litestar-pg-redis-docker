@@ -1,5 +1,4 @@
 from sqlalchemy import Boolean, Column, String
-from sqlalchemy.orm import relationship
 from starlite import DTOFactory
 from starlite.plugins.sql_alchemy import SQLAlchemyPlugin
 

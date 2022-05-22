@@ -1,10 +1,12 @@
-from typing import cast
+from typing import Any, cast
 
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.models.user import User, UserCreateDTO
+from app.models.user import User
+from app.utils import unstructure
 from app.utils.security import get_password_hash, verify_password
+from app.utils.types import DTOProtocol
 
 from ..exceptions import RepositoryException
 from .base import AbstractBaseRepository
@@ -13,10 +15,12 @@ from .base import AbstractBaseRepository
 class UserRepository(AbstractBaseRepository[User]):
     model = User
 
-    async def create(self, data: UserCreateDTO) -> User | None:
+    async def create(self, data: DTOProtocol | dict[str, Any]) -> User | None:
+        unstructured = unstructure(data)
         try:
-            data = data.dict()
-            data.update(hashed_password=get_password_hash(data.pop("password")))
+            unstructured.update(
+                hashed_password=get_password_hash(unstructured.pop("password"))
+            )
             return await super().create(data=data)
         except (TypeError, ValueError, AttributeError) as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e

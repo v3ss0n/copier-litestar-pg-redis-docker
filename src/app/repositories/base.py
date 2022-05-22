@@ -2,13 +2,14 @@ from abc import ABC
 from typing import Any, Generic, TypeVar, cast
 from uuid import UUID
 
-from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.exceptions import RepositoryException
 from app.models.base import Base
+from app.utils import unstructure
+from app.utils.types import DTOProtocol
 
 T = TypeVar("T", bound=Base)
 
@@ -39,21 +40,20 @@ class AbstractBaseRepository(ABC, Generic[T]):
         except SQLAlchemyError as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
-    async def create(self, data: BaseModel | dict[str, Any]) -> T | None:
+    async def create(self, data: DTOProtocol | dict[str, Any]) -> T | None:
+        unstructured = unstructure(data)
         try:
             async with self.async_session as async_session:
                 async with async_session.begin():
-                    if isinstance(data, BaseModel):
-                        data = data.dict()
-                    instance = self.model(**data)
+                    instance = self.model(**unstructured)
                     async_session.add(instance)
                     await async_session.flush()
                     await async_session.refresh(instance)
-                    return cast(T, instance)
+                    return instance
         except Exception as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
-    async def partial_update(self, instance_id: UUID, data: BaseModel) -> T:
+    async def partial_update(self, instance_id: UUID, data: DTOProtocol) -> T:
         try:
             async with self.async_session as async_session:
                 results = await async_session.execute(

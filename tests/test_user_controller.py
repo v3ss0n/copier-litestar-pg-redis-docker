@@ -5,9 +5,11 @@ from app.constants import USER_CONTROLLER_PATH
 from tests.factories import UserCreateDTOFactory
 
 
-def test_create_user(test_client: TestClient):
+def test_create_user(test_client: TestClient) -> None:
     with test_client as client:
-        create_user_dto = UserCreateDTOFactory.build().dict()
-        response = client.post("/v1" + USER_CONTROLLER_PATH, json=create_user_dto)
-        print(response.json())
+        unstructured_user = (
+            UserCreateDTOFactory.build().dict()  # type:ignore[attr-defined]
+        )
+        response = client.post("/v1" + USER_CONTROLLER_PATH, json=unstructured_user)
+        print(str(response.text))
         assert response.status_code == HTTP_201_CREATED

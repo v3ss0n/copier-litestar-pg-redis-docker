@@ -16,7 +16,7 @@ def get_postgres_connection(state: State) -> AsyncEngine:
     """
     if not hasattr(state, "postgres_connection"):
         state.postgres_connection = create_async_engine(db_settings.async_database_uri)
-    return state.postgres_connection
+    return state.postgres_connection  # type:ignore[no-any-return]
 
 
 async def close_postgres_connection(state: State) -> None:
