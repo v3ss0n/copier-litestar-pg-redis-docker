@@ -1,14 +1,15 @@
 from abc import ABC
-from typing import Any, Generic, TypeVar, cast
+from typing import Any, Generic, TypeVar
 from uuid import UUID
 
-from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.exceptions import RepositoryException
 from app.models.base import Base
+from app.utils import unstructure
+from app.utils.types import DTOProtocol
 
 T = TypeVar("T", bound=Base)
 
@@ -25,7 +26,7 @@ class AbstractBaseRepository(ABC, Generic[T]):
                 results = await async_session.execute(
                     select(self.model).offset(offset).limit(limit)
                 )
-                return cast(list[T], results.all())
+                return list(results.scalars())
         except SQLAlchemyError as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
@@ -35,37 +36,38 @@ class AbstractBaseRepository(ABC, Generic[T]):
                 results = await async_session.execute(
                     select(self.model).where(self.model.id == instance_id)
                 )
-                return cast(T | None, results.first())
+                return results.scalar()
         except SQLAlchemyError as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
-    async def create(self, data: BaseModel | dict[str, Any]) -> T | None:
+    async def create(self, data: DTOProtocol | dict[str, Any]) -> T | None:
+        unstructured = unstructure(data)
         try:
             async with self.async_session as async_session:
                 async with async_session.begin():
-                    if isinstance(data, BaseModel):
-                        data = data.dict()
-                    instance = self.model(**data)
+                    instance = self.model(**unstructured)
                     async_session.add(instance)
                     await async_session.flush()
                     await async_session.refresh(instance)
-                    return cast(T, instance)
+                    return instance
         except Exception as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 
-    async def partial_update(self, instance_id: UUID, data: BaseModel) -> T:
+    async def partial_update(self, instance_id: UUID, data: DTOProtocol) -> T:
+        # TODO: what is the difference between this method and `get_one()`
+        # TODO: such that type:ignore[no-any-return] is necessary here...?
         try:
             async with self.async_session as async_session:
                 results = await async_session.execute(
                     select(self.model).where(self.model.id == instance_id)
                 )
-                instance = results.first()
+                instance = results.scalar_one()
                 for key, value in data.dict().items():
                     setattr(instance, key, value)
                 async_session.add(instance)
-                await async_session.commit()
+                await async_session.flush()
                 await async_session.refresh(instance)
-                return cast(T, instance)
+                return instance  # type:ignore[no-any-return]
         except SQLAlchemyError as e:
             raise RepositoryException("An exception occurred: " + repr(e)) from e
 

@@ -12,3 +12,6 @@ python -m flake8 .
 
 echo "+++ Running mypy type checks"
 python -m mypy ./tests ./src
+
+echo "+++ Running unit tests"
+pytest tests

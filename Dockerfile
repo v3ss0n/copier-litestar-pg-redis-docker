@@ -29,7 +29,7 @@ RUN apt-get update \
 
 # Install dependencies and tidy up
 ARG poetry_options=""
-COPY pyproject.toml ./
+COPY poetry.lock pyproject.toml ./
 RUN apt-get update \
     && apt-get -y install --no-install-recommends libpq-dev python3-dev build-essential \
     && poetry install ${poetry_options} --no-root \
