@@ -9,4 +9,4 @@ class UUIDResponse(Response):
     def serializer(value: Any) -> dict[str, Any]:
         if isinstance(value, UUID):
             return str(value)  # type:ignore[return-value]
-        return super().serializer(value)
+        return Response.serializer(value)
