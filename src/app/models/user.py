@@ -1,6 +1,9 @@
 import uuid
+from typing import Any
 
 from sqlalchemy import Boolean, Column, String
+
+from app.utils.security import get_password_hash
 
 from .base import Base, BaseModel
 from .mixins import DateFieldsMixins
@@ -10,6 +13,32 @@ class User(DateFieldsMixins, Base):
     username = Column(String(64), nullable=False)
     is_active = Column(Boolean, nullable=False)
     hashed_password = Column(String(256), nullable=False)
+
+    def __init__(self, password: str | None = None, **kwargs: Any) -> None:
+        if password is not None:
+            if "hashed_password" in kwargs:
+                raise ValueError(
+                    "`password` and `hashed_password` are mutually exclusive"
+                )
+            self.password = password
+        super().__init__(**kwargs)
+
+    @property
+    def password(self) -> str:
+        raise AttributeError("`password` not persisted")
+
+    @password.setter
+    def password(self, value: str) -> None:
+        """
+        Allows for creation of `User` objects with a `password` parameter. Hashes the
+        password and stores to the `hashed_password` attribute.
+
+        Parameters
+        ----------
+        value : str
+            The clear text password.
+        """
+        self.hashed_password = get_password_hash(value)
 
 
 class UserModel(BaseModel):
