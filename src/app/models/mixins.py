@@ -6,5 +6,9 @@ from sqlalchemy.orm import declarative_mixin
 
 @declarative_mixin
 class DateFieldsMixins:
-    created_date: datetime.datetime = Column(DateTime, default=datetime.datetime.now)
-    updated_date: datetime.datetime = Column(DateTime, default=datetime.datetime.now)
+    created_date: datetime.datetime = Column(
+        DateTime, default=datetime.datetime.now, nullable=False
+    )
+    updated_date: datetime.datetime = Column(
+        DateTime, default=datetime.datetime.now, nullable=False
+    )

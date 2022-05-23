@@ -8,7 +8,7 @@ from .mixins import DateFieldsMixins
 
 class User(DateFieldsMixins, Base):
     username = Column(String(64), nullable=False)
-    is_active = Column(Boolean())
+    is_active = Column(Boolean, nullable=False)
     hashed_password = Column(String(256), nullable=False)
 
 

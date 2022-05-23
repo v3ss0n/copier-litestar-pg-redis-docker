@@ -22,20 +22,20 @@ def upgrade():
     op.create_table(
         "user",
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
-        sa.Column("created_date", sa.DateTime(), nullable=True),
-        sa.Column("updated_date", sa.DateTime(), nullable=True),
+        sa.Column("created_date", sa.DateTime(), nullable=False),
+        sa.Column("updated_date", sa.DateTime(), nullable=False),
         sa.Column("username", sa.String(length=64), nullable=False),
-        sa.Column("is_active", sa.Boolean(), nullable=True),
+        sa.Column("is_active", sa.Boolean(), nullable=False),
         sa.Column("hashed_password", sa.String(length=256), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
         "item",
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
-        sa.Column("created_date", sa.DateTime(), nullable=True),
-        sa.Column("updated_date", sa.DateTime(), nullable=True),
+        sa.Column("created_date", sa.DateTime(), nullable=False),
+        sa.Column("updated_date", sa.DateTime(), nullable=False),
         sa.Column("name", sa.String(length=64), nullable=False),
-        sa.Column("owner_id", postgresql.UUID(as_uuid=True), nullable=True),
+        sa.Column("owner_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.ForeignKeyConstraint(
             ["owner_id"],
             ["user.id"],
