@@ -1,6 +1,7 @@
 import uuid
 from typing import Any
 
+from pydantic import BaseModel as _BaseModel
 from sqlalchemy import Column
 from sqlalchemy.dialects import postgresql as pg
 from sqlalchemy.orm.decl_api import as_declarative, declared_attr
@@ -29,3 +30,9 @@ class Base:
 
     id: uuid.UUID = Column(UUID, default=uuid.uuid4, primary_key=True)
 
+
+class BaseModel(_BaseModel):
+    class Config:
+        extra = "ignore"
+        arbitrary_types_allowed = True
+        orm_mode = True
