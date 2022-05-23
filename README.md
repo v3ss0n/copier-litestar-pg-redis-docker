@@ -16,14 +16,13 @@ Warning this example project is a WIP.
 - [x] Add src/ directory
 - [x] Use gunicorn in entry script
 - [x] Make app installable
-- [ ] Get application errors to raise in test suite
-- [ ] Fix runtime errors
-- [ ] Make the database session commit scope outside of request handling scope
-- [ ] CI?
+- [x] Fix runtime errors
+- [x] Make the database session commit scope outside of request handling scope
 
 ### Post Fork
 Things to do to project after I fork off for internal use.
 
+- [ ] CI?
 - [ ] explicitly include any dirs/files into docker and remove .dockerignore
 - [ ] add pre-commit (I'll just make as equivalent as possible to the original pre-commit config in this project)
 - [ ] configure pyupgrade for only --py310-plus
