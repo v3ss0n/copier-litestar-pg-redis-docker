@@ -18,10 +18,29 @@ AsyncScopedSession = async_scoped_session(async_session_factory, scopefunc=curre
 
 
 async def dispose_engine() -> None:
+    """
+    Passed to `Starlite.on_shutdown`.
+    """
     await engine.dispose()
 
 
 async def session_after_request(response: Response) -> Response:
+    """
+    Passed to `Starlite.after_request`.
+
+    Inspects `response` to determine if we should commit, or rollback the database
+    transaction.
+
+    Finally, calls `remove()` on the scoped session.
+
+    Parameters
+    ----------
+    response : Response
+
+    Returns
+    -------
+    Response
+    """
     if 200 <= response.status_code < 300:
         await AsyncScopedSession.commit()
     else:

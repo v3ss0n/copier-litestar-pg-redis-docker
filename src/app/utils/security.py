@@ -12,4 +12,15 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def get_password_hash(password: str) -> str:
-    return cast(str, pwd_context.hash(password))
+    """
+    Return hash of `password`.
+
+    Parameters
+    ----------
+    password : str
+
+    Returns
+    -------
+    str
+    """
+    return pwd_context.hash(password)  # type:ignore[no-any-return]

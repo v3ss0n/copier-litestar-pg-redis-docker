@@ -18,6 +18,8 @@ Warning this example project is a WIP.
 - [x] Make app installable
 - [x] Fix runtime errors
 - [x] Make the database session commit scope outside of request handling scope
+- [x] Documentation
+- [ ] Make repositories more helpful (raise NotFoundExceptions, return Pydantic Models etc)
 
 ### Post Fork
 Things to do to project after I fork off for internal use.
