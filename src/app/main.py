@@ -9,7 +9,6 @@ from app.db import (
     create_async_session,
     get_postgres_connection,
 )
-from app.utils.response import UUIDResponse
 
 
 @get(path="/health-check", media_type=MediaType.TEXT)
@@ -28,6 +27,5 @@ app = Starlite(
         title="Starlite Postgres Example API", version="1.0.0"
     ),
     plugins=[SQLAlchemyPlugin()],
-    response_class=UUIDResponse,
     route_handlers=[health_check, v1_router],
 )
