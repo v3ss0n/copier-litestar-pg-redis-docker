@@ -3,6 +3,7 @@ profile = "black"
 overwrite_in_place = true
 
 [tool.coverage.report]
+show_missing = true
 exclude_lines = [
     'if TYPE_CHECKING:',
     'pragma: no cover',
@@ -10,11 +11,10 @@ exclude_lines = [
 ]
 
 [tool.coverage.run]
-omit = ["tests/*"]
+omit = ["tests/*", "src/app/utils/restartable_worker.py"]
 
 [tool.mypy]
 check_untyped_defs = true
-disable_error_code = ["valid-type"]
 disallow_incomplete_defs = true
 disallow_untyped_defs = true
 ignore_missing_imports = true
@@ -59,6 +59,7 @@ pytest = "*"
 pytest-cov = "*"
 sqlalchemy2-stubs = "*"
 types-passlib = "*"
+types-requests = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

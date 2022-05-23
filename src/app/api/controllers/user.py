@@ -2,7 +2,7 @@ from pydantic import UUID4
 from starlite import Controller, Provide, delete, get, post, put
 
 from app.constants import USER_CONTROLLER_PATH
-from app.models import UserCreateDTO, UserReadDTO
+from app.models import UserCreateModel, UserModel, UserReadModel
 from app.repositories import UserRepository
 
 
@@ -13,30 +13,30 @@ class UserController(Controller):
 
     @post()
     async def create_user(
-        self, data: UserCreateDTO, user_repository: UserRepository
-    ) -> UserReadDTO | None:
+        self, data: UserCreateModel, user_repository: UserRepository
+    ) -> UserReadModel:
         return await user_repository.create(data=data)
 
     @get()
     async def list_users(
         self, user_repository: UserRepository, offset: int = 0, limit: int = 100
-    ) -> list[UserReadDTO]:
+    ) -> list[UserReadModel]:
         return await user_repository.get_many(offset=offset, limit=limit)
 
     @get(path="/{user_id:uuid}")
     async def get_user(
         self, user_id: UUID4, user_repository: UserRepository
-    ) -> UserReadDTO | None:
+    ) -> UserReadModel | None:
         return await user_repository.get_one(instance_id=user_id)
 
     @put(path="/{user_id:uuid}")
     async def update_user(
-        self, user_id: UUID4, data: UserCreateDTO, user_repository: UserRepository
-    ) -> UserReadDTO | None:
+        self, user_id: UUID4, data: UserModel, user_repository: UserRepository
+    ) -> UserReadModel | None:
         return await user_repository.partial_update(instance_id=user_id, data=data)
 
-    @delete(path="/{user_id:uuid}")
+    @delete(path="/{user_id:uuid}", status_code=200)
     async def delete_user(
         self, user_id: UUID4, user_repository: UserRepository
-    ) -> UserReadDTO | None:
+    ) -> UserReadModel:
         return await user_repository.delete(instance_id=user_id)

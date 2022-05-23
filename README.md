@@ -16,14 +16,20 @@ Warning this example project is a WIP.
 - [x] Add src/ directory
 - [x] Use gunicorn in entry script
 - [x] Make app installable
-- [ ] Get application errors to raise in test suite
-- [ ] Fix runtime errors
-- [ ] Make the database session commit scope outside of request handling scope
-- [ ] CI?
+- [x] Fix runtime errors
+- [x] Make the database session commit scope outside of request handling scope
+- [x] Documentation
+- [x] Make repositories more helpful (raise NotFoundExceptions, return Pydantic Models etc)
+- [x] Document `RestartableUvicornWorker`.
+- [x] Expand tests
+- [ ] Run tests in clean database
+- [ ] Handle mismatch between url parameter id and payload id value
+- [ ] Add nested items routes
 
 ### Post Fork
 Things to do to project after I fork off for internal use.
 
+- [ ] CI?
 - [ ] explicitly include any dirs/files into docker and remove .dockerignore
 - [ ] add pre-commit (I'll just make as equivalent as possible to the original pre-commit config in this project)
 - [ ] configure pyupgrade for only --py310-plus
@@ -38,6 +44,21 @@ Things to do to project after I fork off for internal use.
 Starlite is a light and flexible ASGI API framework. 
 
 [Starlite documentation 📚](https://starlite-api.github.io/starlite/)
+
+### RestartableUvicornWorker
+
+There is a known issue when running gunicorn with uvicorn workers, see 
+[here](https://github.com/benoitc/gunicorn/issues/2339).
+
+For convenience an implementation of the workaround 
+([this one](https://github.com/benoitc/gunicorn/issues/2339#issuecomment-867481389))
+suggested in that gunicorn issue is included in the application source.
+
+To use the included `RestartableUvicornWorker` set the `GUNICORN_WORKER_CLASS` env var
+to `app.utils.restartable_worker.RestartableUvicornWorker`.
+
+In production, set the `GUNICORN_WORKER_CLASS` env var to `uvicorn.workers.UvicornWorker`
+as advised [here](https://www.uvicorn.org/deployment/).
 
 ### Setup
 

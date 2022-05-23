@@ -1,24 +1,75 @@
+import uuid
+from typing import Any
+
 from sqlalchemy import Boolean, Column, String
-from starlite import DTOFactory
-from starlite.plugins.sql_alchemy import SQLAlchemyPlugin
 
-from .base import Base
+from app.utils.security import get_password_hash
+
+from .base import Base, BaseModel
 from .mixins import DateFieldsMixins
-
-UserDTOFactory = DTOFactory(plugins=[SQLAlchemyPlugin()])
 
 
 class User(DateFieldsMixins, Base):
-    username: str = Column(String(64), nullable=False)
-    is_active: bool = Column(Boolean(), default=True)
-    hashed_password: str = Column(String(256), nullable=False)
+    username = Column(String(64), nullable=False)
+    is_active = Column(Boolean, nullable=False)
+    hashed_password = Column(String(256), nullable=False)
+
+    def __init__(self, password: str | None = None, **kwargs: Any) -> None:
+        if password is not None:
+            if "hashed_password" in kwargs:
+                raise ValueError(
+                    "`password` and `hashed_password` are mutually exclusive"
+                )
+            self.password = password
+        super().__init__(**kwargs)
+
+    @property
+    def password(self) -> str:
+        raise AttributeError("`password` not persisted")
+
+    @password.setter
+    def password(self, value: str) -> None:
+        """
+        Allows for creation of `User` objects with a `password` parameter. Hashes the
+        password and stores to the `hashed_password` attribute.
+
+        Parameters
+        ----------
+        value : str
+            The clear text password.
+        """
+        self.hashed_password = get_password_hash(value)
 
 
-UserCreateDTO = UserDTOFactory(
-    "UserCreateDTO",
-    User,
-    exclude=["created_date", "updated_date", "items", "id"],
-    field_mapping={"hashed_password": ("password", str)},
-)
+class UserModel(BaseModel):
+    """
+    Common attributes for all User representations.
+    """
 
-UserReadDTO = UserDTOFactory("UserReadDTO", User, exclude=["hashed_password"])
+    username: str
+    is_active: bool = True
+
+
+class UserCreateModel(UserModel):
+    """
+    Fields available to for `User` create operations.
+
+        >>> UserCreateModel(**{"username": "Rick Sanchez", "password": "wubbalubbadubdub"})
+        UserCreateModel(username='Rick Sanchez', is_active=True, password='wubbalubbadubdub')
+        >>> UserCreateModel(**{"username": "Rick Sanchez", "is_active": False, "password": "wubbalubbadubdub"})
+        UserCreateModel(username='Rick Sanchez', is_active=False, password='wubbalubbadubdub')
+    """
+
+    password: str
+
+
+class UserReadModel(UserModel):
+    """
+    Model for outbound representations of `User` instances.
+
+        >>> user = User(id=uuid.uuid4(), username="Rick Sanchez", is_active=True)
+        >>> UserReadModel.from_orm(user)  # doctest: +ELLIPSIS
+        UserReadModel(username='Rick Sanchez', is_active=True, id=UUID('...'))
+    """
+
+    id: uuid.UUID

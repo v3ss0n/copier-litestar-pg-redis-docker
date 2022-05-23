@@ -1,40 +1,49 @@
-from typing import cast
+from asyncio import current_task
 
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    async_scoped_session,
+    create_async_engine,
+)
 from sqlalchemy.orm import sessionmaker
-from starlite.datastructures import State
+from starlite import Response
 
 from app.config import db_settings
 
-
-def get_postgres_connection(state: State) -> AsyncEngine:
-    """
-    Returns the Postgres connection stored in the application state, creates it if it
-    doesn't exist.
-
-    This function is called during startup and is also injected as a dependency.
-    """
-    if not hasattr(state, "postgres_connection"):
-        state.postgres_connection = create_async_engine(db_settings.async_database_uri)
-    return state.postgres_connection  # type:ignore[no-any-return]
+engine = create_async_engine(db_settings.async_database_uri)
+async_session_factory = sessionmaker(
+    engine, class_=AsyncSession, expire_on_commit=False
+)
+AsyncScopedSession = async_scoped_session(async_session_factory, scopefunc=current_task)
 
 
-async def close_postgres_connection(state: State) -> None:
+async def dispose_engine() -> None:
     """
-    Closes the postgres connection stored in the application state. This function is
-    called during shutdown.
+    Passed to `Starlite.on_shutdown`.
     """
-    if hasattr(state, "postgres_connection"):
-        engine = cast(AsyncEngine, state.postgres_connection)
-        await engine.dispose()
+    await engine.dispose()
 
 
-def create_async_session(state: State) -> AsyncSession:
+async def session_after_request(response: Response) -> Response:
     """
-    Creates a sessionmaker from the given connection
+    Passed to `Starlite.after_request`.
+
+    Inspects `response` to determine if we should commit, or rollback the database
+    transaction.
+
+    Finally, calls `remove()` on the scoped session.
+
+    Parameters
+    ----------
+    response : Response
+
+    Returns
+    -------
+    Response
     """
-    if hasattr(state, "postgres_connection"):
-        return sessionmaker(
-            state.postgres_connection, class_=AsyncSession, expire_on_commit=False
-        )()
-    raise RuntimeError("postgres_connection has not been set in state")
+    if 200 <= response.status_code < 300:
+        await AsyncScopedSession.commit()
+    else:
+        await AsyncScopedSession.rollback()
+    await AsyncScopedSession.remove()
+    return response
