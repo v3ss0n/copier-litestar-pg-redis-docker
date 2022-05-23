@@ -21,7 +21,9 @@ Warning this example project is a WIP.
 - [x] Documentation
 - [x] Make repositories more helpful (raise NotFoundExceptions, return Pydantic Models etc)
 - [x] Document `RestartableUvicornWorker`.
-- [ ] Complete tests
+- [x] Expand tests
+- [ ] Run tests in clean database
+- [ ] Handle mismatch between url parameter id and payload id value
 - [ ] Add nested items routes
 
 ### Post Fork

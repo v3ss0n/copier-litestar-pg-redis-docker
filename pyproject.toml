@@ -3,6 +3,7 @@ profile = "black"
 overwrite_in_place = true
 
 [tool.coverage.report]
+show_missing = true
 exclude_lines = [
     'if TYPE_CHECKING:',
     'pragma: no cover',
@@ -10,7 +11,7 @@ exclude_lines = [
 ]
 
 [tool.coverage.run]
-omit = ["tests/*"]
+omit = ["tests/*", "src/app/utils/restartable_worker.py"]
 
 [tool.mypy]
 check_untyped_defs = true

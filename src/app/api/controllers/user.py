@@ -2,7 +2,7 @@ from pydantic import UUID4
 from starlite import Controller, Provide, delete, get, post, put
 
 from app.constants import USER_CONTROLLER_PATH
-from app.models import UserCreateModel, UserReadModel
+from app.models import UserCreateModel, UserModel, UserReadModel
 from app.repositories import UserRepository
 
 
@@ -31,11 +31,11 @@ class UserController(Controller):
 
     @put(path="/{user_id:uuid}")
     async def update_user(
-        self, user_id: UUID4, data: UserCreateModel, user_repository: UserRepository
+        self, user_id: UUID4, data: UserModel, user_repository: UserRepository
     ) -> UserReadModel | None:
         return await user_repository.partial_update(instance_id=user_id, data=data)
 
-    @delete(path="/{user_id:uuid}")
+    @delete(path="/{user_id:uuid}", status_code=200)
     async def delete_user(
         self, user_id: UUID4, user_repository: UserRepository
     ) -> UserReadModel:
