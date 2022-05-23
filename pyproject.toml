@@ -58,6 +58,7 @@ pytest = "*"
 pytest-cov = "*"
 sqlalchemy2-stubs = "*"
 types-passlib = "*"
+types-requests = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
