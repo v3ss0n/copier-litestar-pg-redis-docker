@@ -17,13 +17,14 @@ async def health_check() -> str:
 logger = LoggingConfig(loggers={"app": {"level": "DEBUG", "handlers": ["console"]}})
 
 app = Starlite(
+    after_request=session_after_request,
     debug=app_settings.DEBUG,
     on_shutdown=[dispose_engine],
+    # enabling this causes pytest to hang
     # on_startup=[logger.configure],
     openapi_config=OpenAPIConfig(
         title="Starlite Postgres Example API", version="1.0.0"
     ),
     plugins=[SQLAlchemyPlugin()],
     route_handlers=[health_check, v1_router],
-    after_request=session_after_request,
 )
