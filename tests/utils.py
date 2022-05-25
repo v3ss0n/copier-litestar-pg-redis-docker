@@ -1,4 +1,14 @@
+from collections.abc import Coroutine
+from typing import Any
+
 from requests import Response
+
+
+def awaitable(return_value: Any) -> Coroutine[Any, Any, Any]:
+    async def coro() -> Any:
+        return return_value
+
+    return coro()
 
 
 def check_response(response: Response, expected_status: int) -> None:
