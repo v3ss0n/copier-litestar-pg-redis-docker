@@ -26,7 +26,7 @@ Warning this example project is a WIP.
 - [x] Remove need for sync database uri and driver (entry script and migrations)
 - [x] Change to only require database uri in environment
 - [x] Cache sets URL via environment, DB URL is build inside app, make consistent.
-- [ ] Register cache backend and use it on a route
+- [x] Register cache backend and use it on a route
 - [ ] Handle mismatch between url parameter id and payload id value
 - [ ] Add nested items routes
 

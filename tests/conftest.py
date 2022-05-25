@@ -3,7 +3,8 @@ from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
-from starlite import TestClient
+from starlite import CacheConfig, Starlite, TestClient
+from starlite.cache import SimpleCacheBackend
 
 from app.main import app
 from app.repositories.base import AbstractBaseRepository
@@ -66,7 +67,12 @@ def patch_repo_scalar_404(monkeypatch: Any) -> None:
     )
 
 
-@pytest.fixture(scope="function")
-def test_client() -> TestClient:
+@pytest.fixture
+def starlite(monkeypatch: Any) -> Starlite:
+    monkeypatch.setattr(app, "cache_config", CacheConfig(backend=SimpleCacheBackend()))
+    return app
 
-    return TestClient(app=app)
+
+@pytest.fixture
+def test_client(starlite: Starlite) -> TestClient:
+    return TestClient(app=starlite)

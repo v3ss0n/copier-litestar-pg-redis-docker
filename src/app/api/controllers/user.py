@@ -23,7 +23,7 @@ class UserController(Controller):
     ) -> list[UserReadModel]:
         return await user_repository.get_many(offset=offset, limit=limit)
 
-    @get(path="/{user_id:uuid}")
+    @get(path="/{user_id:uuid}", cache=True)
     async def get_user(
         self, user_id: UUID4, user_repository: UserRepository
     ) -> UserReadModel | None:
