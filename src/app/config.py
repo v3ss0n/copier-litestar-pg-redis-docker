@@ -1,5 +1,4 @@
-from pydantic import BaseSettings
-from sqlalchemy.engine import URL
+from pydantic import AnyUrl, BaseSettings, PostgresDsn
 
 
 class AppSettings(BaseSettings):
@@ -14,7 +13,7 @@ class CacheSettings(BaseSettings):
         env_prefix = "REDIS_"
         case_sensitive = True
 
-    URL: str
+    URL: AnyUrl
 
 
 class DatabaseSettings(BaseSettings):
@@ -22,41 +21,7 @@ class DatabaseSettings(BaseSettings):
         env_prefix = "POSTGRES_"
         case_sensitive = True
 
-    DRIVERNAME: str
-    USERNAME: str
-    PASSWORD: str
-    HOST: str
-    PORT: int
-    DATABASE: str
-
-    @property
-    def database_uri(self) -> URL:
-        """
-        For async connections to db.
-
-            >>> db_conf = DatabaseSettings(
-            ...     DRIVERNAME="postgresql+asyncpg",
-            ...     USERNAME="postgres",
-            ...     PASSWORD="mysecretpassword",
-            ...     HOST="db",
-            ...     PORT=5432,
-            ...     DATABASE="example-pg-docker",
-            ... )
-            >>> db_conf.database_uri
-            postgresql+asyncpg://postgres:***@db:5432/example-pg-docker
-
-        Returns
-        -------
-        URL
-        """
-        return URL.create(
-            drivername=self.DRIVERNAME,
-            username=self.USERNAME,
-            password=self.PASSWORD,
-            host=self.HOST,
-            port=self.PORT,
-            database=self.DATABASE,
-        )
+    URL: PostgresDsn
 
 
 class GunicornSettings(BaseSettings):
