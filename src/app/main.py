@@ -3,6 +3,7 @@ from starlite import LoggingConfig, MediaType, OpenAPIConfig, Starlite, get
 from starlite.plugins.sql_alchemy import SQLAlchemyPlugin
 
 from app.api import v1_router
+from app.cache import config as cache_config
 from app.config import app_settings
 from app.constants import MESSAGE_HEALTHY
 from app.db import AsyncScopedSession, dispose_engine, session_after_request
@@ -18,6 +19,7 @@ logger = LoggingConfig(loggers={"app": {"level": "DEBUG", "handlers": ["console"
 
 app = Starlite(
     after_request=session_after_request,
+    cache_config=cache_config,
     debug=app_settings.DEBUG,
     on_shutdown=[dispose_engine],
     # enabling this causes pytest to hang
