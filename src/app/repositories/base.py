@@ -18,7 +18,25 @@ DbType = TypeVar("DbType", bound=Base)
 ReturnType = TypeVar("ReturnType", bound=BaseModel)
 
 
-def wrap_sqla_exception(f: Any) -> Any:
+def catch_sqlalchemy_exception(f: Any) -> Any:
+    """
+    Decorate a function or method to raise a `RepositoryException` chained from an
+    original `SQLAlchemyError`.
+
+        >>> import asyncio
+        >>> @catch_sqlalchemy_exception
+        ... async def db_error() -> None:
+        ...     raise SQLAlchemyError("Original Exception")
+        ...
+        >>> try:
+        ...     exc = asyncio.run(db_error())
+        ... except RepositoryException as e:
+        ...     print(f"caught repository exception from {type(e.__context__)}")
+        ...
+        caught repository exception from <class 'sqlalchemy.exc.SQLAlchemyError'>
+
+    """
+
     @functools.wraps(f)
     async def wrapped(*args: Any, **kwargs: Any) -> Any:
         try:
@@ -31,9 +49,18 @@ def wrap_sqla_exception(f: Any) -> Any:
 
 class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
     """
-    ABC for type Repository objects.
+    ABC for resource type Repository objects.
 
-    Subclasses must set the `model` class variable.
+    Subclasses must set the `db_model`, and `return_model` class variables.
+
+    Class Attributes
+    ----------------
+    db_model : type[DbType]
+        A SQLAlchemy declarative class.
+    return_model : type[ReturnModel]
+        Typed as a pydantic `BaseModel` class, but could really be anything with a
+        `from_orm()` classmethod, that accepts an instance of `db_model` and returns
+        something.
     """
 
     db_model: type[DbType]
@@ -42,29 +69,29 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
     def __init__(self) -> None:
         self.session = AsyncScopedSession()
 
-    @wrap_sqla_exception
+    @catch_sqlalchemy_exception
     async def _execute(self, statement: Executable, **kwargs: Any) -> Result:
         return await self.session.execute(statement, **kwargs)
 
-    @wrap_sqla_exception
+    @catch_sqlalchemy_exception
     async def _add_flush_refresh(self, instance: DbType) -> DbType:
         self.session.add(instance)
         await self.session.flush()
         await self.session.refresh(instance)
         return instance
 
-    @wrap_sqla_exception
+    @catch_sqlalchemy_exception
     async def _scalars(self, statement: Executable, **kwargs: Any) -> list[DbType]:
         result = await self._execute(statement, **kwargs)
         return list(result.scalars())
 
-    @wrap_sqla_exception
+    @catch_sqlalchemy_exception
     async def _scalar(self, statement: Executable, **kwargs: Any) -> DbType:
         result = await self._execute(statement, **kwargs)
         instance = result.scalar()
         return instance  # type:ignore[no-any-return]
 
-    @wrap_sqla_exception
+    @catch_sqlalchemy_exception
     async def _delete(self, instance: DbType) -> DbType:
         await self.session.delete(instance)
         await self.session.flush()
@@ -78,12 +105,14 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
 
     async def get_many(self, *, offset: int = 0, limit: int = 100) -> list[ReturnType]:
         """
-        Returns a list of `self.model` instances.
+        A list of `ReturnType` instances.
 
         Parameters
         ----------
         offset : int
+            For limit/offset pagination.
         limit : int
+            For limit/offset pagination.
 
         Returns
         -------
@@ -96,7 +125,7 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
 
     async def get_one(self, instance_id: UUID) -> ReturnType:
         """
-        Return a single instance of type `DbType`.
+        A single `ReturnType` instance.
 
         Parameters
         ----------
@@ -109,6 +138,7 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
         Raises
         ------
         NotFoundException
+            If no instance found with `instance_id`.
         """
         inst = self._check_not_found(
             await self._scalar(
@@ -119,39 +149,55 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
 
     async def create(self, data: SupportsDict) -> ReturnType:
         """
-        Create and instance of type `DbType` and return it.
+        Create an instance of type `DbType` and return instance of `ReturnType` from it.
 
-        If the model, `DbType` has relationship attributes without eager loading
-        configured, attempting to access those attributes on the instance returned from
-        this method will result in a SQLAlchemy `DetachedInstanceError`.
+        Notes
+        -----
+            Does not support converting related items into SQLAlchemy instances. This
+            could be done in the `data.dict()` method.
+
+            If the model, `DbType` has relationship attributes without eager loading
+            configured, attempting to access those attributes on the instance returned
+            from this method will result in a SQLAlchemy `DetachedInstanceError`. See
+            Preventing Implicit IO when Using AsyncSession_.
 
         Parameters
         ----------
-        data : SupportsDict | dict[str, Any]
+        data : SupportsDict
+            Anything that has a `dict()` method returning a mapping that is unpacked
+            into `DbType` constructor.
 
         Returns
         -------
         ReturnType
+
+        .. _See Preventing Implicit IO when Using AsyncSession:
+            https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html#preventing-implicit-io-when-using-asyncsession
         """
-        try:
-            instance = await self._add_flush_refresh(self.db_model(**data.dict()))
-        except Exception as e:
-            raise RepositoryException("An exception occurred: " + repr(e)) from e
+        instance = await self._add_flush_refresh(self.db_model(**data.dict()))
         return self.return_model.from_orm(instance)
 
     async def partial_update(self, instance_id: UUID, data: SupportsDict) -> ReturnType:
         """
-        Update attributes and values on `DbType` represented by `instance_id` with
-        keys and values found in mapping returned by `data.dict()`.
+        Update attributes on `DbType` retrieved with `instance_id` with keys and values
+        found in mapping returned by `data.dict()`.
 
-        If the model, `DbType` has relationship attributes without eager loading
-        configured, attempting to access those attributes on the instance returned from
-        this method will result in a SQLAlchemy `DetachedInstanceError`.
+        Notes
+        -----
+            Does not support converting related items into SQLAlchemy instances. This
+            could be done in the `data.dict()` method.
+
+            If the model, `DbType` has relationship attributes without eager loading
+            configured, attempting to access those attributes on the instance returned
+            from this method will result in a SQLAlchemy `DetachedInstanceError`. See
+            Preventing Implicit IO when Using AsyncSession_.
 
         Parameters
         ----------
         instance_id : UUID
         data : SupportsDict
+            Anything that has a `dict()` method returning a mapping that is unpacked
+            into `DbType` constructor.
 
         Returns
         -------
@@ -160,6 +206,9 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
         Raises
         ------
         NotFoundException
+
+        .. _See Preventing Implicit IO when Using AsyncSession:
+            https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html#preventing-implicit-io-when-using-asyncsession
         """
         instance = self._check_not_found(
             await self._scalar(
@@ -173,7 +222,14 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
 
     async def delete(self, instance_id: UUID) -> ReturnType:
         """
-        Delete instance of type `DbType` represented by `instance_id`.
+        Delete and return instance of type `DbType` represented by `instance_id`.
+
+        Notes
+        -----
+            If the model, `DbType` has relationship attributes without eager loading
+            configured, attempting to access those attributes on the instance returned
+            from this method will result in a SQLAlchemy `DetachedInstanceError`. See
+            Preventing Implicit IO when Using AsyncSession_.
 
         Parameters
         ----------
