@@ -1,4 +1,5 @@
-from pydantic import BaseSettings, PostgresDsn
+from pydantic import BaseSettings
+from sqlalchemy.engine import URL
 
 
 class AppSettings(BaseSettings):
@@ -21,51 +22,40 @@ class DatabaseSettings(BaseSettings):
         env_prefix = "POSTGRES_"
         case_sensitive = True
 
-    DB: str
+    DRIVERNAME: str
+    USERNAME: str
     PASSWORD: str
-    SERVER: str
-    USER: str
+    HOST: str
+    PORT: int
+    DATABASE: str
 
     @property
-    def async_database_uri(self) -> PostgresDsn:
+    def database_uri(self) -> URL:
         """
         For async connections to db.
 
-            >>> db_conf = DatabaseSettings(DB="test", PASSWORD="password1!", SERVER="db.local", USER="elongated_muskrat")
-            >>> db_conf.async_database_uri
-            'postgresql+asyncpg://elongated_muskrat:password1!@db.local/test'
+            >>> db_conf = DatabaseSettings(
+            ...     DRIVERNAME="postgresql+asyncpg",
+            ...     USERNAME="postgres",
+            ...     PASSWORD="mysecretpassword",
+            ...     HOST="db",
+            ...     PORT=5432,
+            ...     DATABASE="example-pg-docker",
+            ... )
+            >>> db_conf.database_uri
+            postgresql+asyncpg://postgres:***@db:5432/example-pg-docker
 
         Returns
         -------
-        PostgresDsn
+        URL
         """
-        return PostgresDsn.build(  # type:ignore[no-any-return]
-            scheme="postgresql+asyncpg",
-            user=self.USER,
+        return URL.create(
+            drivername=self.DRIVERNAME,
+            username=self.USERNAME,
             password=self.PASSWORD,
-            host=self.SERVER,
-            path=f"/{self.DB}",
-        )
-
-    @property
-    def sync_database_uri(self) -> PostgresDsn:
-        """
-        For sync connections to db.
-
-            >>> db_conf = DatabaseSettings(DB="test", PASSWORD="password1!", SERVER="db.local", USER="elongated_muskrat")
-            >>> db_conf.sync_database_uri
-            'postgresql://elongated_muskrat:password1!@db.local/test'
-
-        Returns
-        -------
-        PostgresDsn
-        """
-        return PostgresDsn.build(  # type:ignore[no-any-return]
-            scheme="postgresql",
-            user=self.USER,
-            password=self.PASSWORD,
-            host=self.SERVER,
-            path=f"/{self.DB}",
+            host=self.HOST,
+            port=self.PORT,
+            database=self.DATABASE,
         )
 
 

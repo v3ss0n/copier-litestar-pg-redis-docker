@@ -33,15 +33,17 @@ postgres_ready() {
   python <<END
 import asyncio
 import sys
-from asyncpg import connect
-from app.config import db_settings
+from app.db import engine
+from sqlalchemy import text
 
 
 async def c():
     try:
-        await connect(dsn=db_settings.sync_database_uri)
-    except ConnectionRefusedError:
-        sys.exit(-1)
+      async with engine.begin() as conn:
+        await conn.execute(text("SELECT 1"))
+    except Exception as e:
+      print(f"Waiting for db: {e}")
+      sys.exit(-1)
 
 if __name__ == '__main__':
     asyncio.run(c())

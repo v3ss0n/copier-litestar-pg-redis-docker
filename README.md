@@ -22,7 +22,9 @@ Warning this example project is a WIP.
 - [x] Make repositories more helpful (raise NotFoundExceptions, return Pydantic Models etc)
 - [x] Document `RestartableUvicornWorker`.
 - [x] Expand tests
-- [ ] Run tests in clean database
+- [ ] Isolate tests from database
+- [x] Remove need for sync database uri and driver (entry script and migrations)
+- [x] Change to only require database uri in environment
 - [ ] Handle mismatch between url parameter id and payload id value
 - [ ] Add nested items routes
 
