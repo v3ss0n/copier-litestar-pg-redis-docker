@@ -1,72 +1,33 @@
 #!/bin/bash
 
-# Script run before gunicorn/arq is allowed to start
-# We make sure redis and postgres are ready, and we run migrations.
+# - validates Gunicorn config
+# - waits for Redis
+# - waits for PostgreSQL
+# - runs Alembic migrations
+# - starts Starlite application
+#
+# Note: redis-ready and pg-ready scripts defined in `app.utils`.
 
 set -o errexit
 set -o pipefail
 set -o nounset
 
-redis_ready() {
-    python << END
-import asyncio
-import sys
-
-from aioredis import Redis
-from app.config import cache_settings
-
-
-async def c():
-    try:
-        redis = Redis.from_url(cache_settings.URL)
-        await redis.ping()
-    except ConnectionError:
-        sys.exit(-1)
-
-
-if __name__ == '__main__':
-    asyncio.run(c())
-END
-}
-
-postgres_ready() {
-  python <<END
-import asyncio
-import sys
-from asyncpg import connect
-from app.config import db_settings
-
-
-async def c():
-    try:
-        await connect(dsn=db_settings.sync_database_uri)
-    except ConnectionRefusedError:
-        sys.exit(-1)
-
-if __name__ == '__main__':
-    asyncio.run(c())
-END
-}
-
-# Check Gunicorn config
+# Check Gunicorn Config
 gunicorn --check-config --config=gunicorn.conf.py app.main:app
-echo "Gunicorn config OK"
+echo "Gunicorn Config OK!"
 
-# Wait for Redis to be ready
-until redis_ready; do
-  >&2 echo "Waiting for Redis to become available..."
+# Wait for Redis
+until redis-ready; do
   sleep 5
 done
->&2 echo "Redis is available"
 
-# Wait for PostgreSQL to be ready
-until postgres_ready; do
-  echo >&2 "Waiting for PostgreSQL to become available..."
+# Wait for PostgreSQL
+until pg-ready; do
   sleep 5
 done
-echo >&2 "PostgreSQL is available"
 
-# Run migrations
+echo Running migrations...
 alembic upgrade head
 
+echo Starting Starlite App...
 gunicorn app.main:app

@@ -10,7 +10,7 @@ from starlite import Response
 
 from app.config import db_settings
 
-engine = create_async_engine(db_settings.async_database_uri)
+engine = create_async_engine(db_settings.URL)
 async_session_factory = sessionmaker(
     engine, class_=AsyncSession, expire_on_commit=False
 )

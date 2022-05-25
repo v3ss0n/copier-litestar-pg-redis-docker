@@ -1,4 +1,4 @@
-from pydantic import BaseSettings, PostgresDsn
+from pydantic import AnyUrl, BaseSettings, PostgresDsn
 
 
 class AppSettings(BaseSettings):
@@ -13,7 +13,7 @@ class CacheSettings(BaseSettings):
         env_prefix = "REDIS_"
         case_sensitive = True
 
-    URL: str
+    URL: AnyUrl
 
 
 class DatabaseSettings(BaseSettings):
@@ -21,52 +21,7 @@ class DatabaseSettings(BaseSettings):
         env_prefix = "POSTGRES_"
         case_sensitive = True
 
-    DB: str
-    PASSWORD: str
-    SERVER: str
-    USER: str
-
-    @property
-    def async_database_uri(self) -> PostgresDsn:
-        """
-        For async connections to db.
-
-            >>> db_conf = DatabaseSettings(DB="test", PASSWORD="password1!", SERVER="db.local", USER="elongated_muskrat")
-            >>> db_conf.async_database_uri
-            'postgresql+asyncpg://elongated_muskrat:password1!@db.local/test'
-
-        Returns
-        -------
-        PostgresDsn
-        """
-        return PostgresDsn.build(  # type:ignore[no-any-return]
-            scheme="postgresql+asyncpg",
-            user=self.USER,
-            password=self.PASSWORD,
-            host=self.SERVER,
-            path=f"/{self.DB}",
-        )
-
-    @property
-    def sync_database_uri(self) -> PostgresDsn:
-        """
-        For sync connections to db.
-
-            >>> db_conf = DatabaseSettings(DB="test", PASSWORD="password1!", SERVER="db.local", USER="elongated_muskrat")
-            >>> db_conf.sync_database_uri
-            'postgresql://elongated_muskrat:password1!@db.local/test'
-
-        Returns
-        -------
-        PostgresDsn
-        """
-        return PostgresDsn.build(  # type:ignore[no-any-return]
-            scheme="postgresql",
-            user=self.USER,
-            password=self.PASSWORD,
-            host=self.SERVER,
-            path=f"/{self.DB}",
-        )
+    URL: PostgresDsn
 
 
 class GunicornSettings(BaseSettings):
