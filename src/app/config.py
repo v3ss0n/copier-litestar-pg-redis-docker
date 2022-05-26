@@ -43,6 +43,14 @@ class GunicornSettings(BaseSettings):
     WORKER_CLASS: str
 
 
+# Constants
+class Paths:
+    HEALTH = "/health"
+    V1 = "/v1"
+    USERS = "/users"
+    ITEMS = "/users/{user_id:uuid}"
+
+
 app_settings = AppSettings()
 cache_settings = CacheSettings()
 db_settings = DatabaseSettings()

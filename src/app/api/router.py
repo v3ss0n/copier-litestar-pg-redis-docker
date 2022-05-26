@@ -1,5 +1,7 @@
 from starlite import Router
 
-from .controllers import UserController
+from app.config import Paths
 
-v1_router = Router(path="/v1", route_handlers=[UserController])
+from .users import user_router
+
+v1_router = Router(path=Paths.V1, route_handlers=[user_router])

@@ -27,8 +27,12 @@ Warning this example project is a WIP.
 - [x] Change to only require database uri in environment
 - [x] Cache sets URL via environment, DB URL is build inside app, make consistent.
 - [x] Register cache backend and use it on a route
-- [ ] Handle mismatch between url parameter id and payload id value
+- [x] Redis connection pool teardown
+- [ ] Handle mismatch between url parameter id and payload id value.. guards?
 - [ ] Add nested items routes
+- [ ] Debug the logging thing
+- [ ] Profile
+- [ ] Gunicorn logconfig ignore sqlalchemy.engine logs
 
 ### Post Fork
 Things to do to project after I fork off for internal use.

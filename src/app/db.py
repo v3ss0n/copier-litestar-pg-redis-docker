@@ -17,7 +17,7 @@ async_session_factory = sessionmaker(
 AsyncScopedSession = async_scoped_session(async_session_factory, scopefunc=current_task)
 
 
-async def dispose_engine() -> None:
+async def on_shutdown() -> None:
     """
     Passed to `Starlite.on_shutdown`.
     """

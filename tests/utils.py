@@ -3,6 +3,10 @@ from typing import Any
 
 from requests import Response
 
+from app.config import Paths
+
+USERS_PATH = f"{Paths.V1}{Paths.USERS}"
+
 
 def awaitable(return_value: Any) -> Coroutine[Any, Any, Any]:
     async def coro() -> Any:
