@@ -5,6 +5,8 @@ from app.config import Paths
 from app.models import UserCreateModel, UserModel, UserReadModel
 from app.repositories import UserRepository
 
+from .utils import CheckPayloadMismatch
+
 root_dependencies = {"repository": Provide(UserRepository)}
 
 
@@ -33,7 +35,7 @@ class UserDetailController(Controller):
     ) -> UserReadModel | None:
         return await repository.get_one(instance_id=user_id)
 
-    @put()
+    @put(guards=[CheckPayloadMismatch("id", "user_id").__call__])
     async def update_user(
         self, user_id: UUID4, data: UserModel, repository: UserRepository
     ) -> UserReadModel | None:

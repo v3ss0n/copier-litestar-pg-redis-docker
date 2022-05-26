@@ -28,7 +28,7 @@ Warning this example project is a WIP.
 - [x] Cache sets URL via environment, DB URL is build inside app, make consistent.
 - [x] Register cache backend and use it on a route
 - [x] Redis connection pool teardown
-- [ ] Handle mismatch between url parameter id and payload id value.. guards?
+- [x] Handle mismatch between url parameter id and payload id value.. guards?
 - [ ] Add nested items routes
 - [ ] Debug the logging thing
 - [ ] Profile
