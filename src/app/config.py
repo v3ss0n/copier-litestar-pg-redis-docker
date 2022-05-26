@@ -21,6 +21,7 @@ class DatabaseSettings(BaseSettings):
         env_prefix = "POSTGRES_"
         case_sensitive = True
 
+    ECHO: bool
     URL: PostgresDsn
 
 
