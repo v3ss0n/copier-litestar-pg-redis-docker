@@ -14,13 +14,13 @@ class UsersController(Controller):
     path = ""
 
     @post()
-    async def create_user(
+    async def post(
         self, data: UserCreateModel, repository: UserRepository
     ) -> UserReadModel:
         return await repository.create(data=data)
 
     @get()
-    async def list_users(
+    async def get(
         self, repository: UserRepository, offset: int = 0, limit: int = 100
     ) -> list[UserReadModel]:
         return await repository.get_many(offset=offset, limit=limit)
@@ -30,21 +30,19 @@ class UserDetailController(Controller):
     path = "{user_id:uuid}"
 
     @get(cache=True)
-    async def get_user(
+    async def get(
         self, user_id: UUID4, repository: UserRepository
     ) -> UserReadModel | None:
         return await repository.get_one(instance_id=user_id)
 
     @put(guards=[CheckPayloadMismatch("id", "user_id").__call__])
-    async def update_user(
+    async def put(
         self, user_id: UUID4, data: UserModel, repository: UserRepository
     ) -> UserReadModel | None:
         return await repository.partial_update(instance_id=user_id, data=data)
 
     @delete(status_code=200)
-    async def delete_user(
-        self, user_id: UUID4, repository: UserRepository
-    ) -> UserReadModel:
+    async def delete(self, user_id: UUID4, repository: UserRepository) -> UserReadModel:
         return await repository.delete(instance_id=user_id)
 
 

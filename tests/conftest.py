@@ -13,16 +13,12 @@ from .utils import awaitable
 
 
 @pytest.fixture
-def patch_repo_delete(monkeypatch: Any) -> None:
+def patch_repo_delete(monkeypatch: pytest.MonkeyPatch) -> None:
     """
     Patched `AbstractBaseRepository._delete()` method that simply returns the instance
     passed to it.
 
     Include this fixture when testing `DELETE` routes.
-
-    Parameters
-    ----------
-    monkeypatch : Any
     """
 
     def patch(_: Any, instance: Any) -> Any:
@@ -32,15 +28,11 @@ def patch_repo_delete(monkeypatch: Any) -> None:
 
 
 @pytest.fixture
-def patch_repo_add_flush_refresh(monkeypatch: Any) -> None:
+def patch_repo_add_flush_refresh(monkeypatch: pytest.MonkeyPatch) -> None:
     """
-    Patched `AbstractBaseRepository._add_flush_refresh()` method.
+    Patched `_add_flush_refresh()` method.
 
     Inject this fixture when testing `POST`, `PUT` and `PATCH` endpoints.
-
-    Parameters
-    ----------
-    monkeypatch : Any
     """
 
     def patch(_: Any, instance: Any) -> Any:
@@ -52,18 +44,56 @@ def patch_repo_add_flush_refresh(monkeypatch: Any) -> None:
 
 
 @pytest.fixture
-def patch_repo_scalar_404(monkeypatch: Any) -> None:
+def patch_repo_scalar_404(monkeypatch: pytest.MonkeyPatch) -> None:
     """
-    Patched `AbstractBaseRepository._scalar()` method.
+    Patched ``AbstractBaseRepository._scalar()`` method.
 
     Inject this fixture when testing resource detail routes that should return 404.
-
-    Parameters
-    ----------
-    monkeypatch : Any
     """
     monkeypatch.setattr(
         AbstractBaseRepository, "_scalar", MagicMock(return_value=awaitable(None))
+    )
+
+
+@pytest.fixture
+def patch_repo_scalar(request: Any, monkeypatch: Any) -> None:
+    """
+    Patch the ``AbstractBaseRepository._scalar()`` method.
+
+    The model returned by the patch must be supplied via parametrization, e.g.::
+
+        @pytest.mark.parametrize("patch_repo_scalar", ["db_model"], indirect=True)
+
+    In the above example ``"db_model"`` is a fixture that provides the return value of
+    the patch. The name of the fixture is passed as a string due to limitations within
+    ``pytest``, see `here <https://github.com/pytest-dev/pytest/issues/349>`_ for more
+    info.
+    """
+    monkeypatch.setattr(
+        AbstractBaseRepository,
+        "_scalar",
+        MagicMock(return_value=awaitable(request.getfixturevalue(request.param))),
+    )
+
+
+@pytest.fixture
+def patch_repo_scalars(request: Any, monkeypatch: Any) -> None:
+    """
+    Patch the ``AbstractBaseRepository._scalars()`` method to return ``db_users``.
+
+    The models returned by the patch must be supplied via parametrization, e.g.::
+
+        @pytest.mark.parametrize("patch_repo_scalars", ["db_models"], indirect=True)
+
+    In the above example ``"db_models"`` is a fixture that provides the return value of
+    the patch. The name of the fixture is passed as a string due to limitations within
+    ``pytest``, see `here <https://github.com/pytest-dev/pytest/issues/349>`_ for more
+    info.
+    """
+    monkeypatch.setattr(
+        AbstractBaseRepository,
+        "_scalars",
+        MagicMock(return_value=awaitable(request.getfixturevalue(request.param))),
     )
 
 

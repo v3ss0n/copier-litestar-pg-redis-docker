@@ -52,7 +52,7 @@ class ItemDetailController(Controller):
     @put(
         guards=[
             CheckPayloadMismatch("id", "item_id").__call__,
-            CheckPayloadMismatch("owner_id", "user_id"),
+            CheckPayloadMismatch("owner_id", "user_id").__call__,
         ]
     )
     async def put(
