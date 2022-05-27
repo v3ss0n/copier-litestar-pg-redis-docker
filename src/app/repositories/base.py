@@ -68,6 +68,7 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
 
     def __init__(self) -> None:
         self.session = AsyncScopedSession()
+        self.base_select = select(self.db_model)
 
     @catch_sqlalchemy_exception
     async def _execute(self, statement: Executable, **kwargs: Any) -> Result:
@@ -118,9 +119,7 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
         -------
         list[ReturnType]
         """
-        db_models = await self._scalars(
-            select(self.db_model).offset(offset).limit(limit)
-        )
+        db_models = await self._scalars(self.base_select.offset(offset).limit(limit))
         return [self.return_model.from_orm(inst) for inst in db_models]
 
     async def get_one(self, instance_id: UUID) -> ReturnType:
@@ -141,9 +140,7 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
             If no instance found with `instance_id`.
         """
         inst = self._check_not_found(
-            await self._scalar(
-                select(self.db_model).where(self.db_model.id == instance_id)
-            )
+            await self._scalar(self.base_select.where(self.db_model.id == instance_id))
         )
         return self.return_model.from_orm(inst)
 
@@ -211,9 +208,7 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
             https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html#preventing-implicit-io-when-using-asyncsession
         """
         instance = self._check_not_found(
-            await self._scalar(
-                select(self.db_model).where(self.db_model.id == instance_id)
-            )
+            await self._scalar(self.base_select.where(self.db_model.id == instance_id))
         )
         for key, value in data.dict().items():
             setattr(instance, key, value)
@@ -244,9 +239,7 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
         NotFoundException
         """
         instance = self._check_not_found(
-            await self._scalar(
-                select(self.db_model).where(self.db_model.id == instance_id)
-            )
+            await self._scalar(self.base_select.where(self.db_model.id == instance_id))
         )
         await self._delete(instance)
         return self.return_model.from_orm(instance)
