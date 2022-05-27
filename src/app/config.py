@@ -48,7 +48,7 @@ class Paths:
     HEALTH = "/health"
     V1 = "/v1"
     USERS = "/users"
-    ITEMS = "/users/{user_id:uuid}"
+    ITEMS = f"{USERS}/{{user_id:uuid}}/items"
 
 
 app_settings = AppSettings()
