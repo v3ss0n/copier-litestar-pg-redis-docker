@@ -31,6 +31,9 @@ plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=app -v --doctest-modules --doctest-glob=*.md"
+markers = [
+    "no_auto_patch_user",
+]
 
 [tool.poetry]
 name = "starlite-example-api"

@@ -10,14 +10,14 @@ from starlite import Response
 
 from app.config import db_settings
 
-engine = create_async_engine(db_settings.URL)
+engine = create_async_engine(db_settings.URL, echo=db_settings.ECHO)
 async_session_factory = sessionmaker(
     engine, class_=AsyncSession, expire_on_commit=False
 )
 AsyncScopedSession = async_scoped_session(async_session_factory, scopefunc=current_task)
 
 
-async def dispose_engine() -> None:
+async def on_shutdown() -> None:
     """
     Passed to `Starlite.on_shutdown`.
     """

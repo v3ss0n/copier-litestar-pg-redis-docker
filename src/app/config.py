@@ -21,6 +21,7 @@ class DatabaseSettings(BaseSettings):
         env_prefix = "POSTGRES_"
         case_sensitive = True
 
+    ECHO: bool
     URL: PostgresDsn
 
 
@@ -40,6 +41,14 @@ class GunicornSettings(BaseSettings):
     TIMEOUT: int
     WORKERS: int
     WORKER_CLASS: str
+
+
+# Constants
+class Paths:
+    HEALTH = "/health"
+    V1 = "/v1"
+    USERS = "/users"
+    ITEMS = f"{USERS}/{{user_id:uuid}}/items"
 
 
 app_settings = AppSettings()

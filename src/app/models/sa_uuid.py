@@ -21,7 +21,9 @@ class UUID(TypeDecorator):
             return None
         return str(value)
 
-    def process_result_value(self, value: Any, dialect: Any) -> uuid.UUID | None:
+    def process_result_value(
+        self, value: str | pg.UUID, dialect: Any
+    ) -> uuid.UUID | None:
         if value is None:
             return None
-        return uuid.UUID(value)
+        return uuid.UUID(str(value))

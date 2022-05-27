@@ -27,8 +27,16 @@ Warning this example project is a WIP.
 - [x] Change to only require database uri in environment
 - [x] Cache sets URL via environment, DB URL is build inside app, make consistent.
 - [x] Register cache backend and use it on a route
-- [ ] Handle mismatch between url parameter id and payload id value
-- [ ] Add nested items routes
+- [x] Redis connection pool teardown
+- [x] Handle mismatch between url parameter id and payload id value.. guards?
+- [x] Add nested items routes
+- [x] Test nested items routes
+- [ ] Consistent use of stdlib UUID everywhere
+- [ ] PATCH route handlers and supporting logic
+- [ ] Debug the logging thing
+- [ ] Profile
+- [ ] Profile alternate UUID implementation (https://github.com/MagicStack/py-pgproto/blob/a4178145cd7cc3a44eee20cfc9e8b94a7fed2053/uuid.pyx)
+- [ ] Gunicorn logconfig ignore sqlalchemy.engine logs
 
 ### Post Fork
 Things to do to project after I fork off for internal use.

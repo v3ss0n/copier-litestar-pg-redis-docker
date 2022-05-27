@@ -30,4 +30,8 @@ class RedisAsyncioBackend(CacheBackendProtocol):  # pragma: no cover
         return await redis.delete(key)  # type:ignore[return-value]
 
 
+async def on_shutdown() -> None:
+    await redis.close()
+
+
 config = CacheConfig(backend=RedisAsyncioBackend())
