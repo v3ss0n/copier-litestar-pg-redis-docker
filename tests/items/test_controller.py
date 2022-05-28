@@ -1,6 +1,6 @@
-import uuid
 from typing import Any
 from unittest.mock import ANY, MagicMock
+from uuid import UUID
 
 import pytest
 from starlette import status
@@ -29,7 +29,7 @@ def test_404_if_user_not_exists(
 
 @pytest.mark.parametrize("patch_repo_scalars", ["db_items"], indirect=True)
 def test_get_items(
-    user_id: uuid.UUID,
+    user_id: UUID,
     db_items: list[models.Item],
     user_items_path: str,
     test_client: TestClient,
@@ -46,7 +46,7 @@ def test_get_items(
 
 def test_post_item(
     unstructured_item: dict[str, Any],
-    user_id: uuid.UUID,
+    user_id: UUID,
     user_items_path: str,
     test_client: TestClient,
     patch_repo_add_flush_refresh: None,

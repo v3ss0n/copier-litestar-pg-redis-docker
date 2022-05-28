@@ -1,5 +1,5 @@
-import uuid
 from typing import Any
+from uuid import UUID, uuid4
 
 import pytest
 
@@ -8,12 +8,12 @@ from tests.utils import USER_ITEMS_PATH
 
 
 @pytest.fixture
-def user_id() -> uuid.UUID:
-    return uuid.uuid4()
+def user_id() -> UUID:
+    return uuid4()
 
 
 @pytest.fixture
-def user(user_id: uuid.UUID) -> models.User:
+def user(user_id: UUID) -> models.User:
     return models.User(
         id=user_id,
         username="Item Owner",
@@ -22,10 +22,10 @@ def user(user_id: uuid.UUID) -> models.User:
 
 
 @pytest.fixture
-def unstructured_items(user_id: uuid.UUID) -> list[dict[str, Any]]:
+def unstructured_items(user_id: UUID) -> list[dict[str, Any]]:
     return [
-        {"id": str(uuid.uuid4()), "name": "item 1", "owner_id": str(user_id)},
-        {"id": str(uuid.uuid4()), "name": "item 2", "owner_id": str(user_id)},
+        {"id": str(uuid4()), "name": "item 1", "owner_id": str(user_id)},
+        {"id": str(uuid4()), "name": "item 2", "owner_id": str(user_id)},
     ]
 
 
@@ -61,7 +61,7 @@ def patch_user_dependency(
 
 
 @pytest.fixture
-def user_items_path(user_id: uuid.UUID) -> str:
+def user_items_path(user_id: UUID) -> str:
     return USER_ITEMS_PATH.format(user_id)
 
 

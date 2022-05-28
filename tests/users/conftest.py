@@ -1,5 +1,5 @@
-import uuid
 from typing import Any
+from uuid import uuid4
 
 import pytest
 
@@ -11,13 +11,13 @@ from tests.utils import USERS_PATH
 def unstructured_users() -> list[dict[str, Any]]:
     return [
         {
-            "id": str(uuid.uuid4()),
+            "id": str(uuid4()),
             "username": "A User",
             "is_active": True,
             "password": "abc123",
         },
         {
-            "id": str(uuid.uuid4()),
+            "id": str(uuid4()),
             "username": "B User",
             "is_active": False,
             "password": "123abc",

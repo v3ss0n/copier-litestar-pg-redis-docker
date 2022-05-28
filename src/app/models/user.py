@@ -1,5 +1,5 @@
-import uuid
 from typing import Any
+from uuid import UUID
 
 from sqlalchemy import Boolean, Column, String
 
@@ -67,9 +67,10 @@ class UserReadModel(UserModel):
     """
     Model for outbound representations of `User` instances.
 
+        >>> import uuid
         >>> user = User(id=uuid.uuid4(), username="Rick Sanchez", is_active=True)
         >>> UserReadModel.from_orm(user)  # doctest: +ELLIPSIS
         UserReadModel(username='Rick Sanchez', is_active=True, id=UUID('...'))
     """
 
-    id: uuid.UUID
+    id: UUID

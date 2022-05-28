@@ -1,6 +1,6 @@
-import uuid
 from typing import Any
 from unittest.mock import MagicMock
+from uuid import uuid4
 
 import pytest
 from starlite import CacheConfig, Starlite, TestClient
@@ -37,7 +37,8 @@ def patch_repo_add_flush_refresh(monkeypatch: pytest.MonkeyPatch) -> None:
 
     def patch(_: Any, instance: Any) -> Any:
         if instance.id is None:
-            instance.id = uuid.uuid4()
+            # sqlalchemy would normally give us this
+            instance.id = uuid4()
         return awaitable(instance)
 
     monkeypatch.setattr(AbstractBaseRepository, "_add_flush_refresh", patch)

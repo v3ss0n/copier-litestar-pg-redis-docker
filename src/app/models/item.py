@@ -1,15 +1,15 @@
-import uuid
+from uuid import UUID
 
 from sqlalchemy import Column, ForeignKey, String
 
 from .base import Base, BaseModel
 from .mixins import DateFieldsMixins
-from .sa_uuid import UUID
+from .pg_uuid import PostgresUUID
 
 
 class Item(DateFieldsMixins, Base):
     name: str = Column(String(64), nullable=False)
-    owner_id: uuid.UUID = Column(UUID(as_uuid=True), ForeignKey("user.id"))
+    owner_id: UUID = Column(PostgresUUID(as_uuid=True), ForeignKey("user.id"))
 
 
 class ItemCreateModel(BaseModel):
@@ -17,6 +17,6 @@ class ItemCreateModel(BaseModel):
 
 
 class ItemModel(BaseModel):
-    id: uuid.UUID
+    id: UUID
     name: str
-    owner_id: uuid.UUID
+    owner_id: UUID
