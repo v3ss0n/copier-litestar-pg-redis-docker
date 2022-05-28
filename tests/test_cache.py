@@ -1,6 +1,6 @@
-import uuid
 from typing import Any
 from unittest.mock import MagicMock
+from uuid import uuid4
 
 from starlite import TestClient
 
@@ -11,7 +11,7 @@ from .utils import USERS_PATH, awaitable, check_response
 
 
 def test_cached_route(test_client: TestClient, monkeypatch: Any) -> None:
-    id_ = uuid.uuid4()
+    id_ = uuid4()
     user = UserReadModel(username="testing", is_active=True, id=id_)
     get_one_mock = MagicMock(return_value=awaitable(user))
     monkeypatch.setattr(users.UserRepository, "get_one", get_one_mock)

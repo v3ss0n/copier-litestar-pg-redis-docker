@@ -31,6 +31,9 @@ class RedisAsyncioBackend(CacheBackendProtocol):  # pragma: no cover
 
 
 async def on_shutdown() -> None:
+    """
+    Passed to `Starlite.on_shutdown`.
+    """
     await redis.close()
 
 

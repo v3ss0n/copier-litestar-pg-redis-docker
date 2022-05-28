@@ -1,4 +1,5 @@
-from pydantic import UUID4
+from uuid import UUID
+
 from starlite import Controller, Provide, Router, delete, get, post, put
 
 from app.config import Paths
@@ -31,18 +32,18 @@ class UserDetailController(Controller):
 
     @get(cache=True)
     async def get(
-        self, user_id: UUID4, repository: UserRepository
+        self, user_id: UUID, repository: UserRepository
     ) -> UserReadModel | None:
         return await repository.get_one(instance_id=user_id)
 
     @put(guards=[CheckPayloadMismatch("id", "user_id").__call__])
     async def put(
-        self, user_id: UUID4, data: UserModel, repository: UserRepository
+        self, user_id: UUID, data: UserModel, repository: UserRepository
     ) -> UserReadModel | None:
         return await repository.partial_update(instance_id=user_id, data=data)
 
     @delete(status_code=200)
-    async def delete(self, user_id: UUID4, repository: UserRepository) -> UserReadModel:
+    async def delete(self, user_id: UUID, repository: UserRepository) -> UserReadModel:
         return await repository.delete(instance_id=user_id)
 
 

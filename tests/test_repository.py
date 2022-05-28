@@ -1,6 +1,6 @@
-import uuid
 from typing import Any
 from unittest.mock import MagicMock
+from uuid import uuid4
 
 from sqlalchemy.exc import SQLAlchemyError
 from starlette import status
@@ -16,6 +16,6 @@ def test_sqlalchemy_error_wrapped(test_client: TestClient, monkeypatch: Any) -> 
         AbstractBaseRepository, "_execute", MagicMock(side_effect=SQLAlchemyError)
     )
     with test_client as client:
-        response = client.get(f"{USERS_PATH}/{uuid.uuid4()}")
+        response = client.get(f"{USERS_PATH}/{uuid4()}")
         check_response(response, status.HTTP_500_INTERNAL_SERVER_ERROR)
         assert "app.exceptions.RepositoryException" in response.text

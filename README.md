@@ -31,9 +31,7 @@ Warning this example project is a WIP.
 - [x] Handle mismatch between url parameter id and payload id value.. guards?
 - [x] Add nested items routes
 - [x] Test nested items routes
-- [ ] Consistent use of stdlib UUID everywhere
-- [ ] PATCH route handlers and supporting logic
-- [ ] Debug the logging thing
+- [x] Consistent use of stdlib UUID everywhere
 - [ ] Profile
 - [ ] Profile alternate UUID implementation (https://github.com/MagicStack/py-pgproto/blob/a4178145cd7cc3a44eee20cfc9e8b94a7fed2053/uuid.pyx)
 - [ ] Gunicorn logconfig ignore sqlalchemy.engine logs
