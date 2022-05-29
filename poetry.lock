@@ -181,7 +181,7 @@ python-versions = "*"
 
 [[package]]
 name = "faker"
-version = "13.11.1"
+version = "13.12.0"
 description = "Faker is a Python package that generates fake data for you."
 category = "main"
 optional = false
@@ -444,7 +444,7 @@ email = ["email-validator (>=1.0.3)"]
 
 [[package]]
 name = "pydantic-factories"
-version = "1.2.9"
+version = "1.3.0"
 description = "Mock data generation for pydantic based models"
 category = "main"
 optional = false
@@ -648,7 +648,7 @@ typing-extensions = ">=3.7.4"
 
 [[package]]
 name = "starlette"
-version = "0.20.0"
+version = "0.20.1"
 description = "The little ASGI library that shines."
 category = "main"
 optional = false
@@ -662,7 +662,7 @@ full = ["itsdangerous", "jinja2", "python-multipart", "pyyaml", "requests"]
 
 [[package]]
 name = "starlite"
-version = "1.3.4"
+version = "1.3.7"
 description = "Light-weight and flexible ASGI API Framework"
 category = "main"
 optional = false
@@ -697,7 +697,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-redis"
-version = "4.2.5"
+version = "4.2.6"
 description = "Typing stubs for redis"
 category = "dev"
 optional = false
@@ -705,7 +705,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-requests"
-version = "2.27.27"
+version = "2.27.29"
 description = "Typing stubs for requests"
 category = "dev"
 optional = false
@@ -716,7 +716,7 @@ types-urllib3 = "<1.27"
 
 [[package]]
 name = "types-urllib3"
-version = "1.26.14"
+version = "1.26.15"
 description = "Typing stubs for urllib3"
 category = "dev"
 optional = false
@@ -956,8 +956,8 @@ exrex = [
     {file = "exrex-0.10.5.tar.gz", hash = "sha256:3fb8b18fd9832eaff8b13dc042a4f63b13c5d684ee069f70a23ddfc6bcb708f3"},
 ]
 faker = [
-    {file = "Faker-13.11.1-py3-none-any.whl", hash = "sha256:c6ff91847d7c820afc0a74d95e824b48aab71ddfd9003f300641e42d58ae886f"},
-    {file = "Faker-13.11.1.tar.gz", hash = "sha256:cad1f69d72a68878cd67855140b6fe3e44c11628971cd838595d289c98bc45de"},
+    {file = "Faker-13.12.0-py3-none-any.whl", hash = "sha256:5cbb89fc6a16793b2bd98252c03a86098c7426beab0a20382709a815651b8804"},
+    {file = "Faker-13.12.0.tar.gz", hash = "sha256:1f6478011ac8a8273e0f9cd6da03d9ea6391c622db340eca015339512e9cde29"},
 ]
 flake8 = [
     {file = "flake8-4.0.1-py2.py3-none-any.whl", hash = "sha256:479b1304f72536a55948cb40a32dce8bb0ffe3501e26eaf292c7e60eb5e0428d"},
@@ -1259,8 +1259,8 @@ pydantic = [
     {file = "pydantic-1.9.1.tar.gz", hash = "sha256:1ed987c3ff29fff7fd8c3ea3a3ea877ad310aae2ef9889a119e22d3f2db0691a"},
 ]
 pydantic-factories = [
-    {file = "pydantic-factories-1.2.9.tar.gz", hash = "sha256:8f2be46059aac1420fde12045ba2289c4770402d3d11359dfc13852f21ff1176"},
-    {file = "pydantic_factories-1.2.9-py3-none-any.whl", hash = "sha256:6fa3130bca2e484c5492163bfb0ebe0766e520ab4360c48cfbc4c8fb70f53215"},
+    {file = "pydantic-factories-1.3.0.tar.gz", hash = "sha256:28c92e97bb3b27e79e4c6e1da23551fad68cbc5819c5c321993924abd51c11d3"},
+    {file = "pydantic_factories-1.3.0-py3-none-any.whl", hash = "sha256:5ed01fa60658fa00bef6bd3a85217870c693c04f9b2cb968bd7b3d7d36247415"},
 ]
 pyflakes = [
     {file = "pyflakes-2.4.0-py2.py3-none-any.whl", hash = "sha256:3bb3a3f256f4b7968c9c788781e4ff07dce46bdf12339dcda61053375426ee2e"},
@@ -1383,12 +1383,12 @@ sqlalchemy2-stubs = [
     {file = "sqlalchemy2_stubs-0.0.2a22-py3-none-any.whl", hash = "sha256:b9b907c3555d0b11bb8d738b788be478ce3871174839171d0d49aba5d0785016"},
 ]
 starlette = [
-    {file = "starlette-0.20.0-py3-none-any.whl", hash = "sha256:006a726e2398dc0c88c41b1810f66669932ada3ac8539e4ad6a981fde791343b"},
-    {file = "starlette-0.20.0.tar.gz", hash = "sha256:a500c40aba9b7729e396b0b3e4cd37fdbafbd859983a9b60a64359957024d912"},
+    {file = "starlette-0.20.1-py3-none-any.whl", hash = "sha256:4fe6f005ac9cd973ca885c3679c8d991fde7d2ea4f27b2318b79a6673c3b70af"},
+    {file = "starlette-0.20.1.tar.gz", hash = "sha256:dd8227083df6c70ae238324e9270a33d373da38e3933f6b162933f5a16bd28ea"},
 ]
 starlite = [
-    {file = "starlite-1.3.4-py3-none-any.whl", hash = "sha256:6359fb5c58a2c3ad8f1a61c432027dff018d69d8cded3e21f2572aeb8d5bbc01"},
-    {file = "starlite-1.3.4.tar.gz", hash = "sha256:38f61bee08f93af172f0f5aa67b9186473f65c621b65e83d0f54825df7a5f156"},
+    {file = "starlite-1.3.7-py3-none-any.whl", hash = "sha256:db55a9ad58e3c54797d9f40cbfda96c3b307222b057d52391143324c95686271"},
+    {file = "starlite-1.3.7.tar.gz", hash = "sha256:a9a4f7fbac16721a484a2ca9e8e94d156683163b2f3323f09b6ff80140636458"},
 ]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
@@ -1399,16 +1399,16 @@ types-passlib = [
     {file = "types_passlib-1.7.5-py3-none-any.whl", hash = "sha256:8366c5e31bbff65c0a6d1a0f10e84fba567797680c643b485b072691bc0908db"},
 ]
 types-redis = [
-    {file = "types-redis-4.2.5.tar.gz", hash = "sha256:88f04d99f20c20c3d0129c37601f9e70c01b71f1faef473766cfa3dddbd5e5d5"},
-    {file = "types_redis-4.2.5-py3-none-any.whl", hash = "sha256:c0123db52d9b1a887cd3c7bc0d9cb03893dc3873969ffc55a99c9a9ad9d32a79"},
+    {file = "types-redis-4.2.6.tar.gz", hash = "sha256:d6adc77185cf40b300816767a64c0ee9ee0b21dc174e8e5c23b7e83d43189cb8"},
+    {file = "types_redis-4.2.6-py3-none-any.whl", hash = "sha256:1136af954ade0be33b487f440c8cbcbee29f089a83e685484ec91f363c6c69fe"},
 ]
 types-requests = [
-    {file = "types-requests-2.27.27.tar.gz", hash = "sha256:d618d9809fa32f514cf17cea8460814da671c56366fb1c908accca8bf183112b"},
-    {file = "types_requests-2.27.27-py3-none-any.whl", hash = "sha256:6d8463ffe1f6edcf2e5361740a6140e7a16d427c267d83c7c1d3d1298f4e67c5"},
+    {file = "types-requests-2.27.29.tar.gz", hash = "sha256:fb453b3a76a48eca66381cea8004feaaea12835e838196f5c7ac87c75c5c19ef"},
+    {file = "types_requests-2.27.29-py3-none-any.whl", hash = "sha256:014f4f82db7b96c41feea9adaea30e68cd64c230eeab34b70c29bebb26ec74ac"},
 ]
 types-urllib3 = [
-    {file = "types-urllib3-1.26.14.tar.gz", hash = "sha256:2a2578e4b36341ccd240b00fccda9826988ff0589a44ba4a664bbd69ef348d27"},
-    {file = "types_urllib3-1.26.14-py3-none-any.whl", hash = "sha256:5d2388aa76395b1e3999ff789ea5b3283677dad8e9bcf3d9117ba19271fd35d9"},
+    {file = "types-urllib3-1.26.15.tar.gz", hash = "sha256:c89283541ef92e344b7f59f83ea9b5a295b16366ceee3f25ecfc5593c79f794e"},
+    {file = "types_urllib3-1.26.15-py3-none-any.whl", hash = "sha256:6011befa13f901fc934f59bb1fd6973be6f3acf4ebfce427593a27e7f492918f"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.2.0-py3-none-any.whl", hash = "sha256:6657594ee297170d19f67d55c05852a874e7eb634f4f753dbd667855e07c1708"},

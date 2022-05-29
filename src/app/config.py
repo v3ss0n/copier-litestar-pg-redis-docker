@@ -1,4 +1,5 @@
 from pydantic import AnyUrl, BaseSettings, PostgresDsn
+from starlite import LoggingConfig
 
 
 class AppSettings(BaseSettings):
@@ -56,3 +57,9 @@ app_settings = AppSettings()
 cache_settings = CacheSettings()
 db_settings = DatabaseSettings()
 gunicorn_settings = GunicornSettings()
+
+log_config = LoggingConfig(
+    loggers={
+        "app": {"level": "INFO", "handlers": ["queue_listener"], "propagate": False}
+    }
+)

@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from uuid import UUID
 
@@ -9,6 +10,8 @@ from app.repositories import UserRepository
 
 from .utils import CheckPayloadMismatch, Parameters
 
+logger = logging.getLogger(__name__)
+
 router_dependencies = {"repository": Provide(UserRepository)}
 
 
@@ -19,7 +22,9 @@ class UsersController(Controller):
     async def post(
         self, data: UserCreateModel, repository: UserRepository
     ) -> UserReadModel:
-        return await repository.create(data=data)
+        created_user = await repository.create(data=data)
+        logger.info("New User: %s", created_user)
+        return created_user
 
     @get()
     async def get(

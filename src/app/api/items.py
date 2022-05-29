@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from uuid import UUID
 
@@ -8,6 +9,8 @@ from app.models import ItemCreateModel, ItemModel, UserReadModel
 from app.repositories import ItemRepository, UserRepository
 
 from .utils import CheckPayloadMismatch, Parameters
+
+logger = logging.getLogger(__name__)
 
 
 async def get_user(user_id: UUID, user_repository: UserRepository) -> UserReadModel:
@@ -28,7 +31,9 @@ class ItemsController(Controller):
     async def post(
         self, user: UserReadModel, data: ItemCreateModel, repository: ItemRepository
     ) -> ItemModel:
-        return await repository.create_for_user(user=user, data=data)
+        created_item = await repository.create_for_user(user=user, data=data)
+        logger.info("New Item: %s", created_item)
+        return created_item
 
     @get()
     async def get(
