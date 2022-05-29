@@ -1,11 +1,13 @@
+from datetime import datetime
 from typing import Any
-from unittest.mock import ANY
+from unittest.mock import ANY, MagicMock
 
 import pytest
 from starlette import status
 from starlite import TestClient
 
-from app import models
+from app import models, repositories
+from app.config import app_settings
 from tests.utils import USERS_PATH, check_response
 
 
@@ -22,6 +24,101 @@ def test_get_users(
     db_ids = {str(user.id) for user in db_users}
     for user in response.json():
         assert user["id"] in db_ids
+
+
+@pytest.mark.parametrize(
+    "params, call_kwargs",
+    [
+        ({}, {"before": None, "after": None}),
+        (
+            {"updated-before": str(datetime.max)},
+            {"before": datetime.max, "after": None},
+        ),
+        ({"updated-after": str(datetime.min)}, {"before": None, "after": datetime.min}),
+        (
+            {"updated-before": str(datetime.max), "updated-after": str(datetime.min)},
+            {"before": datetime.max, "after": datetime.min},
+        ),
+    ],
+)
+@pytest.mark.parametrize("patch_repo_scalars", ["db_users"], indirect=True)
+def test_get_users_filter_by_updated(
+    params: dict[str, str],
+    call_kwargs: Any,
+    users_path: str,
+    test_client: TestClient,
+    patch_repo_scalars: None,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _filter_select_by_updated_mock = MagicMock()
+    monkeypatch.setattr(
+        repositories.UserRepository,
+        "_filter_select_by_updated",
+        _filter_select_by_updated_mock,
+    )
+    with test_client as client:
+        response = client.get(users_path, params=params)
+    check_response(response, status.HTTP_200_OK)
+    _filter_select_by_updated_mock.assert_called_once_with(**call_kwargs)
+
+
+@pytest.mark.parametrize(
+    "params, call_kwargs",
+    [
+        ({}, {"limit": app_settings.DEFAULT_PAGINATION_LIMIT, "offset": 0}),
+        ({"page": 11}, {"limit": 100, "offset": 10}),
+        ({"page-size": 11}, {"limit": 11, "offset": 0}),
+        ({"page": 11, "page-size": 11}, {"limit": 11, "offset": 10}),
+    ],
+)
+@pytest.mark.parametrize("patch_repo_scalars", ["db_users"], indirect=True)
+def test_get_users_pagination(
+    params: dict[str, str],
+    call_kwargs: Any,
+    users_path: str,
+    test_client: TestClient,
+    patch_repo_scalars: None,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _paginate_select_mock = MagicMock()
+    monkeypatch.setattr(
+        repositories.UserRepository,
+        "_paginate_select",
+        _paginate_select_mock,
+    )
+    with test_client as client:
+        response = client.get(users_path, params=params)
+    check_response(response, status.HTTP_200_OK)
+    _paginate_select_mock.assert_called_once_with(**call_kwargs)
+
+
+@pytest.mark.parametrize(
+    "params, call_arg",
+    [
+        ({}, {"is_active": True}),
+        ({"is-active": True}, {"is_active": True}),
+        ({"is-active": False}, {"is_active": False}),
+    ],
+)
+@pytest.mark.parametrize("patch_repo_scalars", ["db_users"], indirect=True)
+def test_get_users_filter_by_is_active(
+    params: dict[str, str],
+    call_arg: Any,
+    users_path: str,
+    test_client: TestClient,
+    patch_repo_scalars: None,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _filter_select_by_kwargs_mock = MagicMock()
+    monkeypatch.setattr(
+        repositories.UserRepository,
+        "_filter_select_by_kwargs",
+        _filter_select_by_kwargs_mock,
+    )
+    with test_client as client:
+        response = client.get(users_path, params=params)
+    check_response(response, status.HTTP_200_OK)
+    _filter_select_by_kwargs_mock.assert_called_once_with(call_arg)
 
 
 @pytest.mark.parametrize("patch_repo_scalar", ["db_user"], indirect=True)

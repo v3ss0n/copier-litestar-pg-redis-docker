@@ -1,5 +1,6 @@
 import functools
 from abc import ABC
+from datetime import datetime
 from typing import Any, Generic, TypeVar
 from uuid import UUID
 
@@ -104,7 +105,64 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
             raise NotFoundException
         return instance_or_none
 
-    async def get_many(self, *, offset: int = 0, limit: int = 100) -> list[ReturnType]:
+    def _paginate_select(self, limit: int, offset: int) -> None:
+        """
+        Paginate the base select query.
+
+        Parameters
+        ----------
+        limit : int
+            LIMIT to apply to select.
+        offset : int
+            OFFSET to apply to select.
+        """
+        self.base_select = self.base_select.limit(limit).offset(offset)
+
+    def _filter_select_by_updated(
+        self, before: datetime | None, after: datetime | None
+    ) -> None:
+        """
+        Add where-clause(s) to the query.
+
+        Parameters
+        ----------
+        before : datetime
+            Filter for records updated before this date/time.
+        after : datetime
+            Filter for records updated after this date/time.
+        """
+        if before is not None:
+            self.base_select = self.base_select.where(
+                self.db_model.updated_date < before
+            )
+        if after is not None:
+            self.base_select = self.base_select.where(
+                self.db_model.updated_date > after
+            )
+
+    def _filter_select_by_kwargs(self, kwargs: dict[str, Any]) -> None:
+        """
+        Add where-clause(s) to the query.
+
+        Parameters
+        ----------
+        kwargs : dict[str, Any]
+            Keys must be names of attributes on ``self.db_model`` and values are tested
+            on equality.
+        """
+        self.base_select = self.base_select.where(
+            *(getattr(self.db_model, key) == value for key, value in kwargs.items())
+        )
+
+    async def get_many(
+        self,
+        *,
+        offset: int,
+        limit: int,
+        updated_before: datetime | None,
+        updated_after: datetime | None,
+        **kwargs: Any,
+    ) -> list[ReturnType]:
         """
         A list of `ReturnType` instances.
 
@@ -114,12 +172,21 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
             For limit/offset pagination.
         limit : int
             For limit/offset pagination.
+        updated_before : datetime
+            Return only records that have been updated after `datetime`.
+        updated_after : datetime
+            Return only records that have been updated before `datetime`.
+        **kwargs : any
+            each key/value pair added to where-clause of query as ``<key> == <value>``.
 
         Returns
         -------
         list[ReturnType]
         """
-        db_models = await self._scalars(self.base_select.offset(offset).limit(limit))
+        self._filter_select_by_updated(before=updated_before, after=updated_after)
+        self._filter_select_by_kwargs(kwargs)
+        self._paginate_select(limit=limit, offset=offset)
+        db_models = await self._scalars(self.base_select)
         return [self.return_model.from_orm(inst) for inst in db_models]
 
     async def get_one(self, instance_id: UUID) -> ReturnType:
