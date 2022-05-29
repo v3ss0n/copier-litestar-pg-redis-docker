@@ -6,6 +6,7 @@ class AppSettings(BaseSettings):
         case_sensitive = True
 
     DEBUG: bool
+    DEFAULT_PAGINATION_LIMIT: int
 
 
 class CacheSettings(BaseSettings):

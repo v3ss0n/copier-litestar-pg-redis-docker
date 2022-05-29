@@ -1,7 +1,8 @@
+from datetime import datetime
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel as _BaseModel
-from sqlalchemy import Column
+from sqlalchemy import Column, DateTime
 from sqlalchemy.orm.decl_api import as_declarative, declared_attr
 
 from .pg_uuid import PostgresUUID
@@ -18,6 +19,8 @@ class Base:
         return cls.__name__.lower()
 
     id: UUID = Column(PostgresUUID, default=uuid4, primary_key=True)
+    created_date: datetime = Column(DateTime, default=datetime.now, nullable=False)
+    updated_date: datetime = Column(DateTime, default=datetime.now, nullable=False)
 
 
 class BaseModel(_BaseModel):

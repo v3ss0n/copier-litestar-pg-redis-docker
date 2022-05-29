@@ -6,10 +6,9 @@ from sqlalchemy import Boolean, Column, String
 from app.utils.security import get_password_hash
 
 from .base import Base, BaseModel
-from .mixins import DateFieldsMixins
 
 
-class User(DateFieldsMixins, Base):
+class User(Base):
     username = Column(String(64), nullable=False)
     is_active = Column(Boolean, nullable=False)
     hashed_password = Column(String(256), nullable=False)

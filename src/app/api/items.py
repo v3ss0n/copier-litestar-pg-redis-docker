@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 
 from starlite import Controller, Provide, Router, delete, get, post, put
@@ -6,7 +7,7 @@ from app.config import Paths
 from app.models import ItemCreateModel, ItemModel, UserReadModel
 from app.repositories import ItemRepository, UserRepository
 
-from .utils import CheckPayloadMismatch
+from .utils import CheckPayloadMismatch, Parameters
 
 
 async def get_user(user_id: UUID, user_repository: UserRepository) -> UserReadModel:
@@ -34,10 +35,18 @@ class ItemsController(Controller):
         self,
         user: UserReadModel,
         repository: ItemRepository,
-        offset: int = 0,
-        limit: int = 100,
+        page: int = Parameters.page,
+        page_size: int = Parameters.page_size,
+        updated_before: datetime | None = Parameters.updated_before,
+        updated_after: datetime | None = Parameters.updated_after,
     ) -> list[ItemModel]:
-        return await repository.get_many_for_user(user=user, offset=offset, limit=limit)
+        return await repository.get_many_for_user(
+            user=user,
+            offset=page - 1,
+            limit=page_size,
+            updated_before=updated_before,
+            updated_after=updated_after,
+        )
 
 
 class ItemDetailController(Controller):

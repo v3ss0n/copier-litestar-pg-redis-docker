@@ -1,7 +1,21 @@
 from collections import abc
 from typing import Any
 
-from starlite import BaseRouteHandler, NotAuthorizedException, Request
+from starlite import BaseRouteHandler, NotAuthorizedException, Parameter, Request
+
+from app.config import app_settings
+
+
+class Parameters:
+    page = Parameter(ge=1, default=1, required=False)
+    page_size = Parameter(
+        query="page-size",
+        ge=1,
+        default=app_settings.DEFAULT_PAGINATION_LIMIT,
+        required=False,
+    )
+    updated_before = Parameter(query="updated-before", default=None, required=False)
+    updated_after = Parameter(query="updated-after", default=None, required=False)
 
 
 class CheckPayloadMismatch:

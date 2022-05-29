@@ -2,44 +2,15 @@
 
 # backend-starlite-postgres
 
-Warning this example project is a WIP.
+A WIP Starlite API Implementation.
 
 ## TODO
-- [x] Audit config files, include in pyproject.toml if possible and ensure no unnecessary config included
-- [x] Change .env to .env.example and add .env to .gitignore
-- [x] Add .dockerignore
-- [x] Make all environment variables non optional and include in .env.example
-- [x] Usage documentation in README
-- [x] Pydantic settings for gunicorn for consistency and simplify
-- [x] Add dev deps
-- [x] Create test runner script
-- [x] Add src/ directory
-- [x] Use gunicorn in entry script
-- [x] Make app installable
-- [x] Fix runtime errors
-- [x] Make the database session commit scope outside of request handling scope
-- [x] Documentation
-- [x] Make repositories more helpful (raise NotFoundExceptions, return Pydantic Models etc)
-- [x] Document `RestartableUvicornWorker`.
-- [x] Expand tests
-- [x] Isolate tests from database
-- [x] Remove need for sync database uri and driver (entry script and migrations)
-- [x] Change to only require database uri in environment
-- [x] Cache sets URL via environment, DB URL is build inside app, make consistent.
-- [x] Register cache backend and use it on a route
-- [x] Redis connection pool teardown
-- [x] Handle mismatch between url parameter id and payload id value.. guards?
-- [x] Add nested items routes
-- [x] Test nested items routes
-- [x] Consistent use of stdlib UUID everywhere
+
+- [ ] Header/cookie parameter example.
+- [ ] CI?
 - [ ] Profile
 - [ ] Profile alternate UUID implementation (https://github.com/MagicStack/py-pgproto/blob/a4178145cd7cc3a44eee20cfc9e8b94a7fed2053/uuid.pyx)
 - [ ] Gunicorn logconfig ignore sqlalchemy.engine logs
-
-### Post Fork
-Things to do to project after I fork off for internal use.
-
-- [ ] CI?
 - [ ] explicitly include any dirs/files into docker and remove .dockerignore
 - [ ] add pre-commit (I'll just make as equivalent as possible to the original pre-commit config in this project)
 - [ ] configure pyupgrade for only --py310-plus
@@ -48,6 +19,7 @@ Things to do to project after I fork off for internal use.
 - [ ] map docker ports to service defaults
 - [ ] add pylint into tooling
 - [ ] black and isort settings as per original
+- [ ] websocket example project with simple front end???
 
 ## Starlite
 
