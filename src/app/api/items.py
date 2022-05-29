@@ -14,7 +14,7 @@ async def get_user(user_id: UUID, user_repository: UserRepository) -> UserReadMo
     return await user_repository.get_one(user_id)
 
 
-root_dependencies = {
+router_dependencies = {
     "repository": Provide(ItemRepository),
     "user_repository": Provide(UserRepository),
     "user": Provide(get_user),
@@ -85,5 +85,5 @@ class ItemDetailController(Controller):
 item_router = Router(
     path=Paths.ITEMS,
     route_handlers=[ItemsController, ItemDetailController],
-    dependencies=root_dependencies,
+    dependencies=router_dependencies,
 )

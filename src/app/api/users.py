@@ -9,7 +9,7 @@ from app.repositories import UserRepository
 
 from .utils import CheckPayloadMismatch, Parameters
 
-root_dependencies = {"repository": Provide(UserRepository)}
+router_dependencies = {"repository": Provide(UserRepository)}
 
 
 class UsersController(Controller):
@@ -63,5 +63,5 @@ class UserDetailController(Controller):
 user_router = Router(
     path=Paths.USERS,
     route_handlers=[UsersController, UserDetailController],
-    dependencies=root_dependencies,
+    dependencies=router_dependencies,
 )
