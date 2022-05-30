@@ -5,7 +5,7 @@ from pydantic import BaseModel as _BaseModel
 from sqlalchemy import Column, DateTime
 from sqlalchemy.orm.decl_api import as_declarative, declared_attr
 
-from .pg_uuid import PostgresUUID
+from app.utils.pg_uuid import PostgresUUID
 
 
 @as_declarative()
