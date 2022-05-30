@@ -1,6 +1,6 @@
 <img alt="Starlite logo" src="./static/starlite-banner.svg" width="100%" height="auto"> 
 
-# backend-starlite-postgres
+# starlite-pg-redis-docker
 
 A WIP Starlite API Implementation.
 
