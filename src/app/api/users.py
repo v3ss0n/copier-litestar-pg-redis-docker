@@ -49,15 +49,13 @@ class UserDetailController(Controller):
     path = "{user_id:uuid}"
 
     @get(cache=True)
-    async def get(
-        self, user_id: UUID, repository: UserRepository
-    ) -> UserReadModel | None:
+    async def get(self, user_id: UUID, repository: UserRepository) -> UserReadModel:
         return await repository.get_one(instance_id=user_id)
 
     @put(guards=[CheckPayloadMismatch("id", "user_id").__call__])
     async def put(
         self, user_id: UUID, data: UserModel, repository: UserRepository
-    ) -> UserReadModel | None:
+    ) -> UserReadModel:
         return await repository.partial_update(instance_id=user_id, data=data)
 
     @delete(status_code=200)

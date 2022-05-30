@@ -60,7 +60,7 @@ class ItemDetailController(Controller):
     @get(cache=True)
     async def get(
         self, user: UserReadModel, item_id: UUID, repository: ItemRepository
-    ) -> ItemModel | None:
+    ) -> ItemModel:
         return await repository.get_one_for_user(user=user, instance_id=item_id)
 
     @put(
@@ -75,7 +75,7 @@ class ItemDetailController(Controller):
         item_id: UUID,
         data: ItemModel,
         repository: ItemRepository,
-    ) -> ItemModel | None:
+    ) -> ItemModel:
         return await repository.partial_update_for_user(
             user=user, instance_id=item_id, data=data
         )
