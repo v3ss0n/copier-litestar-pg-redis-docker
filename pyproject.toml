@@ -36,10 +36,10 @@ markers = [
 ]
 
 [tool.poetry]
-name = "starlite-example-api"
+name = "starlite-pg-redis-docker"
 version = "0.1.0"
-description = "A containerized example backend stack using starlite and postgres"
-authors = ["yudjinn <yudjinncoding@gmail.com>"]
+description = "An example Starlite stack with Redis, Postgres and Docker"
+authors = ["yudjinn <yudjinncoding@gmail.com>", "Peter Schutt <peter.github@proton.me>"]
 packages = [
     { include = "app", from = "src" },
 ]
