@@ -2,8 +2,9 @@ from uuid import UUID
 
 from sqlalchemy import Column, ForeignKey, String
 
+from app.utils.pg_uuid import PostgresUUID
+
 from .base import Base, BaseModel
-from .pg_uuid import PostgresUUID
 
 
 class Item(Base):
