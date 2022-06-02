@@ -8,6 +8,7 @@ from starlite import TestClient
 
 from app import models, repositories
 from app.config import app_settings
+from app.utils import BeforeAfter, LimitOffset
 from tests.utils import USERS_PATH, check_response
 
 
@@ -27,54 +28,60 @@ def test_get_users(
 
 
 @pytest.mark.parametrize(
-    "params, call_kwargs",
+    "params, call_arg",
     [
-        ({}, {"before": None, "after": None}),
+        ({}, BeforeAfter("updated_date", None, None)),
         (
             {"updated-before": str(datetime.max)},
-            {"before": datetime.max, "after": None},
+            BeforeAfter("updated_date", datetime.max, None),
         ),
-        ({"updated-after": str(datetime.min)}, {"before": None, "after": datetime.min}),
         (
-            {"updated-before": str(datetime.max), "updated-after": str(datetime.min)},
-            {"before": datetime.max, "after": datetime.min},
+            {"updated-after": str(datetime.min)},
+            BeforeAfter("updated_date", None, datetime.min),
+        ),
+        (
+            {
+                "updated-before": str(datetime.max),
+                "updated-after": str(datetime.min),
+            },
+            BeforeAfter("updated_date", datetime.max, datetime.min),
         ),
     ],
 )
 @pytest.mark.parametrize("patch_repo_scalars", ["db_users"], indirect=True)
 def test_get_users_filter_by_updated(
     params: dict[str, str],
-    call_kwargs: Any,
+    call_arg: BeforeAfter,
     users_path: str,
     test_client: TestClient,
     patch_repo_scalars: None,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _filter_select_by_updated_mock = MagicMock()
+    filter_on_datetime_field_mock = MagicMock()
     monkeypatch.setattr(
         repositories.UserRepository,
-        "_filter_select_by_updated",
-        _filter_select_by_updated_mock,
+        "filter_on_datetime_field",
+        filter_on_datetime_field_mock,
     )
     with test_client as client:
         response = client.get(users_path, params=params)
     check_response(response, status.HTTP_200_OK)
-    _filter_select_by_updated_mock.assert_called_once_with(**call_kwargs)
+    filter_on_datetime_field_mock.assert_called_once_with(call_arg)
 
 
 @pytest.mark.parametrize(
-    "params, call_kwargs",
+    "params, call_arg",
     [
-        ({}, {"limit": app_settings.DEFAULT_PAGINATION_LIMIT, "offset": 0}),
-        ({"page": 11}, {"limit": 100, "offset": 10}),
-        ({"page-size": 11}, {"limit": 11, "offset": 0}),
-        ({"page": 11, "page-size": 11}, {"limit": 11, "offset": 10}),
+        ({}, LimitOffset(app_settings.DEFAULT_PAGINATION_LIMIT, 0)),
+        ({"page": 11}, LimitOffset(app_settings.DEFAULT_PAGINATION_LIMIT, 10)),
+        ({"page-size": 11}, LimitOffset(11, 0)),
+        ({"page": 11, "page-size": 11}, LimitOffset(11, 10)),
     ],
 )
 @pytest.mark.parametrize("patch_repo_scalars", ["db_users"], indirect=True)
 def test_get_users_pagination(
     params: dict[str, str],
-    call_kwargs: Any,
+    call_arg: LimitOffset,
     users_path: str,
     test_client: TestClient,
     patch_repo_scalars: None,
@@ -83,13 +90,13 @@ def test_get_users_pagination(
     _paginate_select_mock = MagicMock()
     monkeypatch.setattr(
         repositories.UserRepository,
-        "_paginate_select",
+        "apply_limit_offset_pagination",
         _paginate_select_mock,
     )
     with test_client as client:
         response = client.get(users_path, params=params)
     check_response(response, status.HTTP_200_OK)
-    _paginate_select_mock.assert_called_once_with(**call_kwargs)
+    _paginate_select_mock.assert_called_once_with(call_arg)
 
 
 @pytest.mark.parametrize(
