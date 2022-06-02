@@ -1,8 +1,8 @@
-from app.models.user import User, UserReadModel
+from app.models.user import User, UserModel
 
 from .base import AbstractBaseRepository
 
 
-class UserRepository(AbstractBaseRepository[User, UserReadModel]):
+class UserRepository(AbstractBaseRepository[User, UserModel]):
     db_model = User
-    return_model = UserReadModel
+    return_model = UserModel

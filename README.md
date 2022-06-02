@@ -51,6 +51,10 @@ as advised [here](https://www.uvicorn.org/deployment/).
 
 `$ docker-compose up --build`
 
+### ReDoc
+
+`http://localhost:8000/schema`
+
 ### Test
 
 `$ docker-compose run --rm app scripts/tests`
