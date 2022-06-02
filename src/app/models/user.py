@@ -10,7 +10,7 @@ from .base import Base, BaseModel
 
 class User(Base):
     username = Column(String(64), nullable=False)
-    is_active = Column(Boolean, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
     hashed_password = Column(String(256), nullable=False)
 
     def __init__(self, password: str | None = None, **kwargs: Any) -> None:
@@ -40,36 +40,36 @@ class User(Base):
         self.hashed_password = get_password_hash(value)
 
 
-class UserModel(BaseModel):
+class BaseUserModel(BaseModel):
     """
     Common attributes for all User representations.
     """
 
     username: str
-    is_active: bool = True
 
 
-class UserCreateModel(UserModel):
+class UserCreateModel(BaseUserModel):
     """
     Fields available to for `User` create operations.
 
         >>> UserCreateModel(**{"username": "Rick Sanchez", "password": "wubbalubbadubdub"})
-        UserCreateModel(username='Rick Sanchez', is_active=True, password='wubbalubbadubdub')
+        UserCreateModel(username='Rick Sanchez', password='wubbalubbadubdub')
         >>> UserCreateModel(**{"username": "Rick Sanchez", "is_active": False, "password": "wubbalubbadubdub"})
-        UserCreateModel(username='Rick Sanchez', is_active=False, password='wubbalubbadubdub')
+        UserCreateModel(username='Rick Sanchez', password='wubbalubbadubdub')
     """
 
     password: str
 
 
-class UserReadModel(UserModel):
+class UserModel(BaseUserModel):
     """
     Model for outbound representations of `User` instances.
 
         >>> import uuid
         >>> user = User(id=uuid.uuid4(), username="Rick Sanchez", is_active=True)
-        >>> UserReadModel.from_orm(user)  # doctest: +ELLIPSIS
-        UserReadModel(username='Rick Sanchez', is_active=True, id=UUID('...'))
+        >>> UserModel.from_orm(user)  # doctest: +ELLIPSIS
+        UserModel(username='Rick Sanchez', id=UUID('...'), is_active=True)
     """
 
     id: UUID
+    is_active: bool

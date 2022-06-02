@@ -1,8 +1,8 @@
 from typing import Any
 from unittest.mock import MagicMock
-from uuid import uuid4
 
 import pytest
+import sqlalchemy as sa
 from starlite import CacheConfig, Starlite, TestClient
 from starlite.cache import SimpleCacheBackend
 
@@ -36,9 +36,25 @@ def patch_repo_add_flush_refresh(monkeypatch: pytest.MonkeyPatch) -> None:
     """
 
     def patch(_: Any, instance: Any) -> Any:
-        if instance.id is None:
-            # sqlalchemy would normally give us this
-            instance.id = uuid4()
+        """
+        Returns the passed in instance.
+
+        Patching out SQLAlchemy means that we don't get the default values populated
+        on the object. This method looks for callable or constant default values
+        provided for mapped attributes that haven't already been given a value and sets
+        it on the model before returning.
+        """
+        instance_dict = vars(instance)
+        mapper = sa.inspect(instance).mapper
+        for column in mapper.columns:
+            attr = mapper.get_property_by_column(column)
+            if attr.key in instance_dict:
+                continue
+            if (default := getattr(column.default, "arg")) is not None:
+                if callable(default):
+                    setattr(instance, attr.key, default({}))
+                else:
+                    setattr(instance, attr.key, default)
         return awaitable(instance)
 
     monkeypatch.setattr(AbstractBaseRepository, "_add_flush_refresh", patch)
