@@ -112,10 +112,7 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
         ----------
         data : LimitOffset
         """
-        if data.limit is not None:
-            self.base_select = self.base_select.limit(data.limit)
-        if data.offset is not None:
-            self.base_select = self.base_select.offset(data.offset)
+        self.base_select = self.base_select.limit(data.limit).offset(data.offset)
 
     def filter_on_datetime_field(self, data: BeforeAfter) -> None:
         """
