@@ -25,5 +25,5 @@ class BeforeAfter(NamedTuple):
 
 
 class LimitOffset(NamedTuple):
-    limit: int | None
-    offset: int | None
+    limit: int
+    offset: int
