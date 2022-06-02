@@ -1,21 +1,52 @@
 from collections import abc
+from datetime import datetime
 from typing import Any
 
 from starlite import BaseRouteHandler, NotAuthorizedException, Parameter, Request
 
 from app.config import app_settings
+from app.utils import BeforeAfter, LimitOffset
+
+DTorNone = datetime | None
 
 
-class Parameters:
-    page = Parameter(ge=1, default=1, required=False)
-    page_size = Parameter(
+def filter_for_updated(
+    before: DTorNone = Parameter(query="updated-before", default=None, required=False),
+    after: DTorNone = Parameter(query="updated-after", default=None, required=False),
+) -> BeforeAfter:
+    """
+    Return type consumed by `AbstractBaseRepository.filter_on_datetime_field()`.
+
+    Parameters
+    ----------
+    before : datetime | None
+        Filter for records updated before this date/time.
+    after : datetime | None
+        Filter for records updated after this date/time.
+    """
+    return BeforeAfter("updated_date", before, after)
+
+
+def limit_offset_pagination(
+    page: int = Parameter(ge=1, default=1, required=False),
+    page_size: int = Parameter(
         query="page-size",
         ge=1,
         default=app_settings.DEFAULT_PAGINATION_LIMIT,
         required=False,
-    )
-    updated_before = Parameter(query="updated-before", default=None, required=False)
-    updated_after = Parameter(query="updated-after", default=None, required=False)
+    ),
+) -> LimitOffset:
+    """
+    Return type consumed by `AbstractBaseRepository.apply_limit_offset_pagination()`.
+
+    Parameters
+    ----------
+    page : int
+        LIMIT to apply to select.
+    page_size : int
+        OFFSET to apply to select.
+    """
+    return LimitOffset(page_size, page - 1)
 
 
 class CheckPayloadMismatch:

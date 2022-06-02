@@ -1,6 +1,5 @@
 import functools
 from abc import ABC
-from datetime import datetime
 from typing import Any, Generic, TypeVar
 from uuid import UUID
 
@@ -13,7 +12,7 @@ from starlite.exceptions import NotFoundException
 from app.db import AsyncScopedSession
 from app.exceptions import RepositoryException
 from app.models.base import Base, BaseModel
-from app.utils.types import SupportsDict
+from app.utils.types import BeforeAfter, LimitOffset, SupportsDict
 
 DbType = TypeVar("DbType", bound=Base)
 ReturnType = TypeVar("ReturnType", bound=BaseModel)
@@ -105,40 +104,32 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
             raise NotFoundException
         return instance_or_none
 
-    def _paginate_select(self, limit: int, offset: int) -> None:
+    def apply_limit_offset_pagination(self, data: LimitOffset) -> None:
         """
         Paginate the base select query.
 
         Parameters
         ----------
-        limit : int
-            LIMIT to apply to select.
-        offset : int
-            OFFSET to apply to select.
+        data : LimitOffset
         """
-        self.base_select = self.base_select.limit(limit).offset(offset)
+        if data.limit is not None:
+            self.base_select = self.base_select.limit(data.limit)
+        if data.offset is not None:
+            self.base_select = self.base_select.offset(data.offset)
 
-    def _filter_select_by_updated(
-        self, before: datetime | None, after: datetime | None
-    ) -> None:
+    def filter_on_datetime_field(self, data: BeforeAfter) -> None:
         """
         Add where-clause(s) to the query.
 
         Parameters
         ----------
-        before : datetime
-            Filter for records updated before this date/time.
-        after : datetime
-            Filter for records updated after this date/time.
+        data : BeforeAfter
         """
-        if before is not None:
-            self.base_select = self.base_select.where(
-                self.db_model.updated_date < before
-            )
-        if after is not None:
-            self.base_select = self.base_select.where(
-                self.db_model.updated_date > after
-            )
+        field = getattr(self.db_model, data.field_name)
+        if data.before is not None:
+            self.base_select = self.base_select.where(field < data.before)
+        if data.after is not None:
+            self.base_select = self.base_select.where(field > data.after)
 
     def _filter_select_by_kwargs(self, kwargs: dict[str, Any]) -> None:
         """
@@ -154,28 +145,12 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
             *(getattr(self.db_model, key) == value for key, value in kwargs.items())
         )
 
-    async def get_many(
-        self,
-        *,
-        offset: int,
-        limit: int,
-        updated_before: datetime | None,
-        updated_after: datetime | None,
-        **kwargs: Any,
-    ) -> list[ReturnType]:
+    async def get_many(self, **kwargs: Any) -> list[ReturnType]:
         """
         A list of `ReturnType` instances.
 
         Parameters
         ----------
-        offset : int
-            For limit/offset pagination.
-        limit : int
-            For limit/offset pagination.
-        updated_before : datetime
-            Return only records that have been updated after `datetime`.
-        updated_after : datetime
-            Return only records that have been updated before `datetime`.
         **kwargs : any
             each key/value pair added to where-clause of query as ``<key> == <value>``.
 
@@ -183,9 +158,7 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
         -------
         list[ReturnType]
         """
-        self._filter_select_by_updated(before=updated_before, after=updated_after)
         self._filter_select_by_kwargs(kwargs)
-        self._paginate_select(limit=limit, offset=offset)
         db_models = await self._scalars(self.base_select)
         return [self.return_model.from_orm(inst) for inst in db_models]
 

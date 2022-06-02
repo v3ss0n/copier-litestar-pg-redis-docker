@@ -1,4 +1,5 @@
-from typing import Any, Protocol
+from datetime import datetime
+from typing import Any, NamedTuple, Protocol
 
 
 class SupportsDict(Protocol):
@@ -15,3 +16,14 @@ class SupportsDict(Protocol):
         -------
         dict[str, Any]
         """
+
+
+class BeforeAfter(NamedTuple):
+    field_name: str
+    before: datetime | None
+    after: datetime | None
+
+
+class LimitOffset(NamedTuple):
+    limit: int | None
+    offset: int | None

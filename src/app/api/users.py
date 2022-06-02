@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 from uuid import UUID
 
 from starlite import Controller, Parameter, Provide, Router, delete, get, post, put
@@ -8,7 +7,13 @@ from app.config import Paths
 from app.models import UserCreateModel, UserModel, UserReadModel
 from app.repositories import UserRepository
 
-from .utils import CheckPayloadMismatch, Parameters
+from .utils import (
+    BeforeAfter,
+    CheckPayloadMismatch,
+    LimitOffset,
+    filter_for_updated,
+    limit_offset_pagination,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -26,23 +31,22 @@ class UsersController(Controller):
         logger.info("New User: %s", created_user)
         return created_user
 
-    @get()
+    @get(
+        dependencies={
+            "limit_offset": Provide(limit_offset_pagination),
+            "updated_filter": Provide(filter_for_updated),
+        }
+    )
     async def get(
         self,
         repository: UserRepository,
-        page: int = Parameters.page,
-        page_size: int = Parameters.page_size,
-        updated_before: datetime | None = Parameters.updated_before,
-        updated_after: datetime | None = Parameters.updated_after,
+        limit_offset: LimitOffset,
+        updated_filter: BeforeAfter,
         is_active: bool = Parameter(query="is-active", default=True),
     ) -> list[UserReadModel]:
-        return await repository.get_many(
-            offset=page - 1,
-            limit=page_size,
-            updated_before=updated_before,
-            updated_after=updated_after,
-            is_active=is_active,
-        )
+        repository.apply_limit_offset_pagination(limit_offset)
+        repository.filter_on_datetime_field(updated_filter)
+        return await repository.get_many(is_active=is_active)
 
 
 class UserDetailController(Controller):

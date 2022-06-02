@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 from uuid import UUID
 
 from starlite import Controller, Provide, Router, delete, get, post, put
@@ -7,8 +6,9 @@ from starlite import Controller, Provide, Router, delete, get, post, put
 from app.config import Paths
 from app.models import ItemCreateModel, ItemModel, UserReadModel
 from app.repositories import ItemRepository, UserRepository
+from app.utils import BeforeAfter, LimitOffset
 
-from .utils import CheckPayloadMismatch, Parameters
+from .utils import CheckPayloadMismatch, filter_for_updated, limit_offset_pagination
 
 logger = logging.getLogger(__name__)
 
@@ -35,23 +35,22 @@ class ItemsController(Controller):
         logger.info("New Item: %s", created_item)
         return created_item
 
-    @get()
+    @get(
+        dependencies={
+            "limit_offset": Provide(limit_offset_pagination),
+            "updated_filter": Provide(filter_for_updated),
+        }
+    )
     async def get(
         self,
         user: UserReadModel,
         repository: ItemRepository,
-        page: int = Parameters.page,
-        page_size: int = Parameters.page_size,
-        updated_before: datetime | None = Parameters.updated_before,
-        updated_after: datetime | None = Parameters.updated_after,
+        limit_offset: LimitOffset,
+        updated_filter: BeforeAfter,
     ) -> list[ItemModel]:
-        return await repository.get_many_for_user(
-            user=user,
-            offset=page - 1,
-            limit=page_size,
-            updated_before=updated_before,
-            updated_after=updated_after,
-        )
+        repository.apply_limit_offset_pagination(limit_offset)
+        repository.filter_on_datetime_field(updated_filter)
+        return await repository.get_many_for_user(user=user)
 
 
 class ItemDetailController(Controller):
