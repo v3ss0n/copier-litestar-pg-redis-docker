@@ -6,14 +6,9 @@ from starlite import Controller, Parameter, Provide, Router, delete, get, post, 
 from app.config import Paths
 from app.models import UserCreateModel, UserModel, UserReadModel
 from app.repositories import UserRepository
+from app.utils import BeforeAfter, LimitOffset
 
-from .utils import (
-    BeforeAfter,
-    CheckPayloadMismatch,
-    LimitOffset,
-    filter_for_updated,
-    limit_offset_pagination,
-)
+from .utils import CheckPayloadMismatch, filter_for_updated, limit_offset_pagination
 
 logger = logging.getLogger(__name__)
 
