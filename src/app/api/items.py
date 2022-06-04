@@ -6,7 +6,6 @@ from starlite import Controller, Provide, Router, delete, get, post, put
 from app.config import Paths
 from app.models import ItemCreateModel, ItemModel, UserModel
 from app.repositories import ItemRepository, UserRepository
-from app.utils import BeforeAfter, LimitOffset
 
 from .utils import CheckPayloadMismatch, filter_for_updated, limit_offset_pagination
 
@@ -50,11 +49,7 @@ class ItemsController(Controller):
         self,
         user: UserModel,
         repository: ItemRepository,
-        limit_offset: LimitOffset,
-        updated_filter: BeforeAfter,
     ) -> list[ItemModel]:
-        repository.apply_limit_offset_pagination(limit_offset)
-        repository.filter_on_datetime_field(updated_filter)
         return await repository.get_many_for_user(user=user)
 
 

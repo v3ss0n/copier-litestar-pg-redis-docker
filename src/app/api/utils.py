@@ -46,7 +46,7 @@ def limit_offset_pagination(
     page_size : int
         OFFSET to apply to select.
     """
-    return LimitOffset(page_size, page - 1)
+    return LimitOffset(page_size, page_size * (page - 1))
 
 
 class CheckPayloadMismatch:
