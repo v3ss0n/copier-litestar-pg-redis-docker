@@ -25,6 +25,7 @@ router_dependencies = {
 
 class ItemsController(Controller):
     path = ""
+    tags = ["User-Items"]
 
     @post(
         operation_id="Create User Item",
@@ -55,6 +56,7 @@ class ItemsController(Controller):
 
 class ItemDetailController(Controller):
     path = "{item_id:uuid}"
+    tags = ["User-Items"]
 
     @get(
         cache=True,
@@ -100,5 +102,4 @@ item_router = Router(
     path=Paths.ITEMS,
     route_handlers=[ItemsController, ItemDetailController],
     dependencies=router_dependencies,
-    tags=["User-Items"],
 )

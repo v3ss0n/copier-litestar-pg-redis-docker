@@ -16,6 +16,7 @@ router_dependencies = {"repository": Provide(UserRepository)}
 
 class UsersController(Controller):
     path = ""
+    tags = ["Users"]
 
     @post(
         operation_id="Create User",
@@ -46,6 +47,7 @@ class UsersController(Controller):
 
 class UserDetailController(Controller):
     path = "{user_id:uuid}"
+    tags = ["Users"]
 
     @get(cache=True, operation_id="Get User", description="Details of a distinct User")
     async def get(self, user_id: UUID, repository: UserRepository) -> UserModel:
@@ -74,5 +76,4 @@ user_router = Router(
     path=Paths.USERS,
     route_handlers=[UsersController, UserDetailController],
     dependencies=router_dependencies,
-    tags=["Users"],
 )
