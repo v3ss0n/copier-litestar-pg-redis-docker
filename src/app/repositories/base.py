@@ -66,9 +66,37 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
     db_model: type[DbType]
     return_model: type[ReturnType]
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        limit_offset: LimitOffset | None = None,
+        updated_filter: BeforeAfter | None = None,
+    ) -> None:
+        """
+        Pagination and filtering on updated datetime is handled automatically if
+        ``app.api.utils.limit_offset_pagination`` and ``app.api.utils.filter_for_updated``
+        are provided as dependencies, keyed as `limit_offset` and `updated_filter`
+        respectively. E.g.,
+
+        ..:
+            @get(
+                dependencies={
+                    "limit_offset": Provide(limit_offset_pagination),
+                    "updated_filter": Provide(filter_for_updated),
+                },
+            )
+
+
+        Parameters
+        ----------
+        limit_offset :
+        updated_filter :
+        """
         self.session = AsyncScopedSession()
         self.base_select = select(self.db_model)
+        if limit_offset is not None:
+            self.apply_limit_offset_pagination(limit_offset)
+        if updated_filter is not None:
+            self.filter_on_datetime_field(updated_filter)
 
     @catch_sqlalchemy_exception
     async def _execute(self, statement: Executable, **kwargs: Any) -> Result:

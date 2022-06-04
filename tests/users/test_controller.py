@@ -73,9 +73,15 @@ def test_get_users_filter_by_updated(
     "params, call_arg",
     [
         ({}, LimitOffset(app_settings.DEFAULT_PAGINATION_LIMIT, 0)),
-        ({"page": 11}, LimitOffset(app_settings.DEFAULT_PAGINATION_LIMIT, 10)),
+        (
+            {"page": 11},
+            LimitOffset(
+                app_settings.DEFAULT_PAGINATION_LIMIT,
+                app_settings.DEFAULT_PAGINATION_LIMIT * 10,
+            ),
+        ),
         ({"page-size": 11}, LimitOffset(11, 0)),
-        ({"page": 11, "page-size": 11}, LimitOffset(11, 10)),
+        ({"page": 11, "page-size": 11}, LimitOffset(11, 110)),
     ],
 )
 @pytest.mark.parametrize("patch_repo_scalars", ["db_users"], indirect=True)

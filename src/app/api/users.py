@@ -6,7 +6,6 @@ from starlite import Controller, Parameter, Provide, Router, delete, get, post, 
 from app.config import Paths
 from app.models import UserCreateModel, UserModel
 from app.repositories import UserRepository
-from app.utils import BeforeAfter, LimitOffset
 
 from .utils import CheckPayloadMismatch, filter_for_updated, limit_offset_pagination
 
@@ -40,12 +39,8 @@ class UsersController(Controller):
     async def get(
         self,
         repository: UserRepository,
-        limit_offset: LimitOffset,
-        updated_filter: BeforeAfter,
         is_active: bool = Parameter(query="is-active", default=True),
     ) -> list[UserModel]:
-        repository.apply_limit_offset_pagination(limit_offset)
-        repository.filter_on_datetime_field(updated_filter)
         return await repository.get_many(is_active=is_active)
 
 
