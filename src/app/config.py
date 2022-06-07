@@ -7,6 +7,7 @@ class AppSettings(BaseSettings):
 
     DEBUG: bool
     DEFAULT_PAGINATION_LIMIT: int
+    ENVIRONMENT: str
     LOG_LEVEL: str
 
 
@@ -45,6 +46,15 @@ class GunicornSettings(BaseSettings):
     WORKER_CLASS: str
 
 
+class SentrySettings(BaseSettings):
+    class Config:
+        env_prefix = "SENTRY_"
+        case_sensitive = True
+
+    DSN: str
+    TRACES_SAMPLE_RATE: float
+
+
 # Constants
 class Paths:
     HEALTH = "/health"
@@ -57,3 +67,4 @@ app_settings = AppSettings()
 cache_settings = CacheSettings()
 db_settings = DatabaseSettings()
 gunicorn_settings = GunicornSettings()
+sentry_settings = SentrySettings()
