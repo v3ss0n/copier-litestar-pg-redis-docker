@@ -8,7 +8,7 @@ from starlite import TestClient
 
 from app import models, repositories
 from app.config import app_settings
-from app.utils import BeforeAfter, LimitOffset
+from app.types import BeforeAfter, LimitOffset
 from tests.utils import USERS_PATH, check_response
 
 
