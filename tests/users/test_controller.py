@@ -93,16 +93,16 @@ def test_get_users_pagination(
     patch_repo_scalars: None,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _paginate_select_mock = MagicMock()
+    apply_limit_offset_pagination_mock = MagicMock()
     monkeypatch.setattr(
         repositories.UserRepository,
         "apply_limit_offset_pagination",
-        _paginate_select_mock,
+        apply_limit_offset_pagination_mock,
     )
     with test_client as client:
         response = client.get(users_path, params=params)
     check_response(response, status.HTTP_200_OK)
-    _paginate_select_mock.assert_called_once_with(call_arg)
+    apply_limit_offset_pagination_mock.assert_called_once_with(call_arg)
 
 
 @pytest.mark.parametrize(
