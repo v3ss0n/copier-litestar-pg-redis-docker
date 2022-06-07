@@ -19,10 +19,9 @@ class UsersController(Controller):
     tags = ["Users"]
 
     @post(
-        operation_id="Create User",
         description="Create a new User by supplying a username and password",
     )
-    async def post(
+    async def create_user(
         self, data: UserCreateModel, repository: UserRepository
     ) -> UserModel:
         created_user = await repository.create(data=data)
@@ -34,10 +33,9 @@ class UsersController(Controller):
             "limit_offset": Provide(limit_offset_pagination),
             "updated_filter": Provide(filter_for_updated),
         },
-        operation_id="List Users",
         description="A paginated list of all Users",
     )
-    async def get(
+    async def list_users(
         self,
         repository: UserRepository,
         is_active: bool = Parameter(query="is-active", default=True),
@@ -49,13 +47,12 @@ class UserDetailController(Controller):
     path = "{user_id:uuid}"
     tags = ["Users"]
 
-    @get(cache=True, operation_id="Get User", description="Details of a distinct User")
-    async def get(self, user_id: UUID, repository: UserRepository) -> UserModel:
+    @get(cache=True, description="Details of a distinct User")
+    async def get_user(self, user_id: UUID, repository: UserRepository) -> UserModel:
         return await repository.get_one(instance_id=user_id)
 
     @put(
         guards=[CheckPayloadMismatch("id", "user_id").__call__],
-        operation_id="Update User",
         description="Modify a distinct User",
     )
     async def update_user(
@@ -65,10 +62,9 @@ class UserDetailController(Controller):
 
     @delete(
         status_code=200,
-        operation_id="Delete User",
         description="Delete the user and return its representation",
     )
-    async def delete(self, user_id: UUID, repository: UserRepository) -> UserModel:
+    async def delete_user(self, user_id: UUID, repository: UserRepository) -> UserModel:
         return await repository.delete(instance_id=user_id)
 
 
