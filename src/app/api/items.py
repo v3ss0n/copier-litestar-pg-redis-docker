@@ -28,10 +28,9 @@ class ItemsController(Controller):
     tags = ["User-Items"]
 
     @post(
-        operation_id="Create User Item",
         description="Create a new Item for the User by supplying the Item's name",
     )
-    async def post(
+    async def create_user_item(
         self, user: UserModel, data: ItemCreateModel, repository: ItemRepository
     ) -> ItemModel:
         created_item = await repository.create_for_user(user=user, data=data)
@@ -43,10 +42,9 @@ class ItemsController(Controller):
             "limit_offset": Provide(limit_offset_pagination),
             "updated_filter": Provide(filter_for_updated),
         },
-        operation_id="List User Items",
         description="A paginated list of all Items belonging to the User",
     )
-    async def get(
+    async def list_user_items(
         self,
         user: UserModel,
         repository: ItemRepository,
@@ -60,10 +58,9 @@ class ItemDetailController(Controller):
 
     @get(
         cache=True,
-        operation_id="Get User Item",
         description="Details of a distinct Item belonging to the User",
     )
-    async def get(
+    async def get_user_item(
         self, user: UserModel, item_id: UUID, repository: ItemRepository
     ) -> ItemModel:
         return await repository.get_one_for_user(user=user, instance_id=item_id)
@@ -73,10 +70,9 @@ class ItemDetailController(Controller):
             CheckPayloadMismatch("id", "item_id").__call__,
             CheckPayloadMismatch("owner_id", "user_id").__call__,
         ],
-        operation_id="Update User Item",
         description="Modify the User's Item.",
     )
-    async def put(
+    async def update_user_item(
         self,
         user: UserModel,
         item_id: UUID,
@@ -89,10 +85,9 @@ class ItemDetailController(Controller):
 
     @delete(
         status_code=200,
-        operation_id="Delete User Item",
         description="Delete the User's Item and return its representation",
     )
-    async def delete(
+    async def delete_user_item(
         self, user: UserModel, item_id: UUID, repository: ItemRepository
     ) -> ItemModel:
         return await repository.delete_for_user(user=user, instance_id=item_id)

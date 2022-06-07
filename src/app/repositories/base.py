@@ -88,8 +88,8 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
 
         Parameters
         ----------
-        limit_offset :
-        updated_filter :
+        limit_offset : LimitOffset | None
+        updated_filter : BeforeAfter | None
         """
         self.session = AsyncScopedSession()
         self.base_select = select(self.db_model)
