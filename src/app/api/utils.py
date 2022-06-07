@@ -5,7 +5,7 @@ from typing import Any
 from starlite import BaseRouteHandler, NotAuthorizedException, Parameter, Request
 
 from app.config import app_settings
-from app.utils import BeforeAfter, LimitOffset
+from app.types import BeforeAfter, LimitOffset
 
 DTorNone = datetime | None
 
