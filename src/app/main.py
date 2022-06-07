@@ -3,7 +3,8 @@ from starlite import Starlite
 from starlite.plugins.sql_alchemy import SQLAlchemyPlugin
 
 from app import api, cache, db, exceptions, health, openapi
-from app.config import app_settings, log_config
+from app.config import app_settings
+from app.logging import log_config
 
 app = Starlite(
     after_request=db.session_after_request,
