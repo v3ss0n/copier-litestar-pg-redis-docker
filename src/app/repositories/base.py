@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.engine import Result
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql import Executable
+from starlite import Dependency
 from starlite.exceptions import NotFoundException
 
 from app.db import AsyncScopedSession
@@ -68,8 +69,8 @@ class AbstractBaseRepository(ABC, Generic[DbType, ReturnType]):
 
     def __init__(
         self,
-        limit_offset: LimitOffset | None = None,
-        updated_filter: BeforeAfter | None = None,
+        limit_offset: LimitOffset | None = Dependency(),
+        updated_filter: BeforeAfter | None = Dependency(),
     ) -> None:
         """
         Pagination and filtering on updated datetime is handled automatically if
