@@ -5,7 +5,7 @@ from sqlalchemy.dialects import postgresql as pg
 from sqlalchemy.types import TypeDecorator
 
 
-class PostgresUUID(TypeDecorator):
+class PostgresUUID(TypeDecorator):  # pylint: disable=abstract-method
     """
     Decorated `sqlalchemy.dialects.postgresql.UUID` type that ensures we are only
     dealing with stdlib's `uuid.UUID` outsdide of SQLAlchemy.

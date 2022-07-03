@@ -42,8 +42,8 @@ async def session_after_request(response: Response) -> Response:
     Response
     """
     if 200 <= response.status_code < 300:
-        await AsyncScopedSession.commit()
+        await AsyncScopedSession.commit()  # pylint: disable=no-member
     else:
-        await AsyncScopedSession.rollback()
+        await AsyncScopedSession.rollback()  # pylint: disable=no-member
     await AsyncScopedSession.remove()
     return response

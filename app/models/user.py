@@ -24,6 +24,9 @@ class User(Base):
 
     @property
     def password(self) -> str:
+        """
+        Password cannot be retrieved.
+        """
         raise AttributeError("`password` not persisted")
 
     @password.setter

@@ -11,19 +11,25 @@ redis = Redis.from_url(cache_settings.URL)
 
 
 class RedisAsyncioBackend(CacheBackendProtocol):  # pragma: no cover
-    async def get(self, key: str) -> Awaitable[Any]:
+    async def get(  # pylint: disable=invalid-overridden-method
+        self, key: str
+    ) -> Awaitable[Any]:
         """
         Retrieve a valued from cache corresponding to the given key
         """
         return await redis.get(key)  # type:ignore[return-value]
 
-    async def set(self, key: str, value: Any, expiration: int) -> Awaitable[Any]:
+    async def set(  # pylint:disable=invalid-overridden-method
+        self, key: str, value: Any, expiration: int
+    ) -> Awaitable[Any]:
         """
         Set a value in cache for a given key with a given expiration in seconds
         """
         return await redis.set(key, value, expiration)  # type:ignore[return-value]
 
-    async def delete(self, key: str) -> Awaitable[Any]:
+    async def delete(  # pylint: disable=invalid-overridden-method
+        self, key: str
+    ) -> Awaitable[Any]:
         """
         Remove a value from the cache for a given key
         """

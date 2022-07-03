@@ -13,5 +13,8 @@ from app.config import Paths
     operation_id="Health Check",
 )
 async def check() -> str:
+    """
+    Checks database connection.
+    """
     assert (await db.AsyncScopedSession().execute(text("SELECT 1"))).scalar_one() == 1
     return "OK"

@@ -50,7 +50,7 @@ def patch_repo_add_flush_refresh(monkeypatch: pytest.MonkeyPatch) -> None:
             attr = mapper.get_property_by_column(column)
             if attr.key in instance_dict:
                 continue
-            if (default := getattr(column.default, "arg")) is not None:
+            if (default := getattr(column.default, "arg")) is not None:  # noqa: B009
                 if callable(default):
                     setattr(instance, attr.key, default({}))
                 else:
