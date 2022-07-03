@@ -15,8 +15,8 @@ class Base:
     """
 
     @declared_attr
-    def __tablename__(cls) -> str:
-        return cls.__name__.lower()
+    def __tablename__(cls) -> str:  # pylint: disable=no-self-argument
+        return cls.__name__.lower()  # pylint: disable=no-member
 
     id: UUID = Column(PostgresUUID, default=uuid4, primary_key=True)
     created_date: datetime = Column(DateTime, default=datetime.now, nullable=False)

@@ -13,6 +13,18 @@ logger = logging.getLogger(__name__)
 
 
 async def get_user(user_id: UUID, user_repository: UserRepository) -> UserModel:
+    """
+    Get user representation.
+
+    Parameters
+    ----------
+    user_id : UUID
+    user_repository : UserRepository
+
+    Returns
+    -------
+    UserModel
+    """
     return await user_repository.get_one(user_id)
 
 
@@ -33,6 +45,9 @@ class ItemsController(Controller):
     async def create_user_item(
         self, user: UserModel, data: ItemCreateModel, repository: ItemRepository
     ) -> ItemModel:
+        """
+        Create a new Item for the User.
+        """
         created_item = await repository.create_for_user(user=user, data=data)
         logger.info("New Item: %s", created_item)
         return created_item
@@ -49,6 +64,9 @@ class ItemsController(Controller):
         user: UserModel,
         repository: ItemRepository,
     ) -> list[ItemModel]:
+        """
+        Paginated list of User's Items.
+        """
         return await repository.get_many_for_user(user=user)
 
 
@@ -63,6 +81,9 @@ class ItemDetailController(Controller):
     async def get_user_item(
         self, user: UserModel, item_id: UUID, repository: ItemRepository
     ) -> ItemModel:
+        """
+        User Item member view.
+        """
         return await repository.get_one_for_user(user=user, instance_id=item_id)
 
     @put(
@@ -79,6 +100,9 @@ class ItemDetailController(Controller):
         data: ItemModel,
         repository: ItemRepository,
     ) -> ItemModel:
+        """
+        Update User Item member
+        """
         return await repository.partial_update_for_user(
             user=user, instance_id=item_id, data=data
         )
@@ -90,6 +114,9 @@ class ItemDetailController(Controller):
     async def delete_user_item(
         self, user: UserModel, item_id: UUID, repository: ItemRepository
     ) -> ItemModel:
+        """
+        Delete User Item member.
+        """
         return await repository.delete_for_user(user=user, instance_id=item_id)
 
 

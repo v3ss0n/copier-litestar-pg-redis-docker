@@ -1,17 +1,5 @@
 #!/bin/bash
 set -euo pipefail
 
-# Run linting
-echo "+++ Running linting"
-echo "--- isort"
-python -m isort --check --diff .
-echo "--- black"
-python -m black --check --diff .
-echo "--- flake8"
-python -m flake8 .
-
-echo "+++ Running mypy type checks"
-python -m mypy ./tests ./src
-
 echo "+++ Running unit tests"
-pytest tests/ src/
+pytest tests/ app/

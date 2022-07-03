@@ -24,6 +24,9 @@ class UsersController(Controller):
     async def create_user(
         self, data: UserCreateModel, repository: UserRepository
     ) -> UserModel:
+        """
+        Create a new User by supplying a username and password
+        """
         created_user = await repository.create(data=data)
         logger.info("New User: %s", created_user)
         return created_user
@@ -40,6 +43,9 @@ class UsersController(Controller):
         repository: UserRepository,
         is_active: bool = Parameter(query="is-active", default=True),
     ) -> list[UserModel]:
+        """
+        Paginated list of all Users
+        """
         return await repository.get_many(is_active=is_active)
 
 
@@ -49,6 +55,9 @@ class UserDetailController(Controller):
 
     @get(cache=True, description="Details of a distinct User")
     async def get_user(self, user_id: UUID, repository: UserRepository) -> UserModel:
+        """
+        User member view.
+        """
         return await repository.get_one(instance_id=user_id)
 
     @put(
@@ -58,6 +67,9 @@ class UserDetailController(Controller):
     async def update_user(
         self, user_id: UUID, data: UserModel, repository: UserRepository
     ) -> UserModel:
+        """
+        Update User member.
+        """
         return await repository.partial_update(instance_id=user_id, data=data)
 
     @delete(
@@ -65,6 +77,9 @@ class UserDetailController(Controller):
         description="Delete the user and return its representation",
     )
     async def delete_user(self, user_id: UUID, repository: UserRepository) -> UserModel:
+        """
+        Delete User member.
+        """
         return await repository.delete(instance_id=user_id)
 
 

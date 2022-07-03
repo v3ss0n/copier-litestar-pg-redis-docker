@@ -1,4 +1,4 @@
-<img alt="Starlite logo" src="./static/starlite-banner.svg" width="100%" height="auto"> 
+<img alt="Starlite logo" src="./static/starlite-banner.svg" width="100%" height="auto">
 
 # starlite-pg-redis-docker
 
@@ -23,16 +23,16 @@ A WIP Starlite API Implementation.
 
 ## Starlite
 
-Starlite is a light and flexible ASGI API framework. 
+Starlite is a light and flexible ASGI API framework.
 
 [Starlite documentation 📚](https://starlite-api.github.io/starlite/)
 
 ### RestartableUvicornWorker
 
-There is a known issue when running gunicorn with uvicorn workers, see 
+There is a known issue when running gunicorn with uvicorn workers, see
 [here](https://github.com/benoitc/gunicorn/issues/2339).
 
-For convenience an implementation of the workaround 
+For convenience an implementation of the workaround
 ([this one](https://github.com/benoitc/gunicorn/issues/2339#issuecomment-867481389))
 suggested in that gunicorn issue is included in the application source.
 
@@ -44,6 +44,7 @@ as advised [here](https://www.uvicorn.org/deployment/).
 
 ### Setup
 
+- `pre-commit install`
 - `$ cp .env.example .env`
 - `$ docker-compose run --rm app alembic upgrade head`
 
@@ -57,21 +58,17 @@ as advised [here](https://www.uvicorn.org/deployment/).
 
 ### Test
 
+`$ poetry run pytest .`
+
 `$ docker-compose run --rm app scripts/tests`
 
-### Format
+### Linting
 
-#### black
-
-`$ docker-compose run --rm app black .` 
-
-#### isort
-
-`$ docker-compose run --rm app isort .`
+`$ pre-commit run --all-files`
 
 ### Add Dependencies
 
-#### Production 
+#### Production
 
 `$ docker-compose run --rm app poetry add <dependency>`
 
@@ -90,6 +87,7 @@ as advised [here](https://www.uvicorn.org/deployment/).
 `$ docker-compose up -d db`
 
 #### Revision
+
 `$ docker-compose run --rm app alembic revision --autogenerate -m "revision description"`
 
 May have issue with permissions after having docker generate the revision file, to fix:
@@ -97,4 +95,5 @@ May have issue with permissions after having docker generate the revision file, 
 `$ sudo chown <user> ./alembic/versions/<filename>.py`
 
 #### Migration
+
 `$ docker-compose run --rm app alembic upgrade head`
