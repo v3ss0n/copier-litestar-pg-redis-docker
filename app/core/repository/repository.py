@@ -26,8 +26,8 @@ T_base = TypeVar("T_base", bound=Base)
 @contextmanager
 def catch_sqlalchemy_exception() -> Any:
     """
-    Decorate a function or method to raise a `RepositoryException` chained from an
-    original `SQLAlchemyError`.
+    Do something within context to raise a `RepositoryException` chained from an original
+    `SQLAlchemyError`.
 
         >>> try:
         ...     with catch_sqlalchemy_exception():
@@ -50,7 +50,7 @@ class Repository(Generic[T_model]):
     """
     ABC for resource type Repository objects.
 
-    Subclasses must set the `model`, and `schema` class variables.
+    Subclasses must set the `model_type` class variable.
 
     Filtering for the route must be done as part of the repository construction. For example, if
     accessing `repository.scalar()` accessor method, and more than one result is returned from the
@@ -125,6 +125,7 @@ class Repository(Generic[T_model]):
         statement : Executable
             A SQLAlchemy executable.
         kwargs : Any
+            Passed as kwargs to `self.session.execute()`.
 
         Returns
         -------
@@ -177,11 +178,6 @@ class Repository(Generic[T_model]):
         -----
             Does not support converting related entity_mappings into SQLAlchemy instances. This
             could be done in the `data.dict()` method.
-
-            If the model, `T_model` has relationship attributes without eager loading
-            configured, attempting to access those attributes on the instance returned
-            from this method will result in a SQLAlchemy `DetachedInstanceError`. See
-            Preventing Implicit IO when Using AsyncSession_.
 
         Parameters
         ----------

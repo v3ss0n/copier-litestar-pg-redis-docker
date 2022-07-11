@@ -6,6 +6,17 @@ from typing import Any
 def endpoint(cls_: Any = None, base_url: Any = None) -> Any:
     """
     Decorator for automatically constructing urls from a base_url and defined resources.
+
+        >>> @endpoint(base_url="https://anywhere.com")
+        ... class AnywhereEndpoint:
+        ...    all_things = "all-things"
+        ...    a_thing = "all-things/{id}"
+        ...
+        >>> AnywhereEndpoint.all_things
+        'https://anywhere.com/all-things'
+        >>> AnywhereEndpoint.a_thing.format(id=13)
+        'https://anywhere.com/all-things/13'
+
     """
 
     def wrap(cls: Any) -> Any:

@@ -21,7 +21,7 @@ class CheckPayloadMismatch:
         the payload the value of the path parameter will be compared against `None`.
     path_key : str
         Name of the path parameter. This must be the name of a path parameter on
-        the route to which the guard is applied, otherwise will raise `KeyError`.
+        the route to which the guard is applied, otherwise will raise `KeyError` at runtime.
     compare_fn : Callable[[Any, Any], bool] | None
         For custom comparison logic, pass a two parameter callable here that returns
         a `bool`.

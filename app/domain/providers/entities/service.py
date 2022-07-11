@@ -29,8 +29,8 @@ class Service(entities.Service):
 
         Parameters
         ----------
-        provider_id : UUID | None
-            Filters database queries by the provider id.
+        provider_id : UUID
+            ID of provider that owns the entity, required.
         entity_id : UUID | None
             Filters the query by id if not `None`
         filters : core.dependencies.Filters

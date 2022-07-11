@@ -26,7 +26,7 @@ class Service(core.Service[model.Integration, integrations.Repository, schema.In
         Parameters
         ----------
         provider_id : UUID | None
-            Filters database queries by the provider id.
+            ID of provider that provides the integration.
         integration_type : types.IntegrationEnum | None
             Filters the query by integration type if not `None`
         filters : core.dependencies.Filters

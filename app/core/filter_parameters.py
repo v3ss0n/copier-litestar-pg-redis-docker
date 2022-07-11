@@ -51,6 +51,7 @@ def updated_filter(
 ) -> BeforeAfter:
     """
     Return type consumed by `Repository.filter_on_datetime_field()`.
+
     Parameters
     ----------
     before : datetime | None
@@ -72,6 +73,7 @@ def limit_offset_pagination(
 ) -> LimitOffset:
     """
     Return type consumed by `Repository.apply_limit_offset_pagination()`.
+
     Parameters
     ----------
     page : int

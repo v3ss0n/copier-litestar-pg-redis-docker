@@ -9,6 +9,18 @@ from app.config import Paths, app_settings
 
 
 class AccessLogFilter(logging.Filter):
+    """
+    For filtering log events based on request path.
+
+    Parameters
+    ----------
+    path_re : str
+        Regex string, if the path of the request matches the regex the log event is dropped.
+    args : Any
+    kwargs : Any
+        Args and kwargs passed through to `logging.Filter`.
+    """
+
     def __init__(self, *args: Any, path_re: str, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.path_filter = re.compile(path_re)

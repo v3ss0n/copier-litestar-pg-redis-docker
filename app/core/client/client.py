@@ -15,11 +15,9 @@ class HttpClient:
     """
     Base class for HTTP clients.
 
-    ..
         client = HttpClient()
         response = client.request("GET", "/some/resource")
         assert response.status_code == 200
-
     """
 
     _client = httpx.AsyncClient()
@@ -27,7 +25,7 @@ class HttpClient:
     async def request(self, *args: Any, **kwargs: Any) -> httpx.Response:
         """
 
-        ``Passes `*args`, `**kwargs` straight through to ``httpx.AsyncClient.request``, we  call
+        Passes `*args`, `**kwargs` straight through to `httpx.AsyncClient.request`. Calls
         `raise_for_status()` on the response, handles any HTTPX error by returning a 503 response to
         client.
 

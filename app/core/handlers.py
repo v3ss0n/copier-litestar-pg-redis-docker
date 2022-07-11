@@ -161,16 +161,16 @@ class put(DescriptionMixin, http_handlers.put):
         id_guard: str | tuple[str, str] | abc.Collection[str | tuple[str, str]] | None = None,
     ) -> None:
         """
-        Wraps ``Starlite.put``, adding the ``id_guard`` parameter.
+        Wraps `Starlite.put`, adding the `id_guard` parameter.
 
         id_guard
         --------
-        Can be a ``str``, ``tuple[str, str]``, or ``abc.Collection[tuple[str, str]]``.
-        - a single ``str`` should be the name of the path parameter that is checked against a body
-        attribute called ``"id"``.
-        - a tuple, e.g., ``("str_1", "str_2")`` checks a payload attribute named ``"str_1"`` against
-        a path parameter named ``"str_2"``.
-        - a collection of tuples, e.g., ``[("str_1", "str_2")]`` will perform checks identical to
+        Can be a `str`, `tuple[str, str]`, or `abc.Collection[tuple[str, str]]`.
+        - a single `str` should be the name of the path parameter that is checked against a body
+        attribute called `"id"`.
+        - a tuple, e.g., `("str_1", "str_2")` checks a payload attribute named `"str_1"` against
+        a path parameter named `"str_2"`.
+        - a collection of tuples, e.g., `[("str_1", "str_2")]` will perform checks identical to
         the tuple case, for each tuple in the collection.
         """
         if id_guard is not None:
@@ -237,16 +237,16 @@ class patch(DescriptionMixin, http_handlers.put):
         id_guard: str | tuple[str, str] | abc.Collection[tuple[str, str]] | None = None,
     ) -> None:
         """
-        Wraps ``Starlite.patch``, adding the ``id_guard`` parameter.
+        Wraps `Starlite.patch`, adding the `id_guard` parameter.
 
         id_guard
         --------
-        Can be a ``str``, ``tuple[str, str]``, or ``abc.Collection[tuple[str, str]]``.
-        - a single ``str`` should be the name of the path parameter that is checked against a body
-        attribute called ``"id"``.
-        - a tuple, e.g., ``("str_1", "str_2")`` checks a payload attribute named ``"str_1"`` against
-        a path parameter named ``"str_2"``.
-        - a collection of tuples, e.g., ``[("str_1", "str_2")]`` will perform checks identical to
+        Can be a `str`, `tuple[str, str]`, or `abc.Collection[tuple[str, str]]`.
+        - a single `str` should be the name of the path parameter that is checked against a body
+        attribute called `"id"`.
+        - a tuple, e.g., `("str_1", "str_2")` checks a payload attribute named `"str_1"` against
+        a path parameter named `"str_2"`.
+        - a collection of tuples, e.g., `[("str_1", "str_2")]` will perform checks identical to
         the tuple case, for each tuple in the collection.
         """
         if id_guard is not None:
