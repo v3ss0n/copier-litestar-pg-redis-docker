@@ -35,6 +35,7 @@ as advised [here](https://www.uvicorn.org/deployment/).
 
 - `pre-commit install`
 - `$ cp .env.example .env`
+- `$ docker-compose build`
 - `$ docker-compose run --rm app alembic upgrade head`
 
 ### Run
