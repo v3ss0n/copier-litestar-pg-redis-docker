@@ -1,46 +1,35 @@
-# Pull base image
-FROM python:3.10-slim
+FROM python:3.10-slim AS install
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends curl git \
+    && apt-get autoremove -y
+RUN pip install --upgrade pip
+WORKDIR /app/
+# install poetry and keep the get-poetry script so it can be reused later.
+ENV POETRY_HOME="/opt/poetry"
+RUN curl https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py > get-poetry.py
+RUN python get-poetry.py
 
-# Set shell pipefail
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-# Create working directory
-RUN mkdir -p /workspace
-WORKDIR /workspace
-
-# Set python env vars
-ENV PIP_DEFAULT_TIMEOUT=100 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_CACHE_DIR=1 \
-    POETRY_HOME="/opt/poetry" \
-    POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_CREATE=0 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
-# Set path
+FROM install AS app-image
+# allow controlling the poetry installation of dependencies via external args
+ARG INSTALL_ARGS="--no-dev"
+WORKDIR /app/
+# let poetry know where its installed and add the poetry bin to the path
+ENV POETRY_HOME="/opt/poetry"
 ENV PATH="$POETRY_HOME/bin:$PATH"
-
-# Install poetry
-RUN apt-get update \
-    && apt-get -y --no-install-recommends install curl \
-    && curl -sSL https://install.python-poetry.org | python \
-    && apt-get -y purge curl
-
-# Install dependencies and tidy up
-ARG poetry_options=""
-COPY poetry.lock pyproject.toml ./
-RUN apt-get update \
-    && apt-get -y install --no-install-recommends git libpq-dev python3-dev build-essential \
-    && poetry install ${poetry_options} --no-root \
-    && apt-get -y purge python3-dev build-essential \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy files
-COPY . ./
-
-# Install app
-RUN poetry install ${poetry_options}
-
-CMD ["scripts/entry"]
+COPY . .
+# install without virtualenv, since we are inside a continer, follow by cleanup
+RUN poetry config virtualenvs.create false \
+    && poetry install $INSTALL_ARGS \
+    && python get-poetry.py --uninstall \
+    && rm get-poetry.py
+# cleanup curl, git and apt cache
+RUN apt-get purge -y curl git \
+    && apt-get clean -y \
+    && rm -rf /root/.cache \
+    && rm -rf /var/apt/lists/* \
+    && rm -rf /var/cache/apt/*
+# switch to a non-root user for security
+RUN addgroup --system --gid 1001 "app-user"
+RUN adduser --system --uid 1001 "app-user"
+USER "app-user"

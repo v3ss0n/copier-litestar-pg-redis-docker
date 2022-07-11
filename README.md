@@ -52,15 +52,19 @@ as advised [here](https://www.uvicorn.org/deployment/).
 
 `$ docker-compose up --build`
 
-### ReDoc
+### Migrations
 
-`http://localhost:8000/schema`
+#### Revision
+
+`$ docker-compose run --rm app alembic revision --autogenerate -m "revision description"`
+
+#### Migration
+
+`$ docker-compose run --rm app alembic upgrade head`
 
 ### Test
 
-`$ poetry run pytest .`
-
-`$ docker-compose run --rm app scripts/tests`
+`$ poetry run pytest`
 
 ### Linting
 
@@ -70,30 +74,8 @@ as advised [here](https://www.uvicorn.org/deployment/).
 
 #### Production
 
-`$ docker-compose run --rm app poetry add <dependency>`
+`$ poetry add starlite`
 
 #### Dev
 
-`$ docker-compose run --rm app poetry add <dependency> --dev`
-
-#### Rebuild
-
-`$ docker-compose build`
-
-### Migrations
-
-#### Ensure the database service is up
-
-`$ docker-compose up -d db`
-
-#### Revision
-
-`$ docker-compose run --rm app alembic revision --autogenerate -m "revision description"`
-
-May have issue with permissions after having docker generate the revision file, to fix:
-
-`$ sudo chown <user> ./alembic/versions/<filename>.py`
-
-#### Migration
-
-`$ docker-compose run --rm app alembic upgrade head`
+`$ poetry add starlite --extras=testing --dev`

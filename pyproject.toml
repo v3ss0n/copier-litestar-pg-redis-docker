@@ -28,6 +28,7 @@ pylint = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
+pytest-dotenv = "^0.5.2"
 starlite = { extras = ["testing"], git = "https://github.com/starlite-api/starlite.git", branch = "main" }
 types-redis = "*"
 types-requests = "*"
@@ -76,8 +77,9 @@ warn_unused_ignores = true
 plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
 
 [tool.pytest.ini_options]
-addopts = "--cov=app -v --doctest-modules --doctest-glob=*.md"
+addopts = "--cov=app -v --doctest-modules --doctest-glob=*.md --ignore=gunicorn.conf.py --ignore=alembic"
 asyncio_mode = "auto"
+env_files = [".env.example"]
 
 [tool.pylint.MESSAGE_CONTROL]
 disable = [
