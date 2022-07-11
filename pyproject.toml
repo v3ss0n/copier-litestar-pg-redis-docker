@@ -9,15 +9,15 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.10"
 alembic = "^1.7"
-asyncpg = "^0.25"
+asyncpg = "^0.26"
 gunicorn = "^20.1"
-passlib = "^1.7"
+httpx = "^0.23"
 pydantic = "^1.9"
 redis = "^4.3"
 sentry-sdk = "^1.5"
-sqlalchemy = "^1.4"
-uvicorn = {extras = ["standard"], version = "^0.17"}
-starlite = "1.4.0"
+sqlalchemy = { git = "https://github.com/sqlalchemy/sqlalchemy.git", branch = "main" }
+starlite = { git = "https://github.com/starlite-api/starlite.git", branch = "main" }
+uvicorn = { extras = ["standard"], version = "^0.18" }
 
 [tool.poetry.dev-dependencies]
 black = "*"
@@ -26,9 +26,9 @@ mypy = "*"
 pre-commit = "*"
 pylint = "*"
 pytest = "*"
+pytest-asyncio = "*"
 pytest-cov = "*"
-sqlalchemy2-stubs = "*"
-types-passlib = "*"
+starlite = { extras = ["testing"], git = "https://github.com/starlite-api/starlite.git", branch = "main" }
 types-redis = "*"
 types-requests = "*"
 
@@ -39,6 +39,9 @@ redis-ready = "app.utils.redis_ready:main"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
 
 [tool.isort]
 profile = "black"
@@ -74,9 +77,7 @@ plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=app -v --doctest-modules --doctest-glob=*.md"
-markers = [
-    "no_auto_patch_user",
-]
+asyncio_mode = "auto"
 
 [tool.pylint.MESSAGE_CONTROL]
 disable = [
