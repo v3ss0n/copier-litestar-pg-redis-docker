@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "starlite-pg-redis-docker"
 version = "0.1.0"
-description = "An example Starlite stack with Redis, Postgres and Docker"
-authors = ["yudjinn <yudjinncoding@gmail.com>", "Peter Schutt <peter.github@proton.me>"]
+description = "An example Starlite application with Redis, Postgres and Docker"
+authors = ["yudjinn <yudjinncoding@gmail.com>", "Peter Schutt <peter.github@proton.me>", "Na'aman Hirschfeld <nhirschfeld@gmail.com>"]
 packages = [{include = "app" }]
 license = "MIT"
 
