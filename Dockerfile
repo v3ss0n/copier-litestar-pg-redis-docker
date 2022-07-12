@@ -3,7 +3,6 @@ RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends curl git \
     && apt-get autoremove -y
-RUN pip install --upgrade pip
 WORKDIR /app/
 # install poetry and keep the get-poetry script so it can be reused later.
 ENV POETRY_HOME="/opt/poetry"
@@ -17,7 +16,9 @@ WORKDIR /app/
 # let poetry know where its installed and add the poetry bin to the path
 ENV POETRY_HOME="/opt/poetry"
 ENV PATH="$POETRY_HOME/bin:$PATH"
-COPY . .
+COPY pyproject.toml poetry.lock gunicorn.conf.py alembic.ini ./
+COPY alembic alembic
+COPY app app
 # install without virtualenv, since we are inside a continer, follow by cleanup
 RUN poetry config virtualenvs.create false \
     && poetry install $INSTALL_ARGS \
