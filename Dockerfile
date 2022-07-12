@@ -1,7 +1,7 @@
 FROM python:3.10-slim AS install
 RUN apt-get update \
     && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends curl git \
+    && apt-get install -y --no-install-recommends curl git build-essential \
     && apt-get autoremove -y
 WORKDIR /app/
 # install poetry and keep the get-poetry script so it can be reused later.
@@ -25,7 +25,7 @@ RUN poetry config virtualenvs.create false \
     && python get-poetry.py --uninstall \
     && rm get-poetry.py
 # cleanup curl, git and apt cache
-RUN apt-get purge -y curl git \
+RUN apt-get purge -y curl git build-essential \
     && apt-get clean -y \
     && rm -rf /root/.cache \
     && rm -rf /var/apt/lists/* \
