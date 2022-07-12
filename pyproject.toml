@@ -20,15 +20,12 @@ starlite = { git = "https://github.com/starlite-api/starlite.git", branch = "mai
 uvicorn = { extras = ["standard"], version = "^0.18" }
 
 [tool.poetry.dev-dependencies]
-black = "*"
 coverage = {extras = ["toml"], version = "*"}
-mypy = "*"
 pre-commit = "*"
-pylint = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
-pytest-dotenv = "^0.5.2"
+pytest-dotenv = "*"
 starlite = { extras = ["testing"], git = "https://github.com/starlite-api/starlite.git", branch = "main" }
 types-redis = "*"
 types-requests = "*"

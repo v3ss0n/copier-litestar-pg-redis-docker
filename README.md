@@ -7,7 +7,6 @@ A WIP Starlite API Implementation.
 ## TODO
 
 - [ ] Header/cookie parameter example.
-- [ ] CI?
 - [ ] Profile
 
 ## Starlite

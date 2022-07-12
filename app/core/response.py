@@ -18,6 +18,6 @@ class Response(_Response):
         -------
         Any
         """
-        if isinstance(value, pgproto.UUID):  # pylint: disable=c-extension-no-member
+        if isinstance(value, pgproto.UUID):
             return str(value)
         return _Response.serializer(value)
