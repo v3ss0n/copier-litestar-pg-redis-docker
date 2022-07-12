@@ -1,12 +1,30 @@
-from collections.abc import Coroutine
-from typing import Any
+from collections.abc import Coroutine, Sequence
+from typing import Any, Generic
 
 from requests import Response
 
-from app.config import Paths
+from app.core import Repository
+from app.core.repository.repository import T_base, T_model
 
-USERS_PATH = f"{Paths.V1}{Paths.USERS}"
-USER_ITEMS_PATH = f"{USERS_PATH}/{{}}/items"
+
+class TestRepo(Repository[T_model], Generic[T_model]):
+    many_response: list[T_model]
+    one_response: T_model
+
+    async def add_flush_refresh(self, instance: T_base) -> T_base:
+        return instance
+
+    async def get_many(self) -> Sequence[T_model]:
+        return self.many_response
+
+    async def get_one(self) -> T_model | None:
+        return self.one_response
+
+    async def create(self, data: dict[str, Any]) -> T_model:
+        return self.model_type(**data)
+
+    async def destroy(self) -> T_model:
+        return self.one_response
 
 
 def awaitable(return_value: Any) -> Coroutine[Any, Any, Any]:

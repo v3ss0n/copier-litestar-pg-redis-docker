@@ -5,10 +5,12 @@ class AppSettings(BaseSettings):
     class Config:
         case_sensitive = True
 
+    BUILD_NUMBER: str
     DEBUG: bool
     DEFAULT_PAGINATION_LIMIT: int
     ENVIRONMENT: str
     LOG_LEVEL: str
+    NAME: str
 
 
 class CacheSettings(BaseSettings):
@@ -16,6 +18,7 @@ class CacheSettings(BaseSettings):
         env_prefix = "REDIS_"
         case_sensitive = True
 
+    EXPIRATION: int
     URL: AnyUrl
 
 
@@ -57,10 +60,12 @@ class SentrySettings(BaseSettings):
 
 # Constants
 class Paths:
+    ENTITIES = "/entities"
     HEALTH = "/health"
-    V1 = "/v1"
-    USERS = "/users"
-    ITEMS = "{user_id:uuid}/items"
+    INTEGRATIONS = "/integrations"
+    PROVIDERS = "/providers"
+    PROVIDER_ENTITIES = "{provider_id:uuid}/entities"
+    PROVIDER_INTEGRATIONS = "{provider_id:uuid}/integrations"
 
 
 app_settings = AppSettings()

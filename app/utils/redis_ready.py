@@ -8,7 +8,7 @@ from app.config import cache_settings
 
 async def c() -> None:
     """
-    Checks cache connectivity.
+    Checks for cache connectivity.
     """
     redis = Redis.from_url(cache_settings.URL)
     try:
@@ -23,7 +23,5 @@ async def c() -> None:
 
 
 def main() -> None:
-    """
-    Wraps async entrypoint.
-    """
+    """Entrypoint"""
     asyncio.run(c())

@@ -9,17 +9,6 @@ A WIP Starlite API Implementation.
 - [ ] Header/cookie parameter example.
 - [ ] CI?
 - [ ] Profile
-- [ ] Profile alternate UUID implementation (https://github.com/MagicStack/py-pgproto/blob/a4178145cd7cc3a44eee20cfc9e8b94a7fed2053/uuid.pyx)
-- [ ] Gunicorn logconfig ignore sqlalchemy.engine logs
-- [ ] explicitly include any dirs/files into docker and remove .dockerignore
-- [ ] add pre-commit (I'll just make as equivalent as possible to the original pre-commit config in this project)
-- [ ] configure pyupgrade for only --py310-plus
-- [ ] use the Dockerfile from https://gist.github.com/Goldziher/942f4a027a7fa1e2cafaa35e0333b6dc
-- [ ] remove black and isort from alembic hooks
-- [ ] map docker ports to service defaults
-- [ ] add pylint into tooling
-- [ ] black and isort settings as per original
-- [ ] websocket example project with simple front end???
 
 ## Starlite
 
@@ -46,21 +35,26 @@ as advised [here](https://www.uvicorn.org/deployment/).
 
 - `pre-commit install`
 - `$ cp .env.example .env`
+- `$ docker-compose build`
 - `$ docker-compose run --rm app alembic upgrade head`
 
 ### Run
 
 `$ docker-compose up --build`
 
-### ReDoc
+### Migrations
 
-`http://localhost:8000/schema`
+#### Revision
+
+`$ docker-compose run --rm app alembic revision --autogenerate -m "revision description"`
+
+#### Migration
+
+`$ docker-compose run --rm app alembic upgrade head`
 
 ### Test
 
-`$ poetry run pytest .`
-
-`$ docker-compose run --rm app scripts/tests`
+`$ poetry run pytest`
 
 ### Linting
 
@@ -70,30 +64,8 @@ as advised [here](https://www.uvicorn.org/deployment/).
 
 #### Production
 
-`$ docker-compose run --rm app poetry add <dependency>`
+`$ poetry add starlite`
 
 #### Dev
 
-`$ docker-compose run --rm app poetry add <dependency> --dev`
-
-#### Rebuild
-
-`$ docker-compose build`
-
-### Migrations
-
-#### Ensure the database service is up
-
-`$ docker-compose up -d db`
-
-#### Revision
-
-`$ docker-compose run --rm app alembic revision --autogenerate -m "revision description"`
-
-May have issue with permissions after having docker generate the revision file, to fix:
-
-`$ sudo chown <user> ./alembic/versions/<filename>.py`
-
-#### Migration
-
-`$ docker-compose run --rm app alembic upgrade head`
+`$ poetry add starlite --extras=testing --dev`

@@ -6,8 +6,9 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
+from app import domain  # ensures models are in scope
 from app.config import db_settings
-from app.models.base import Base
+from app.core.model import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
