@@ -21,7 +21,7 @@ services:
   app:
     build:
       context: .
-    command: scripts/entry
+    command: /workspace/scripts/entry
     depends_on:
       - db
       - cache
