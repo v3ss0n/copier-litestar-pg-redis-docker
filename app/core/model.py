@@ -32,6 +32,6 @@ class Base:
     def __tablename__(cls) -> str:  # pylint: disable=no-self-argument
         return re.sub(cls.table_name_pattern, "_", cls.__name__).lower()
 
-    id: Mapped[UUID] = Column(pg.UUID, default=uuid4, primary_key=True)  # type:ignore[misc]
+    id: Mapped[UUID] = Column(pg.UUID, default=uuid4, primary_key=True)
     created_date: Mapped[datetime] = Column(DateTime, default=datetime.now, nullable=False)
     updated_date: Mapped[datetime] = Column(DateTime, default=datetime.now, nullable=False)

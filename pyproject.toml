@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "starlite-pg-redis-docker"
 version = "0.1.0"
-description = "An example Starlite stack with Redis, Postgres and Docker"
-authors = ["yudjinn <yudjinncoding@gmail.com>", "Peter Schutt <peter.github@proton.me>"]
+description = "An example Starlite application with Redis, Postgres and Docker"
+authors = ["yudjinn <yudjinncoding@gmail.com>", "Peter Schutt <peter.github@proton.me>", "Na'aman Hirschfeld <nhirschfeld@gmail.com>"]
 packages = [{include = "app" }]
 license = "MIT"
 
@@ -20,15 +20,12 @@ starlite = { git = "https://github.com/starlite-api/starlite.git", branch = "mai
 uvicorn = { extras = ["standard"], version = "^0.18" }
 
 [tool.poetry.dev-dependencies]
-black = "*"
 coverage = {extras = ["toml"], version = "*"}
-mypy = "*"
 pre-commit = "*"
-pylint = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
-pytest-dotenv = "^0.5.2"
+pytest-dotenv = "*"
 starlite = { extras = ["testing"], git = "https://github.com/starlite-api/starlite.git", branch = "main" }
 types-redis = "*"
 types-requests = "*"

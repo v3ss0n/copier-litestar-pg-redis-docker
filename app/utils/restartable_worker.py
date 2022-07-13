@@ -2,7 +2,7 @@ import os
 import signal
 import threading
 import time
-from typing import Any, Dict, List
+from typing import Any
 
 from uvicorn.workers import UvicornWorker
 
@@ -35,7 +35,7 @@ class RestartableUvicornWorker(UvicornWorker):
 
     CONFIG_KWARGS = {"loop": "uvloop", "http": "httptools"}
 
-    def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]):
+    def __init__(self, *args: list[Any], **kwargs: dict[str, Any]):
         super().__init__(*args, **kwargs)
         self._reloader_thread = ReloaderThread(self)
 
