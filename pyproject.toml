@@ -82,7 +82,6 @@ env_files = [".env.example"]
 disable = [
     "fixme",
     "invalid-name",
-    "line-too-long",
     "missing-class-docstring",
     "missing-module-docstring",
     "super-init-not-called",
@@ -95,4 +94,4 @@ enable = "useless-suppression"
 reports = "no"
 
 [tool.pylint.FORMAT]
-max-line-length = "88"
+max-line-length = "100"
