@@ -1,7 +1,7 @@
 import functools
 from collections import abc
 from contextlib import contextmanager
-from typing import Any, Generic, TypeVar
+from typing import Any, Generic, TypeVar, overload
 from uuid import UUID
 
 from sqlalchemy import select
@@ -9,9 +9,7 @@ from sqlalchemy.engine import Result, ScalarResult
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import Executable
-from sqlalchemy.sql.selectable import (  # pylint: disable=no-name-in-module
-    TypedReturnsRows,
-)
+from sqlalchemy.sql.selectable import TypedReturnsRows
 from starlite.exceptions import NotFoundException
 
 from ..db import AsyncScopedSession
@@ -110,9 +108,15 @@ class Repository(Generic[T_model]):
         """
         return AsyncScopedSession()
 
-    async def execute(
-        self, statement: Executable | TypedReturnsRows[T_row], **kwargs: Any
-    ) -> Result:
+    @overload
+    async def execute(self, statement: TypedReturnsRows[T_row], **kwargs: Any) -> Result[T_row]:
+        ...
+
+    @overload
+    async def execute(self, statement: Executable, **kwargs: Any) -> Result[Any]:
+        ...
+
+    async def execute(self, statement: Executable, **kwargs: Any) -> Result[Any]:
         """
         Executes `statement` with error handling.
 
@@ -225,7 +229,7 @@ class Repository(Generic[T_model]):
                 getattr(self.model_type, data.field_name).in_(data.values)
             )
 
-    async def scalars(self, **kwargs: Any) -> ScalarResult:
+    async def scalars(self, **kwargs: Any) -> ScalarResult[T_model]:
         """
         Return the result of `self.select`, filtered by `**kwargs`.
 

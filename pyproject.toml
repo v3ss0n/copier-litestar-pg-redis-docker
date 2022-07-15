@@ -16,7 +16,7 @@ pydantic = "^1.9"
 redis = "^4.3"
 sentry-sdk = "^1.7"
 sqlalchemy = { git = "https://github.com/sqlalchemy/sqlalchemy.git", branch = "main" }
-starlite = { git = "https://github.com/starlite-api/starlite.git", branch = "main" }
+starlite = "^1.6"
 uvicorn = { extras = ["standard"], version = "^0.18" }
 
 [tool.poetry.dev-dependencies]
@@ -26,7 +26,7 @@ pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
 pytest-dotenv = "*"
-starlite = { extras = ["testing"], git = "https://github.com/starlite-api/starlite.git", branch = "main" }
+starlite = { extras = ["testing"], version = "^1.6" }
 types-redis = "*"
 types-requests = "*"
 
@@ -82,7 +82,6 @@ env_files = [".env.example"]
 disable = [
     "fixme",
     "invalid-name",
-    "line-too-long",
     "missing-class-docstring",
     "missing-module-docstring",
     "super-init-not-called",
@@ -95,4 +94,4 @@ enable = "useless-suppression"
 reports = "no"
 
 [tool.pylint.FORMAT]
-max-line-length = "88"
+max-line-length = "100"
