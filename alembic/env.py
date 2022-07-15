@@ -20,7 +20,7 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-target_metadata = Base.metadata  # type: ignore[attr-defined]
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -41,7 +41,7 @@ def run_migrations_offline() -> None:
 
     """
     context.configure(
-        url=db_settings.database_uri,  # type: ignore[attr-defined]
+        url=db_settings.URL,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},

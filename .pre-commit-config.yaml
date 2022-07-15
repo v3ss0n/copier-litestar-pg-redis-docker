@@ -62,7 +62,7 @@ repos:
         additional_dependencies:
           [
             "starlite",
-            "sqlalchemy",
+            "git+https://github.com/sqlalchemy/sqlalchemy",
             "asyncpg",
             "sentry-sdk",
             "redis",
@@ -75,4 +75,10 @@ repos:
       - id: mypy
         exclude: "alembic/versions"
         additional_dependencies:
-          ["starlite", "sqlalchemy", "asyncpg", "types-redis", "types-requests"]
+          [
+            "starlite",
+            "git+https://github.com/sqlalchemy/sqlalchemy",
+            "asyncpg",
+            "types-redis",
+            "types-requests",
+          ]

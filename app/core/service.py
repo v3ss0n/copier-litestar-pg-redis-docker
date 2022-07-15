@@ -55,7 +55,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         -------
         list[T_Schema]
         """
-        models: list[T_model] = await self.repository.scalars()
+        models: list[T_model] = await self.repository.scalars()  # type:ignore[assignment]
         return [self.schema.from_orm(i) for i in models]
 
     async def update(self, data: T_schema) -> T_schema:

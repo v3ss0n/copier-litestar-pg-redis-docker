@@ -3,7 +3,7 @@ from asyncio import current_task
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import (  # pylint: disable=no-name-in-module
+from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_scoped_session,
     async_sessionmaker,
@@ -65,8 +65,8 @@ async def session_after_request(response: Response) -> Response:
     Response
     """
     if 200 <= response.status_code < 300:
-        await AsyncScopedSession.commit()  # pylint: disable=no-member
+        await AsyncScopedSession.commit()
     else:
-        await AsyncScopedSession.rollback()  # pylint: disable=no-member
+        await AsyncScopedSession.rollback()
     await AsyncScopedSession.remove()
     return response

@@ -10,4 +10,6 @@ from app import core
 class InProviderDomain(core.Base):
     __abstract__ = True
 
-    provider_id: Mapped[UUID] = Column(pg.UUID, ForeignKey("provider.id"), nullable=False)
+    provider_id: Mapped[UUID] = Column(  # type:ignore[misc]
+        pg.UUID, ForeignKey("provider.id"), nullable=False
+    )
