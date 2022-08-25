@@ -1,12 +1,17 @@
-# flake8: noqa
 from starlite import Provide, Router
 
-from app.config import Paths
+from app.constants import Paths
 
 from .controller import Controller
 from .repository import Repository
 from .service import Service
 from .types import IntegrationEnum
+
+router = Router(
+    path=Paths.INTEGRATIONS,
+    route_handlers=[Controller],
+    dependencies={"service": Provide(Service.new)},
+)
 
 __all__ = [
     "Controller",
@@ -17,9 +22,3 @@ __all__ = [
     "router",
     "schema",
 ]
-
-router = Router(
-    path=Paths.INTEGRATIONS,
-    route_handlers=[Controller],
-    dependencies={"service": Provide(Service.new)},
-)

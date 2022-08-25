@@ -1,7 +1,5 @@
-from typing import Generic, TypeVar
-from uuid import UUID
+from typing import TYPE_CHECKING, Generic, Optional, TypeVar
 
-from .dependencies import Filters
 from .model import Base
 from .repository import Repository
 from .schema import Schema
@@ -12,6 +10,11 @@ T_repository = TypeVar("T_repository", bound=Repository)
 T_schema = TypeVar("T_schema", bound=Schema)
 T_service = TypeVar("T_service", bound="Service")
 
+if TYPE_CHECKING:
+    from uuid import UUID
+
+    from .dependencies import Filters
+
 
 class Service(Generic[T_model, T_repository, T_schema]):
     model: type[T_model]
@@ -21,8 +24,8 @@ class Service(Generic[T_model, T_repository, T_schema]):
     def __init__(
         self,
         *,
-        id_: UUID | None,
-        filters: Filters,
+        id_: Optional["UUID"],
+        filters: "Filters",
     ) -> None:
         self.repository = self.repository_type(
             id_=id_,
@@ -33,8 +36,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         )
 
     async def create(self, data: T_schema) -> T_schema:
-        """
-        Default create handler.
+        """Default create handler.
 
         Parameters
         ----------
@@ -48,8 +50,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         return self.schema.from_orm(model)
 
     async def list(self) -> list[T_schema]:
-        """
-        Default list view handler.
+        """Default list view handler.
 
         Returns
         -------
@@ -59,8 +60,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         return [self.schema.from_orm(i) for i in models]
 
     async def update(self, data: T_schema) -> T_schema:
-        """
-        Default update view handler.
+        """Default update view handler.
 
         Parameters
         ----------
@@ -74,8 +74,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         return self.schema.from_orm(model)
 
     async def upsert(self, data: T_schema) -> T_schema:
-        """
-        Default upsert view handler.
+        """Default upsert view handler.
 
         Parameters
         ----------
@@ -89,8 +88,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         return self.schema.from_orm(model)
 
     async def show(self) -> T_schema:
-        """
-        Default member view handler.
+        """Default member view handler.
 
         Returns
         -------
@@ -100,8 +98,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         return self.schema.from_orm(model)
 
     async def destroy(self) -> T_schema:
-        """
-        Default delete view handler.
+        """Default delete view handler.
 
         Returns
         -------

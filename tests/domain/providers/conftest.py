@@ -5,6 +5,6 @@ import pytest
 from app.domain.providers import schema
 
 
-@pytest.fixture
+@pytest.fixture()
 def provider() -> schema.Provider:
     return schema.Provider(id=uuid4(), name="test provider")

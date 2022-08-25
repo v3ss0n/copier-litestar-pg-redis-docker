@@ -1,18 +1,21 @@
-from uuid import UUID
+from typing import TYPE_CHECKING, Optional
 
 from starlite import Dependency, Parameter
 from starlite.exceptions import ValidationException
 
-from app import core
 from app.domain import entities
+
+if TYPE_CHECKING:
+    from uuid import UUID
+
+    from app.core.dependencies import Filters
 
 
 class Service(entities.Service):
     async def upsert(self, data: entities.schema.Entity) -> entities.schema.Entity:
         if data.type == entities.EntitiesEnum.competitor and data.extra.sub_entity is None:
             raise ValidationException(
-                "Competitors must have the team or sport-person entity they represent in "
-                "`extra.sub_entity`"
+                "Competitors must have the team or sport-person entity they represent in `extra.sub_entity`"
             )
         return await super().upsert(data)
 
@@ -20,12 +23,11 @@ class Service(entities.Service):
     async def new(
         cls,
         *,
-        provider_id: UUID = Parameter(),
-        entity_id: UUID | None = Parameter(),
-        filters: core.dependencies.Filters = Dependency(),
+        provider_id: "UUID" = Parameter(),
+        entity_id: Optional["UUID"] = Parameter(),
+        filters: "Filters" = Dependency(),
     ) -> "Service":
-        """
-        Creates a new service object.
+        """Creates a new service object.
 
         Parameters
         ----------

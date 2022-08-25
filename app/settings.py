@@ -1,4 +1,4 @@
-from pydantic import AnyUrl, BaseSettings, PostgresDsn
+from pydantic import BaseSettings, PostgresDsn, RedisDsn
 
 
 class AppSettings(BaseSettings):
@@ -19,7 +19,7 @@ class CacheSettings(BaseSettings):
         case_sensitive = True
 
     EXPIRATION: int
-    URL: AnyUrl
+    URL: RedisDsn
 
 
 class DatabaseSettings(BaseSettings):
@@ -56,16 +56,6 @@ class SentrySettings(BaseSettings):
 
     DSN: str
     TRACES_SAMPLE_RATE: float
-
-
-# Constants
-class Paths:
-    ENTITIES = "/entities"
-    HEALTH = "/health"
-    INTEGRATIONS = "/integrations"
-    PROVIDERS = "/providers"
-    PROVIDER_ENTITIES = "{provider_id:uuid}/entities"
-    PROVIDER_INTEGRATIONS = "{provider_id:uuid}/integrations"
 
 
 app_settings = AppSettings()

@@ -1,4 +1,4 @@
-from uuid import UUID
+from typing import TYPE_CHECKING, Optional
 
 from starlite import Dependency, Parameter
 
@@ -7,11 +7,14 @@ from app import core
 from . import model, schema
 from .repository import Repository
 
+if TYPE_CHECKING:
+    from uuid import UUID
+
 
 class Service(core.Service[model.Integration, Repository, schema.Integration]):
-    """
-    Read only service for the root `integration` domain. CRUD operations must be performed through a
-    provider's subdomain.
+    """Read only service for the root `integration` domain.
+
+    CRUD operations must be performed through a provider's subdomain.
     """
 
     model = model.Integration
@@ -22,11 +25,10 @@ class Service(core.Service[model.Integration, Repository, schema.Integration]):
     async def new(
         cls,
         *,
-        integration_id: UUID | None = Parameter(),
+        integration_id: Optional["UUID"] = Parameter(),
         filters: core.dependencies.Filters = Dependency(),
     ) -> "Service":
-        """
-        Creates a new service object.
+        """Creates a new service object.
 
         Parameters
         ----------

@@ -1,9 +1,8 @@
-"""initial revision
+"""initial revision.
 
 Revision ID: 769c4a8c5435
 Revises:
 Create Date: 2022-07-10 23:21:51.492639
-
 """
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
@@ -56,12 +55,8 @@ def upgrade():
         sa.Column("id", sa.UUID(), nullable=False),
         sa.Column("created_date", sa.DateTime(), nullable=False),
         sa.Column("updated_date", sa.DateTime(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["owner_id"], ["entity.id"], name=op.f("fk_entity_owner_id_entity")
-        ),
-        sa.ForeignKeyConstraint(
-            ["provider_id"], ["provider.id"], name=op.f("fk_entity_provider_id_provider")
-        ),
+        sa.ForeignKeyConstraint(["owner_id"], ["entity.id"], name=op.f("fk_entity_owner_id_entity")),
+        sa.ForeignKeyConstraint(["provider_id"], ["provider.id"], name=op.f("fk_entity_provider_id_provider")),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_entity")),
     )
     op.create_index(op.f("ix_entity_owner_id"), "entity", ["owner_id"], unique=False)
@@ -73,9 +68,7 @@ def upgrade():
         sa.Column("id", sa.UUID(), nullable=False),
         sa.Column("created_date", sa.DateTime(), nullable=False),
         sa.Column("updated_date", sa.DateTime(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["provider_id"], ["provider.id"], name=op.f("fk_integration_provider_id_provider")
-        ),
+        sa.ForeignKeyConstraint(["provider_id"], ["provider.id"], name=op.f("fk_integration_provider_id_provider")),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_integration")),
         sa.UniqueConstraint("provider_id", "type", name="ux_integration_provider_type"),
     )

@@ -5,7 +5,7 @@ import pytest
 from app.domain import entities, providers
 
 
-@pytest.fixture
+@pytest.fixture()
 def sport(provider: providers.schema.Provider) -> entities.schema.Entity:
     return entities.schema.Entity(
         id=uuid4(),
@@ -16,10 +16,8 @@ def sport(provider: providers.schema.Provider) -> entities.schema.Entity:
     )
 
 
-@pytest.fixture
-def sport_person(
-    provider: providers.schema.Provider, sport: entities.schema.Entity
-) -> entities.schema.Entity:
+@pytest.fixture()
+def sport_person(provider: providers.schema.Provider, sport: entities.schema.Entity) -> entities.schema.Entity:
     return entities.schema.Entity(
         id=uuid4(),
         name="Nick Kyrgios",
@@ -29,10 +27,8 @@ def sport_person(
     )
 
 
-@pytest.fixture
-def contest(
-    provider: providers.schema.Provider, sport: entities.schema.Entity
-) -> entities.schema.Entity:
+@pytest.fixture()
+def contest(provider: providers.schema.Provider, sport: entities.schema.Entity) -> entities.schema.Entity:
     return entities.schema.Entity(
         id=uuid4(),
         name="Jubb v Kyrgios",
@@ -42,7 +38,7 @@ def contest(
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def competitor(
     provider: providers.schema.Provider,
     sport_person: entities.schema.Entity,

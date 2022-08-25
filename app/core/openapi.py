@@ -1,4 +1,4 @@
-from openapi_schema_pydantic import Contact
+from pydantic_openapi_schema.v3_1_0 import Contact
 from starlite import OpenAPIConfig
 
 config = OpenAPIConfig(

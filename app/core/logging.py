@@ -5,12 +5,12 @@ from typing import Any
 from starlette.status import HTTP_200_OK
 from starlite import LoggingConfig
 
-from app.config import Paths, app_settings
+from app.constants import Paths
+from app.settings import app_settings
 
 
 class AccessLogFilter(logging.Filter):
-    """
-    For filtering log events based on request path.
+    """For filtering log events based on request path.
 
     Parameters
     ----------

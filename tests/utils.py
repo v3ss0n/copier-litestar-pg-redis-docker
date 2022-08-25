@@ -1,10 +1,12 @@
-from collections.abc import Coroutine, Sequence
-from typing import Any, Generic
-
-from requests import Response
+from typing import TYPE_CHECKING, Any, Generic
 
 from app.core import Repository
 from app.core.repository.repository import T_base, T_model
+
+if TYPE_CHECKING:
+    from collections.abc import Coroutine, Sequence
+
+    from requests import Response
 
 
 class TestRepo(Repository[T_model], Generic[T_model]):
@@ -14,7 +16,7 @@ class TestRepo(Repository[T_model], Generic[T_model]):
     async def add_flush_refresh(self, instance: T_base) -> T_base:
         return instance
 
-    async def get_many(self) -> Sequence[T_model]:
+    async def get_many(self) -> "Sequence[T_model]":
         return self.many_response
 
     async def get_one(self) -> T_model | None:
@@ -27,19 +29,16 @@ class TestRepo(Repository[T_model], Generic[T_model]):
         return self.one_response
 
 
-def awaitable(return_value: Any) -> Coroutine[Any, Any, Any]:
+def awaitable(return_value: Any) -> "Coroutine[Any, Any, Any]":
     async def coro() -> Any:
         return return_value
 
     return coro()
 
 
-def check_response(response: Response, expected_status: int) -> None:
+def check_response(response: "Response", expected_status: int) -> None:
     if response.status_code != expected_status:
-        raise RuntimeError(
-            f"Response status code ({response.status_code}) does not equal expected "
-            f"({expected_status})"
-        )
+        raise RuntimeError(f"Response status code ({response.status_code}) does not equal expected ({expected_status})")
 
 
 def raise_exc(exc: type[Exception] | Exception) -> None:

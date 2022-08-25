@@ -1,5 +1,5 @@
-from app.config import gunicorn_settings
 from app.core.logging import log_config
+from app.settings import gunicorn_settings
 
 # Gunicorn config variables
 accesslog = gunicorn_settings.ACCESS_LOG

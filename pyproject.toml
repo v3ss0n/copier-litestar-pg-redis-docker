@@ -2,48 +2,45 @@
 name = "starlite-pg-redis-docker"
 version = "0.1.0"
 description = "An example Starlite application with Redis, Postgres and Docker"
-authors = ["yudjinn <yudjinncoding@gmail.com>", "Peter Schutt <peter.github@proton.me>", "Na'aman Hirschfeld <nhirschfeld@gmail.com>"]
+authors = []
 packages = [{include = "app" }]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.10"
-alembic = "^1.7"
-asyncpg = "^0.26"
-gunicorn = "^20.1"
-httpx = "^0.23"
-pydantic = "^1.9"
-redis = "^4.3"
-sentry-sdk = "^1.7"
+python = ">=3.10,<4.0"
+alembic = "*"
+asyncpg = "*"
+greenlet = "*"
+gunicorn = "*"
+httpx = "*"
+pydantic = "*"
+redis = "*"
+sentry-sdk = "*"
 sqlalchemy = { git = "https://github.com/sqlalchemy/sqlalchemy.git", branch = "main" }
-starlite = "^1.6"
-uvicorn = { extras = ["standard"], version = "^0.18" }
+starlite = "*"
+uvicorn = { extras = ["standard"], version = "*" }
 
 [tool.poetry.dev-dependencies]
-coverage = {extras = ["toml"], version = "*"}
 pre-commit = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
 pytest-dotenv = "*"
-starlite = { extras = ["testing"], version = "^1.6" }
+starlite = { extras = ["full"], version = "*" }
 types-redis = "*"
 types-requests = "*"
-
-[tool.poetry.scripts]
-pg-ready = "app.utils.postgres_ready:main"
-redis-ready = "app.utils.redis_ready:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-line-length = 100
+line-length = 120
+include = '\.pyi?$'
 
 [tool.isort]
 profile = "black"
-overwrite_in_place = true
+multi_line_output = 3
 
 [tool.coverage.report]
 show_missing = true
@@ -56,9 +53,7 @@ exclude_lines = [
 [tool.coverage.run]
 omit = [
     "tests/*",
-    "src/app/utils/restartable_worker.py",
-    "src/app/utils/redis_ready.py",
-    "src/app/utils/postgres_ready.py",
+    "utils/restartable_worker.py",
 ]
 
 [tool.mypy]
@@ -80,18 +75,31 @@ env_files = [".env.example"]
 
 [tool.pylint.MESSAGE_CONTROL]
 disable = [
-    "fixme",
+    "line-too-long",
     "invalid-name",
     "missing-class-docstring",
     "missing-module-docstring",
-    "super-init-not-called",
     "too-few-public-methods",
     "duplicate-code",
 ]
 enable = "useless-suppression"
 
+[tool.pylint.VARIABLES]
+ignored-argument-names = "args|kwargs|_|__"
+
+[tool.pylint.BASIC]
+good-names = "_,__,i,e,k,v,fn,get,post,put,patch,delete,route,asgi,websocket,Dependency,Body,Parameter"
+# Regular expression which should only match function or class names that do
+# not require a docstring.
+no-docstring-rgx="(__.*__|main|test.*|.*test|.*Test|^_.*)$"
+
 [tool.pylint.REPORTS]
 reports = "no"
 
 [tool.pylint.FORMAT]
-max-line-length = "100"
+max-line-length = "120"
+
+[tool.pylint.LOGGING]
+# Logging modules to check that the string format arguments are in logging
+# function parameter format
+logging-modules=["logging","picologging"]

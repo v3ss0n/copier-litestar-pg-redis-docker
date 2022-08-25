@@ -1,6 +1,6 @@
 import json
 from asyncio import current_task
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import (
@@ -9,9 +9,11 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
-from starlite import Response
 
-from app.config import db_settings
+from app.settings import db_settings
+
+if TYPE_CHECKING:
+    from starlite import Response
 
 
 def _default(val: Any) -> str:
@@ -21,8 +23,7 @@ def _default(val: Any) -> str:
 
 
 def dumps(d: dict[str, Any]) -> str:
-    """
-    Alternate JSON serializer for sqlalchemy queries.
+    """Alternate JSON serializer for sqlalchemy queries.
 
     Parameters
     ----------
@@ -41,15 +42,12 @@ AsyncScopedSession = async_scoped_session(async_session_factory, scopefunc=curre
 
 
 async def on_shutdown() -> None:
-    """
-    Passed to `Starlite.on_shutdown`.
-    """
+    """Passed to `Starlite.on_shutdown`."""
     await engine.dispose()
 
 
-async def session_after_request(response: Response) -> Response:
-    """
-    Passed to `Starlite.after_request`.
+async def session_after_request(response: "Response") -> "Response":
+    """Passed to `Starlite.after_request`.
 
     Inspects `response` to determine if we should commit, or rollback the database
     transaction.
