@@ -3,45 +3,38 @@ from typing import Any
 
 from redis.asyncio import Redis
 from starlite import CacheConfig, Request
-from starlite.config import CacheBackendProtocol, default_cache_key_builder
+from starlite.cache.base import CacheBackendProtocol
+from starlite.config.cache import default_cache_key_builder
 
-from app.config import app_settings, cache_settings
+from app.settings import app_settings, cache_settings
 
 redis = Redis.from_url(cache_settings.URL)
 
 
 class RedisAsyncioBackend(CacheBackendProtocol):  # pragma: no cover
     async def get(self, key: str) -> Awaitable[Any]:  # pylint: disable=invalid-overridden-method
-        """
-        Retrieve a value from cache corresponding to the given key.
-        """
+        """Retrieve a value from cache corresponding to the given key."""
         return await redis.get(key)  # type:ignore[return-value]
 
     async def set(  # pylint: disable=invalid-overridden-method
         self, key: str, value: Any, expiration: int
     ) -> Awaitable[Any]:
-        """
-        Set a value in cache for a given key with a given expiration in seconds.
-        """
+        """Set a value in cache for a given key with a given expiration in
+        seconds."""
         return await redis.set(key, value, expiration)  # type:ignore[return-value]
 
     async def delete(self, key: str) -> Awaitable[Any]:  # pylint: disable=invalid-overridden-method
-        """
-        Remove a value from the cache for a given key.
-        """
+        """Remove a value from the cache for a given key."""
         return await redis.delete(key)  # type:ignore[return-value]
 
 
 async def on_shutdown() -> None:
-    """
-    Passed to `Starlite.on_shutdown`.
-    """
+    """Passed to `Starlite.on_shutdown`."""
     await redis.close()
 
 
 def cache_key_builder(request: Request) -> str:
-    """
-    Prefixes the default cache key with the app name.
+    """Prefixes the default cache key with the app name.
 
     Parameters
     ----------

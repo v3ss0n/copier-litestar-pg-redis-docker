@@ -20,8 +20,7 @@ class Service(core.Service[model.Provider, Repository, schema.Provider]):
         provider_id: UUID | None = Parameter(),
         filters: core.dependencies.Filters = Dependency(),
     ) -> "Service":
-        """
-        Creates a new service object.
+        """Creates a new service object.
 
         Parameters
         ----------

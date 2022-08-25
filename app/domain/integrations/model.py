@@ -7,7 +7,5 @@ from . import types
 
 
 class Integration(InProviderDomain):
-    type: Mapped[types.IntegrationEnum] = Column(
-        Enum(types.IntegrationEnum), nullable=False, index=True
-    )
+    type: Mapped[types.IntegrationEnum] = Column(Enum(types.IntegrationEnum), nullable=False, index=True)
     __table_args__ = (UniqueConstraint("provider_id", "type", name="ux_integration_provider_type"),)

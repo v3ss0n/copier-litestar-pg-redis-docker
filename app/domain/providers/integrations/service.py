@@ -20,8 +20,7 @@ class Service(core.Service[model.Integration, integrations.Repository, schema.In
         integration_type: types.IntegrationEnum | None = Parameter(),
         filters: core.dependencies.Filters = Dependency(),
     ) -> "Service":
-        """
-        Creates a new service object.
+        """Creates a new service object.
 
         Parameters
         ----------

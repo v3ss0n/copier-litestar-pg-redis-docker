@@ -1,15 +1,14 @@
 import logging
 
 from starlette.responses import Response
+from starlite.connection import Request
 from starlite.middleware import ExceptionHandlerMiddleware
-from starlite.types import Request
 
 logger = logging.getLogger(__name__)
 
 
 def logging_exception_handler(request: Request, exc: Exception) -> Response:
-    """
-    Logs exception and returns appropriate response.
+    """Logs exception and returns appropriate response.
 
     Parameters
     ----------

@@ -3,9 +3,9 @@ from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 from starlite import CompressionConfig, Starlite
 
 from app import domain
-from app.config import app_settings
 from app.core import cache, client, db, exceptions, openapi, response, routes, sentry
 from app.core.logging import log_config
+from app.settings import app_settings
 
 app = Starlite(
     after_request=db.session_after_request,

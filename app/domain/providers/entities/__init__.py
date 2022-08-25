@@ -1,6 +1,6 @@
 from starlite import Provide, Router
 
-from app.config import Paths
+from app.constants import Paths
 
 from .controller import Controller
 from .service import Service

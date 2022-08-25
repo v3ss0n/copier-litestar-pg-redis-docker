@@ -11,8 +11,7 @@ class Service(entities.Service):
     async def upsert(self, data: entities.schema.Entity) -> entities.schema.Entity:
         if data.type == entities.EntitiesEnum.competitor and data.extra.sub_entity is None:
             raise ValidationException(
-                "Competitors must have the team or sport-person entity they represent in "
-                "`extra.sub_entity`"
+                "Competitors must have the team or sport-person entity they represent in `extra.sub_entity`"
             )
         return await super().upsert(data)
 
@@ -24,8 +23,7 @@ class Service(entities.Service):
         entity_id: UUID | None = Parameter(),
         filters: core.dependencies.Filters = Dependency(),
     ) -> "Service":
-        """
-        Creates a new service object.
+        """Creates a new service object.
 
         Parameters
         ----------

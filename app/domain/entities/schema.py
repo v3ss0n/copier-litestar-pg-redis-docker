@@ -8,21 +8,19 @@ from .types import EntitiesEnum
 
 
 class Extra(core.Schema):
-    """
-    Extra information about the entity that may be required depending on the entity type.
+    """Extra information about the entity that may be required depending on the
+    entity type.
 
-    Contest competitors must define the `sub_entity` key to reference the team/sport-person that the
-    competitor wraps.
+    Contest competitors must define the `sub_entity` key to reference
+    the team/sport-person that the competitor wraps.
     """
 
     sub_entity: "Entity | None"
 
 
 class Entity(core.Schema):
-    """
-    Representation of provider entities that forces integrations to put the provider entities into
-    the terms of our core entities.
-    """
+    """Representation of provider entities that forces integrations to put the
+    provider entities into the terms of our core entities."""
 
     id: UUID
     name: str

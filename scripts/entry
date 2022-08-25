@@ -6,7 +6,6 @@
 # - runs Alembic migrations
 # - starts Starlite application
 #
-# Note: redis-ready and pg-ready scripts defined in `app.utils`.
 
 set -o errexit
 set -o pipefail
@@ -15,16 +14,7 @@ set -o nounset
 # Check Gunicorn Config
 gunicorn --check-config --config=gunicorn.conf.py app.main:app
 echo "Gunicorn Config OK!"
-
-# Wait for Redis
-until redis-ready; do
-  sleep 5
-done
-
-# Wait for PostgreSQL
-until pg-ready; do
-  sleep 5
-done
+echo "Waiting for 5 seconds before application startup"
 
 echo Running migrations...
 alembic upgrade head

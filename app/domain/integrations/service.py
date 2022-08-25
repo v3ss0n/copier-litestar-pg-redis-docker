@@ -9,9 +9,9 @@ from .repository import Repository
 
 
 class Service(core.Service[model.Integration, Repository, schema.Integration]):
-    """
-    Read only service for the root `integration` domain. CRUD operations must be performed through a
-    provider's subdomain.
+    """Read only service for the root `integration` domain.
+
+    CRUD operations must be performed through a provider's subdomain.
     """
 
     model = model.Integration
@@ -25,8 +25,7 @@ class Service(core.Service[model.Integration, Repository, schema.Integration]):
         integration_id: UUID | None = Parameter(),
         filters: core.dependencies.Filters = Dependency(),
     ) -> "Service":
-        """
-        Creates a new service object.
+        """Creates a new service object.
 
         Parameters
         ----------

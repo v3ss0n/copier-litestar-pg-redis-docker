@@ -15,20 +15,17 @@ class ReloaderThread(threading.Thread):
         self._interval = sleep_interval
 
     def run(self) -> None:
-        """
-        Sends a KILL signal to the current process if the worker's active flag is set to
-        False.
-        """
+        """Sends a KILL signal to the current process if the worker's active
+        flag is set to False."""
         while True:
             if not self._worker.alive:
                 os.kill(os.getpid(), signal.SIGINT)
             time.sleep(self._interval)
 
 
-class RestartableUvicornWorker(UvicornWorker):
-    """
-    UvicornWorker with additional thread that sends a KILL signal to the current process
-    if the worker's active flag is set to False.
+class RestartableUvicornWorker(UvicornWorker):  # type: ignore[misc]
+    """UvicornWorker with additional thread that sends a KILL signal to the
+    current process if the worker's active flag is set to False.
 
     attribution: https://github.com/benoitc/gunicorn/issues/2339#issuecomment-867481389
     """

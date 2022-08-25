@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from starlite import Response
 
-from app.config import db_settings
+from app.settings import db_settings
 
 
 def _default(val: Any) -> str:
@@ -21,8 +21,7 @@ def _default(val: Any) -> str:
 
 
 def dumps(d: dict[str, Any]) -> str:
-    """
-    Alternate JSON serializer for sqlalchemy queries.
+    """Alternate JSON serializer for sqlalchemy queries.
 
     Parameters
     ----------
@@ -41,15 +40,12 @@ AsyncScopedSession = async_scoped_session(async_session_factory, scopefunc=curre
 
 
 async def on_shutdown() -> None:
-    """
-    Passed to `Starlite.on_shutdown`.
-    """
+    """Passed to `Starlite.on_shutdown`."""
     await engine.dispose()
 
 
 async def session_after_request(response: Response) -> Response:
-    """
-    Passed to `Starlite.after_request`.
+    """Passed to `Starlite.after_request`.
 
     Inspects `response` to determine if we should commit, or rollback the database
     transaction.

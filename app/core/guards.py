@@ -5,9 +5,8 @@ from starlite import BaseRouteHandler, NotAuthorizedException, Request
 
 
 class CheckPayloadMismatch:
-    """
-    Creates a callable class instance that can be used as a Guard function to check
-    that path variables are equal to payload counterparts.
+    """Creates a callable class instance that can be used as a Guard function
+    to check that path variables are equal to payload counterparts.
 
     Default behaviour is for the path variables to be coerced to a `str` before the
     comparison. This supports the common case of comparing a `str` identity from
@@ -45,9 +44,8 @@ class CheckPayloadMismatch:
         return payload_value == str(path_value)  # type:ignore[no-any-return]
 
     async def __call__(self, request: Request, _: BaseRouteHandler) -> None:
-        """
-        Ensure value of `self.payload_key` key in request payload matches the value of
-        `self.path_key` in `Request.path_params`.
+        """Ensure value of `self.payload_key` key in request payload matches
+        the value of `self.path_key` in `Request.path_params`.
 
         By default, calls `str` on both values before comparing. For custom comparison
         provide a callable to `compare_fn` on instantiation.

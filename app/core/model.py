@@ -19,9 +19,7 @@ meta = MetaData(naming_convention=convention)
 
 @as_declarative(metadata=meta)
 class Base:
-    """
-    Base for all SQLAlchemy declarative models.
-    """
+    """Base for all SQLAlchemy declarative models."""
 
     __name__: str
 

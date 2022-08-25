@@ -1,4 +1,8 @@
+<!-- markdownlint-disable -->
 <img alt="Starlite logo" src="./static/starlite-banner.svg" width="100%" height="auto">
+<!-- markdownlint-restore -->
+
+<div align="center">
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=starlite-api_starlite-pg-redis-docker&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=starlite-api_starlite-pg-redis-docker)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=starlite-api_starlite-pg-redis-docker&metric=coverage)](https://sonarcloud.io/summary/new_code?id=starlite-api_starlite-pg-redis-docker)
@@ -8,14 +12,12 @@
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=starlite-api_starlite-pg-redis-docker&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=starlite-api_starlite-pg-redis-docker)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=starlite-api_starlite-pg-redis-docker&metric=bugs)](https://sonarcloud.io/summary/new_code?id=starlite-api_starlite-pg-redis-docker)
 
+</div>
+
 # starlite-pg-redis-docker
 
-A WIP Starlite API Implementation.
-
-## TODO
-
-- [ ] Header/cookie parameter example.
-- [ ] Profile
+This is an example [Starlite](https://github.com/starlite-api/starlite) project using SQLAlchemy + Alembic + postgresql,
+Redis and Docker.
 
 ## Starlite
 
@@ -33,7 +35,7 @@ For convenience an implementation of the workaround
 suggested in that gunicorn issue is included in the application source.
 
 To use the included `RestartableUvicornWorker` set the `GUNICORN_WORKER_CLASS` env var
-to `app.utils.restartable_worker.RestartableUvicornWorker`.
+to `utils.restartable_worker.RestartableUvicornWorker`.
 
 In production, set the `GUNICORN_WORKER_CLASS` env var to `uvicorn.workers.UvicornWorker`
 as advised [here](https://www.uvicorn.org/deployment/).

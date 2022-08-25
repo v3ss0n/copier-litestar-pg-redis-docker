@@ -1,13 +1,11 @@
 import sentry_sdk
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
-from app.config import app_settings, sentry_settings
+from app.settings import app_settings, sentry_settings
 
 
 def on_startup() -> None:
-    """
-    Callback to configure sentry on app startup.
-    """
+    """Callback to configure sentry on app startup."""
     sentry_sdk.init(
         dsn=sentry_settings.DSN,
         environment=app_settings.ENVIRONMENT,

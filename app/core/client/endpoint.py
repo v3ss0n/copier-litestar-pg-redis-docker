@@ -4,8 +4,8 @@ from typing import Any
 
 
 def endpoint(cls_: Any = None, base_url: Any = None) -> Any:
-    """
-    Decorator for automatically constructing urls from a base_url and defined resources.
+    """Decorator for automatically constructing urls from a base_url and
+    defined resources.
 
         >>> @endpoint(base_url="https://anywhere.com")
         ... class AnywhereEndpoint:
@@ -16,7 +16,6 @@ def endpoint(cls_: Any = None, base_url: Any = None) -> Any:
         'https://anywhere.com/all-things'
         >>> AnywhereEndpoint.a_thing.format(id=13)
         'https://anywhere.com/all-things/13'
-
     """
 
     def wrap(cls: Any) -> Any:
@@ -31,10 +30,7 @@ def endpoint(cls_: Any = None, base_url: Any = None) -> Any:
 
 def _process_class(cls: Any, base_url: Any) -> Any:
     if base_url is None:
-        raise RuntimeError(
-            "A decorated endpoint must define a base_url as "
-            "@endpoint(base_url='https://foo.com')."
-        )
+        raise RuntimeError("A decorated endpoint must define a base_url as @endpoint(base_url='https://foo.com').")
     base_url = base_url.rstrip("/")
 
     for name, value in inspect.getmembers(cls):

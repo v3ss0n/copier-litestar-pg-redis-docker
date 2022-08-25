@@ -25,9 +25,8 @@ T_base = TypeVar("T_base", bound=Base)
 
 @contextmanager
 def catch_sqlalchemy_exception() -> Any:
-    """
-    Do something within context to raise a `RepositoryException` chained from an original
-    `SQLAlchemyError`.
+    """Do something within context to raise a `RepositoryException` chained
+    from an original `SQLAlchemyError`.
 
         >>> try:
         ...     with catch_sqlalchemy_exception():
@@ -36,7 +35,6 @@ def catch_sqlalchemy_exception() -> Any:
         ...     print(f"caught repository exception from {type(exc.__context__)}")
         ...
         caught repository exception from <class 'sqlalchemy.exc.SQLAlchemyError'>
-
     """
     try:
         yield
@@ -47,8 +45,7 @@ def catch_sqlalchemy_exception() -> Any:
 
 
 class Repository(Generic[T_model]):
-    """
-    ABC for resource type Repository objects.
+    """ABC for resource type Repository objects.
 
     Subclasses must set the `model_type` class variable.
 
@@ -89,9 +86,9 @@ class Repository(Generic[T_model]):
             self.apply_limit_offset_pagination(limit_offset)
 
     def filter_select_by_kwargs(self, **kwargs: Any) -> None:
-        """
-        Add a where clause to `self.select` for each key/value pair in `**kwargs` where key is
-        an attribute of `model_type` and value is used for an equality test.
+        """Add a where clause to `self.select` for each key/value pair in
+        `**kwargs` where key is an attribute of `model_type` and value is used
+        for an equality test.
 
         Parameters
         ----------
@@ -103,9 +100,7 @@ class Repository(Generic[T_model]):
 
     @functools.cached_property
     def session(self) -> AsyncSession:
-        """
-        A scoped session for the repository instance.
-        """
+        """A scoped session for the repository instance."""
         return AsyncScopedSession()
 
     @overload
@@ -117,8 +112,7 @@ class Repository(Generic[T_model]):
         ...
 
     async def execute(self, statement: Executable, **kwargs: Any) -> Result[Any]:
-        """
-        Executes `statement` with error handling.
+        """Executes `statement` with error handling.
 
         Parameters
         ----------
@@ -135,8 +129,8 @@ class Repository(Generic[T_model]):
             return await self.session.execute(statement, **kwargs)
 
     async def add_flush_refresh(self, instance: T_base) -> T_base:
-        """
-        Adds `instance` to `self.session`, flush changes, refresh `instance`.
+        """Adds `instance` to `self.session`, flush changes, refresh
+        `instance`.
 
         Parameters
         ----------
@@ -157,8 +151,7 @@ class Repository(Generic[T_model]):
     # create
 
     def parse_obj(self, data: abc.Mapping[str, Any]) -> T_model:
-        """
-        Creates an instance of `T_model` from `data`.
+        """Creates an instance of `T_model` from `data`.
 
         Parameters
         ----------
@@ -171,8 +164,7 @@ class Repository(Generic[T_model]):
         return self.model_type(**data)
 
     async def create(self, data: dict[str, Any]) -> T_model:
-        """
-        Create an instance of type `self.model`.
+        """Create an instance of type `self.model`.
 
         Notes
         -----
@@ -193,8 +185,7 @@ class Repository(Generic[T_model]):
     # read
 
     def apply_limit_offset_pagination(self, data: LimitOffset) -> None:
-        """
-        Paginate the base select query.
+        """Paginate the base select query.
 
         Parameters
         ----------
@@ -203,8 +194,7 @@ class Repository(Generic[T_model]):
         self.select = self.select.limit(data.limit).offset(data.offset)
 
     def filter_on_datetime_field(self, data: BeforeAfter) -> None:
-        """
-        Add where-clause(s) to the query.
+        """Add where-clause(s) to the query.
 
         Parameters
         ----------
@@ -217,21 +207,17 @@ class Repository(Generic[T_model]):
             self.select = self.select.where(field > data.before)
 
     def filter_in_collection(self, data: CollectionFilter) -> None:
-        """
-        Adds a `WHERE ... IN (...)` clause to the query.
+        """Adds a `WHERE ... IN (...)` clause to the query.
 
         Parameters
         ----------
         data : CollectionFilter
         """
         if data.values is not None:
-            self.select = self.select.where(
-                getattr(self.model_type, data.field_name).in_(data.values)
-            )
+            self.select = self.select.where(getattr(self.model_type, data.field_name).in_(data.values))
 
     async def scalars(self, **kwargs: Any) -> ScalarResult[T_model]:
-        """
-        Return the result of `self.select`, filtered by `**kwargs`.
+        """Return the result of `self.select`, filtered by `**kwargs`.
 
         Parameters
         ----------
@@ -249,9 +235,8 @@ class Repository(Generic[T_model]):
 
     @staticmethod
     def check_not_found(instance_or_none: T | None) -> T:
-        """
-        Responsible for raising the `404` error to client where we attempt to access a `scalar()`
-        query result.
+        """Responsible for raising the `404` error to client where we attempt
+        to access a `scalar()` query result.
 
         Parameters
         ----------
@@ -270,8 +255,7 @@ class Repository(Generic[T_model]):
         return instance_or_none
 
     async def scalar(self, **kwargs: Any) -> T_model:
-        """
-        Get a scalar result from `self.select`.
+        """Get a scalar result from `self.select`.
 
         If `self.select` returns more than a single result, a `RepositoryException` is raised.
 
@@ -304,8 +288,8 @@ class Repository(Generic[T_model]):
 
     @staticmethod
     def update_model(model: T, data: abc.Mapping[str, Any]) -> T:
-        """
-        Simple helper for setting key/values from `data` as attributes on `model`.
+        """Simple helper for setting key/values from `data` as attributes on
+        `model`.
 
         Parameters
         ----------
@@ -316,15 +300,14 @@ class Repository(Generic[T_model]):
 
         Returns
         -------
-
         """
         for k, v in data.items():
             setattr(model, k, v)
         return model
 
     async def update(self, data: abc.Mapping[str, Any]) -> T_model:
-        """
-        Update the model returned from `self.select` with key/val pairs from `data`.
+        """Update the model returned from `self.select` with key/val pairs from
+        `data`.
 
         Parameters
         ----------
@@ -348,9 +331,8 @@ class Repository(Generic[T_model]):
         return await self.add_flush_refresh(self.update_model(model, data))
 
     async def upsert(self, data: dict[str, Any]) -> T_model:
-        """
-        Update the model returned from `self.select` but if the instance doesn't exist create
-        it and populate from ``data``.
+        """Update the model returned from `self.select` but if the instance
+        doesn't exist create it and populate from ``data``.
 
         Parameters
         ----------
@@ -380,8 +362,7 @@ class Repository(Generic[T_model]):
     # delete
 
     async def delete(self) -> T_model:
-        """
-        Delete and return the instance returned from `self.scalar()`.
+        """Delete and return the instance returned from `self.scalar()`.
 
         Returns
         -------

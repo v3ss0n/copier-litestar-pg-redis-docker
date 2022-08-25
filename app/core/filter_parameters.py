@@ -3,18 +3,15 @@ from uuid import UUID
 
 from starlite import Parameter
 
-from app.config import app_settings
+from app.settings import app_settings
 
 from .types import BeforeAfter, CollectionFilter, LimitOffset
 
 DTorNone = datetime | None
 
 
-def id_filter(
-    ids: list[UUID] | None = Parameter(query="ids", default=None, required=False)
-) -> CollectionFilter[UUID]:
-    """
-    Return type consumed by ``Repository.filter_in_collection()``.
+def id_filter(ids: list[UUID] | None = Parameter(query="ids", default=None, required=False)) -> CollectionFilter[UUID]:
+    """Return type consumed by ``Repository.filter_in_collection()``.
 
     Parameters
     ----------
@@ -32,8 +29,7 @@ def created_filter(
     before: DTorNone = Parameter(query="created-before", default=None, required=False),
     after: DTorNone = Parameter(query="created-after", default=None, required=False),
 ) -> BeforeAfter:
-    """
-    Return type consumed by `Repository.filter_on_datetime_field()`.
+    """Return type consumed by `Repository.filter_on_datetime_field()`.
 
     Parameters
     ----------
@@ -49,8 +45,7 @@ def updated_filter(
     before: DTorNone = Parameter(query="updated-before", default=None, required=False),
     after: DTorNone = Parameter(query="updated-after", default=None, required=False),
 ) -> BeforeAfter:
-    """
-    Return type consumed by `Repository.filter_on_datetime_field()`.
+    """Return type consumed by `Repository.filter_on_datetime_field()`.
 
     Parameters
     ----------
@@ -71,8 +66,7 @@ def limit_offset_pagination(
         required=False,
     ),
 ) -> LimitOffset:
-    """
-    Return type consumed by `Repository.apply_limit_offset_pagination()`.
+    """Return type consumed by `Repository.apply_limit_offset_pagination()`.
 
     Parameters
     ----------

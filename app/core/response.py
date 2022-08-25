@@ -7,8 +7,8 @@ from starlite import Response as _Response
 class Response(_Response):
     @staticmethod
     def serializer(value: Any) -> Any:
-        """
-        Custom serializer method that handles the `asyncpg.pgproto.UUID` implementation.
+        """Custom serializer method that handles the `asyncpg.pgproto.UUID`
+        implementation.
 
         Parameters
         ----------

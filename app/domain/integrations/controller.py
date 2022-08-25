@@ -1,22 +1,24 @@
-from app.core import Controller as BaseController
-from app.core import get, get_collection
+from starlite import Controller as BaseController
+from starlite import get
+
+from app.core.handlers import create_pagination_dependencies
 
 from . import schema
 from .service import Service
 
 
 class Controller(BaseController):
-    """
-    Read-only view of all integrations.
+    """Read-only view of all integrations.
 
-    Identification and modification must occur through the relevant provider sub-route, e.g.:
-    `/providers/<provider_id>/integrations`, etc.
+    Identification and modification must occur through the relevant
+    provider sub-route, e.g.: `/providers/<provider_id>/integrations`,
+    etc.
     """
 
     tags = ["Integrations"]
     member_path = "{integration_id:uuid}"
 
-    @get_collection()
+    @get(dependencies=create_pagination_dependencies())
     async def list_all_integrations(self, service: Service) -> list[schema.Integration]:
         """Paginated list of all integrations."""
         return await service.list()

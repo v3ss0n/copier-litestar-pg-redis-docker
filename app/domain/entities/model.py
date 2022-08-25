@@ -18,6 +18,4 @@ class Entity(InProviderDomain):
     )
     # ryno id is an implementation detail, not to be exposed to clients.
     ryno_id: Mapped[int] = Column(Integer, index=True, nullable=True)
-    extra: Mapped[dict[str, Any]] = Column(
-        pg.JSONB, nullable=False, server_default=text("'{}'::jsonb")
-    )
+    extra: Mapped[dict[str, Any]] = Column(pg.JSONB, nullable=False, server_default=text("'{}'::jsonb"))

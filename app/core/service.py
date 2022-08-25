@@ -33,8 +33,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         )
 
     async def create(self, data: T_schema) -> T_schema:
-        """
-        Default create handler.
+        """Default create handler.
 
         Parameters
         ----------
@@ -48,8 +47,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         return self.schema.from_orm(model)
 
     async def list(self) -> list[T_schema]:
-        """
-        Default list view handler.
+        """Default list view handler.
 
         Returns
         -------
@@ -59,8 +57,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         return [self.schema.from_orm(i) for i in models]
 
     async def update(self, data: T_schema) -> T_schema:
-        """
-        Default update view handler.
+        """Default update view handler.
 
         Parameters
         ----------
@@ -74,8 +71,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         return self.schema.from_orm(model)
 
     async def upsert(self, data: T_schema) -> T_schema:
-        """
-        Default upsert view handler.
+        """Default upsert view handler.
 
         Parameters
         ----------
@@ -89,8 +85,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         return self.schema.from_orm(model)
 
     async def show(self) -> T_schema:
-        """
-        Default member view handler.
+        """Default member view handler.
 
         Returns
         -------
@@ -100,8 +95,7 @@ class Service(Generic[T_model, T_repository, T_schema]):
         return self.schema.from_orm(model)
 
     async def destroy(self) -> T_schema:
-        """
-        Default delete view handler.
+        """Default delete view handler.
 
         Returns
         -------

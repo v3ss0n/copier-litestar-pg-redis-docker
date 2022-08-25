@@ -20,8 +20,7 @@ def filters(
     updated_filter: BeforeAfter | None = Dependency(),
     limit_offset: LimitOffset | None = Dependency(),
 ) -> Filters:
-    """
-    Aggregates filter dependencies to simplify injection.
+    """Aggregates filter dependencies to simplify injection.
 
     Parameters
     ----------
