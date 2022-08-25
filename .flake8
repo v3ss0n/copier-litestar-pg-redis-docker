@@ -2,3 +2,4 @@
 exclude = alembic/*
 max-line-length = 100
 ignore = E,W,B008
+type-checking-exempt-modules = from sqlalchemy.orm

@@ -1,6 +1,6 @@
 import json
 from asyncio import current_task
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import (
@@ -9,9 +9,11 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
-from starlite import Response
 
 from app.settings import db_settings
+
+if TYPE_CHECKING:
+    from starlite import Response
 
 
 def _default(val: Any) -> str:
@@ -44,7 +46,7 @@ async def on_shutdown() -> None:
     await engine.dispose()
 
 
-async def session_after_request(response: Response) -> Response:
+async def session_after_request(response: "Response") -> "Response":
     """Passed to `Starlite.after_request`.
 
     Inspects `response` to determine if we should commit, or rollback the database

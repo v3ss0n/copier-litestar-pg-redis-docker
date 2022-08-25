@@ -1,7 +1,9 @@
-from collections import abc
-from typing import Any
+from typing import TYPE_CHECKING, Any, Optional
 
 from starlite import BaseRouteHandler, NotAuthorizedException, Request
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class CheckPayloadMismatch:
@@ -30,7 +32,7 @@ class CheckPayloadMismatch:
         self,
         payload_key: str,
         path_key: str,
-        compare_fn: abc.Callable[[Any, Any], bool] | None = None,
+        compare_fn: Optional["Callable[[Any, Any], bool]"] = None,
     ) -> None:
         self.payload_key = payload_key
         self.path_key = path_key

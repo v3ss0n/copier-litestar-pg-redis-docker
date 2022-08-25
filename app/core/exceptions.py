@@ -1,13 +1,16 @@
 import logging
+from typing import TYPE_CHECKING
 
-from starlette.responses import Response
-from starlite.connection import Request
 from starlite.middleware import ExceptionHandlerMiddleware
 
 logger = logging.getLogger(__name__)
 
+if TYPE_CHECKING:
+    from starlette.responses import Response
+    from starlite.connection import Request
 
-def logging_exception_handler(request: Request, exc: Exception) -> Response:
+
+def logging_exception_handler(request: "Request", exc: Exception) -> "Response":
     """Logs exception and returns appropriate response.
 
     Parameters

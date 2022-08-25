@@ -1,11 +1,16 @@
 import re
 from datetime import datetime
-from uuid import UUID, uuid4
+from typing import TYPE_CHECKING
+from uuid import uuid4
 
 from sqlalchemy import Column, DateTime, MetaData
 from sqlalchemy.dialects import postgresql as pg
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm.decl_api import as_declarative, declared_attr
+
+if TYPE_CHECKING:
+    from uuid import UUID
+
 
 convention = {
     "ix": "ix_%(column_0_label)s",
@@ -30,6 +35,6 @@ class Base:
     def __tablename__(cls) -> str:  # pylint: disable=no-self-argument
         return re.sub(cls.table_name_pattern, "_", cls.__name__).lower()
 
-    id: Mapped[UUID] = Column(pg.UUID, default=uuid4, primary_key=True)  # type:ignore[misc]
-    created_date: Mapped[datetime] = Column(DateTime, default=datetime.now, nullable=False)
-    updated_date: Mapped[datetime] = Column(DateTime, default=datetime.now, nullable=False)
+    id: Mapped["UUID"] = Column(pg.UUID, default=uuid4, primary_key=True)  # type:ignore[misc]
+    created_date: Mapped["datetime"] = Column(DateTime, default=datetime.now, nullable=False)
+    updated_date: Mapped["datetime"] = Column(DateTime, default=datetime.now, nullable=False)

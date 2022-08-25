@@ -1,10 +1,13 @@
-from uuid import UUID
+from typing import TYPE_CHECKING
 
 from starlite import Dependency, Parameter
 
 from app import core
 from app.domain import integrations
 from app.domain.integrations import model, schema, types
+
+if TYPE_CHECKING:
+    from uuid import UUID
 
 
 class Service(core.Service[model.Integration, integrations.Repository, schema.Integration]):
@@ -16,7 +19,7 @@ class Service(core.Service[model.Integration, integrations.Repository, schema.In
     async def new(
         cls,
         *,
-        provider_id: UUID = Parameter(),
+        provider_id: "UUID" = Parameter(),
         integration_type: types.IntegrationEnum | None = Parameter(),
         filters: core.dependencies.Filters = Dependency(),
     ) -> "Service":

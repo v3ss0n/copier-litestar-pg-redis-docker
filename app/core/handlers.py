@@ -1,8 +1,7 @@
 import itertools
-from collections import abc
+from typing import TYPE_CHECKING
 
 from starlite import Provide
-from starlite.types import Guard
 
 from .filter_parameters import (
     created_filter,
@@ -11,6 +10,9 @@ from .filter_parameters import (
     updated_filter,
 )
 from .guards import CheckPayloadMismatch
+
+if TYPE_CHECKING:
+    from starlite.types import Guard
 
 
 def create_pagination_dependencies() -> dict[str, Provide]:
@@ -29,7 +31,7 @@ def create_pagination_dependencies() -> dict[str, Provide]:
     }
 
 
-def resolve_id_guards(id_guard: str | tuple[str, str] | abc.Collection[str | tuple[str, str]]) -> list[Guard]:
+def resolve_id_guards(id_guard: str | tuple[str, str] | list[str | tuple[str, str]]) -> list["Guard"]:
     """Resolves guards by ID.
 
     Parameters

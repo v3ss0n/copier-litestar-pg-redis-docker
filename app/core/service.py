@@ -1,7 +1,5 @@
-from typing import Generic, TypeVar
-from uuid import UUID
+from typing import TYPE_CHECKING, Generic, Optional, TypeVar
 
-from .dependencies import Filters
 from .model import Base
 from .repository import Repository
 from .schema import Schema
@@ -12,6 +10,11 @@ T_repository = TypeVar("T_repository", bound=Repository)
 T_schema = TypeVar("T_schema", bound=Schema)
 T_service = TypeVar("T_service", bound="Service")
 
+if TYPE_CHECKING:
+    from uuid import UUID
+
+    from .dependencies import Filters
+
 
 class Service(Generic[T_model, T_repository, T_schema]):
     model: type[T_model]
@@ -21,8 +24,8 @@ class Service(Generic[T_model, T_repository, T_schema]):
     def __init__(
         self,
         *,
-        id_: UUID | None,
-        filters: Filters,
+        id_: Optional["UUID"],
+        filters: "Filters",
     ) -> None:
         self.repository = self.repository_type(
             id_=id_,

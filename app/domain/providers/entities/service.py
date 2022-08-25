@@ -1,10 +1,14 @@
-from uuid import UUID
+from typing import TYPE_CHECKING, Optional
 
 from starlite import Dependency, Parameter
 from starlite.exceptions import ValidationException
 
-from app import core
 from app.domain import entities
+
+if TYPE_CHECKING:
+    from uuid import UUID
+
+    from app.core.dependencies import Filters
 
 
 class Service(entities.Service):
@@ -19,9 +23,9 @@ class Service(entities.Service):
     async def new(
         cls,
         *,
-        provider_id: UUID = Parameter(),
-        entity_id: UUID | None = Parameter(),
-        filters: core.dependencies.Filters = Dependency(),
+        provider_id: "UUID" = Parameter(),
+        entity_id: Optional["UUID"] = Parameter(),
+        filters: "Filters" = Dependency(),
     ) -> "Service":
         """Creates a new service object.
 

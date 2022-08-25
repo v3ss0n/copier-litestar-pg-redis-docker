@@ -1,26 +1,30 @@
 import functools
-from collections import abc
 from contextlib import contextmanager
-from typing import Any, Generic, TypeVar, overload
-from uuid import UUID
+from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar, overload
 
 from sqlalchemy import select
-from sqlalchemy.engine import Result, ScalarResult
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import Executable
-from sqlalchemy.sql.selectable import TypedReturnsRows
 from starlite.exceptions import NotFoundException
 
 from ..db import AsyncScopedSession
 from ..model import Base
-from ..types import BeforeAfter, CollectionFilter, LimitOffset
 from .exceptions import RepositoryConflictException, RepositoryException
 
 T = TypeVar("T")
 T_row = TypeVar("T_row", bound=tuple[Any, ...])
 T_model = TypeVar("T_model", bound=Base)
 T_base = TypeVar("T_base", bound=Base)
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+    from uuid import UUID
+
+    from sqlalchemy.engine import Result, ScalarResult
+    from sqlalchemy.ext.asyncio import AsyncSession
+    from sqlalchemy.sql import Executable
+    from sqlalchemy.sql.selectable import TypedReturnsRows
+
+    from ..types import BeforeAfter, CollectionFilter, LimitOffset
 
 
 @contextmanager
@@ -66,11 +70,11 @@ class Repository(Generic[T_model]):
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
-        id_: UUID | None = None,
-        id_filter: CollectionFilter[UUID] | None = None,
-        created_filter: BeforeAfter | None = None,
-        updated_filter: BeforeAfter | None = None,
-        limit_offset: LimitOffset | None = None,
+        id_: Optional["UUID"] = None,
+        id_filter: Optional["CollectionFilter[UUID]"] = None,
+        created_filter: Optional["BeforeAfter"] = None,
+        updated_filter: Optional["BeforeAfter"] = None,
+        limit_offset: Optional["LimitOffset"] = None,
         id_key: str = "id",
     ) -> None:
         self.select = select(self.model_type)
@@ -99,19 +103,19 @@ class Repository(Generic[T_model]):
             self.select = self.select.where(getattr(self.model_type, k) == v)
 
     @functools.cached_property
-    def session(self) -> AsyncSession:
+    def session(self) -> "AsyncSession":
         """A scoped session for the repository instance."""
         return AsyncScopedSession()
 
     @overload
-    async def execute(self, statement: TypedReturnsRows[T_row], **kwargs: Any) -> Result[T_row]:
+    async def execute(self, statement: "TypedReturnsRows[T_row]", **kwargs: Any) -> "Result[T_row]":
         ...
 
     @overload
-    async def execute(self, statement: Executable, **kwargs: Any) -> Result[Any]:
+    async def execute(self, statement: "Executable", **kwargs: Any) -> "Result[Any]":
         ...
 
-    async def execute(self, statement: Executable, **kwargs: Any) -> Result[Any]:
+    async def execute(self, statement: "Executable", **kwargs: Any) -> "Result[Any]":
         """Executes `statement` with error handling.
 
         Parameters
@@ -150,12 +154,12 @@ class Repository(Generic[T_model]):
 
     # create
 
-    def parse_obj(self, data: abc.Mapping[str, Any]) -> T_model:
+    def parse_obj(self, data: "Mapping[str, Any]") -> T_model:
         """Creates an instance of `T_model` from `data`.
 
         Parameters
         ----------
-        data : abc.Mapping[str, Any]
+        data : Mapping[str, Any]
 
         Returns
         -------
@@ -184,7 +188,7 @@ class Repository(Generic[T_model]):
 
     # read
 
-    def apply_limit_offset_pagination(self, data: LimitOffset) -> None:
+    def apply_limit_offset_pagination(self, data: "LimitOffset") -> None:
         """Paginate the base select query.
 
         Parameters
@@ -193,7 +197,7 @@ class Repository(Generic[T_model]):
         """
         self.select = self.select.limit(data.limit).offset(data.offset)
 
-    def filter_on_datetime_field(self, data: BeforeAfter) -> None:
+    def filter_on_datetime_field(self, data: "BeforeAfter") -> None:
         """Add where-clause(s) to the query.
 
         Parameters
@@ -206,7 +210,7 @@ class Repository(Generic[T_model]):
         if data.after is not None:
             self.select = self.select.where(field > data.before)
 
-    def filter_in_collection(self, data: CollectionFilter) -> None:
+    def filter_in_collection(self, data: "CollectionFilter") -> None:
         """Adds a `WHERE ... IN (...)` clause to the query.
 
         Parameters
@@ -216,7 +220,7 @@ class Repository(Generic[T_model]):
         if data.values is not None:
             self.select = self.select.where(getattr(self.model_type, data.field_name).in_(data.values))
 
-    async def scalars(self, **kwargs: Any) -> ScalarResult[T_model]:
+    async def scalars(self, **kwargs: Any) -> "ScalarResult[T_model]":
         """Return the result of `self.select`, filtered by `**kwargs`.
 
         Parameters
@@ -287,7 +291,7 @@ class Repository(Generic[T_model]):
     # update
 
     @staticmethod
-    def update_model(model: T, data: abc.Mapping[str, Any]) -> T:
+    def update_model(model: T, data: "Mapping[str, Any]") -> T:
         """Simple helper for setting key/values from `data` as attributes on
         `model`.
 
@@ -305,7 +309,7 @@ class Repository(Generic[T_model]):
             setattr(model, k, v)
         return model
 
-    async def update(self, data: abc.Mapping[str, Any]) -> T_model:
+    async def update(self, data: "Mapping[str, Any]") -> T_model:
         """Update the model returned from `self.select` with key/val pairs from
         `data`.
 

@@ -1,5 +1,5 @@
 from datetime import datetime
-from uuid import UUID
+from typing import TYPE_CHECKING
 
 from starlite import Parameter
 
@@ -9,8 +9,13 @@ from .types import BeforeAfter, CollectionFilter, LimitOffset
 
 DTorNone = datetime | None
 
+if TYPE_CHECKING:
+    from uuid import UUID
 
-def id_filter(ids: list[UUID] | None = Parameter(query="ids", default=None, required=False)) -> CollectionFilter[UUID]:
+
+def id_filter(
+    ids: list["UUID"] | None = Parameter(query="ids", default=None, required=False)
+) -> CollectionFilter["UUID"]:
     """Return type consumed by ``Repository.filter_in_collection()``.
 
     Parameters

@@ -1,13 +1,14 @@
-from uuid import UUID
+from typing import Optional
+from uuid import UUID  # noqa: TC003
 
 from pydantic import Field
 
-from app import core
+from app.core import Schema
 
-from .types import EntitiesEnum
+from .types import EntitiesEnum  # noqa: TC003
 
 
-class Extra(core.Schema):
+class Extra(Schema):
     """Extra information about the entity that may be required depending on the
     entity type.
 
@@ -15,10 +16,10 @@ class Extra(core.Schema):
     the team/sport-person that the competitor wraps.
     """
 
-    sub_entity: "Entity | None"
+    sub_entity: Optional["Entity"]
 
 
-class Entity(core.Schema):
+class Entity(Schema):
     """Representation of provider entities that forces integrations to put the
     provider entities into the terms of our core entities."""
 

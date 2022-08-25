@@ -1,8 +1,6 @@
 #!/bin/bash
 
 # - validates Gunicorn config
-# - waits for Redis
-# - waits for PostgreSQL
 # - runs Alembic migrations
 # - starts Starlite application
 #

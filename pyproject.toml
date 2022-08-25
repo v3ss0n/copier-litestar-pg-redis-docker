@@ -76,7 +76,6 @@ env_files = [".env.example"]
 [tool.pylint.MESSAGE_CONTROL]
 disable = [
     "line-too-long",
-    "fixme",
     "invalid-name",
     "missing-class-docstring",
     "missing-module-docstring",
@@ -104,6 +103,3 @@ max-line-length = "120"
 # Logging modules to check that the string format arguments are in logging
 # function parameter format
 logging-modules=["logging","picologging"]
-
-[tool.pycln]
-all = true
