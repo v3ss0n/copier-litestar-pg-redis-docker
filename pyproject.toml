@@ -53,9 +53,7 @@ exclude_lines = [
 [tool.coverage.run]
 omit = [
     "tests/*",
-    "src/app/utils/restartable_worker.py",
-    "src/app/utils/redis_ready.py",
-    "src/app/utils/postgres_ready.py",
+    "utils/restartable_worker.py",
 ]
 
 [tool.mypy]
