@@ -1,3 +1,4 @@
+import uvicorn
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 from starlite import CompressionConfig, Starlite
 
@@ -18,3 +19,6 @@ app = Starlite(
     response_class=response.Response,
     route_handlers=[routes.health_check, domain.router],
 )
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -4,19 +4,20 @@ from starlite import Dependency, Parameter
 
 from app import core
 
-from . import model, schema
+from .model import Integration as IntegrationModel
 from .repository import Repository
+from .schema import Integration as IntegrationSchema
 
 
-class Service(core.Service[model.Integration, Repository, schema.Integration]):
+class Service(core.Service[IntegrationModel, Repository, IntegrationSchema]):
     """Read only service for the root `integration` domain.
 
     CRUD operations must be performed through a provider's subdomain.
     """
 
-    model = model.Integration
+    model = IntegrationModel
     repository_type = Repository
-    schema = schema.Integration
+    schema = IntegrationSchema
 
     @classmethod
     async def new(
