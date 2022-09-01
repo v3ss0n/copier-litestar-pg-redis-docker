@@ -83,6 +83,7 @@ disable = [
     "duplicate-code",
 ]
 enable = "useless-suppression"
+extension-pkg-allow-list = ["pydantic","asyncpg.pgproto.pgproto"]
 
 [tool.pylint.VARIABLES]
 ignored-argument-names = "args|kwargs|_|__"
