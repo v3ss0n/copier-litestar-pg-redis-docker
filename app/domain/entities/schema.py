@@ -1,11 +1,11 @@
 from typing import Optional
-from uuid import UUID  # noqa: TC003
+from uuid import UUID
 
 from pydantic import Field
 
 from app.core import Schema
 
-from .types import EntitiesEnum  # noqa: TC003
+from .types import EntitiesEnum
 
 
 class Extra(Schema):
@@ -28,7 +28,7 @@ class Entity(Schema):
     owner_id: UUID | None
     provider_id: UUID
     type: EntitiesEnum
-    extra: Extra = Field(default_factory=Extra)
+    extra: Extra = Field(default_factory=Extra)  # type:ignore[arg-type]
 
 
 Extra.update_forward_refs()

@@ -12,6 +12,11 @@ class AppSettings(BaseSettings):
     LOG_LEVEL: str
     NAME: str
 
+    @property
+    def slug(self) -> str:
+        """Name without spaces and all lower case."""
+        return "-".join(self.NAME.lower().split())
+
 
 class CacheSettings(BaseSettings):
     class Config:

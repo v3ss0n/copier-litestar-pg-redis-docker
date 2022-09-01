@@ -1,4 +1,4 @@
-from uuid import UUID  # noqa: TC003
+from uuid import UUID
 
 from app import core
 

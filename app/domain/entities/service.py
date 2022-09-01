@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from uuid import UUID
 
 from starlite import Dependency, Parameter
 
@@ -6,9 +6,6 @@ from app import core
 
 from . import model, schema
 from .repository import Repository
-
-if TYPE_CHECKING:
-    from uuid import UUID
 
 
 class Service(core.Service[model.Entity, Repository, schema.Entity]):
@@ -25,7 +22,7 @@ class Service(core.Service[model.Entity, Repository, schema.Entity]):
     async def new(
         cls,
         *,
-        entity_id: Optional["UUID"] = Parameter(),
+        entity_id: UUID | None = Parameter(),
         filters: core.dependencies.Filters = Dependency(),
     ) -> "Service":
         """Creates a new service object.

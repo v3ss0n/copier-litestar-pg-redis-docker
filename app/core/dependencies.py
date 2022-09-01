@@ -1,27 +1,24 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Optional
+from uuid import UUID
 
 from starlite import Dependency
 
-if TYPE_CHECKING:
-    from uuid import UUID
-
-    from .types import BeforeAfter, CollectionFilter, LimitOffset
+from .types import BeforeAfter, CollectionFilter, LimitOffset
 
 
 @dataclass
 class Filters:
-    id: Optional["CollectionFilter[UUID]"]
-    created: Optional["BeforeAfter"]
-    updated: Optional["BeforeAfter"]
-    limit_offset: Optional["LimitOffset"]
+    id: CollectionFilter[UUID] | None
+    created: BeforeAfter | None
+    updated: BeforeAfter | None
+    limit_offset: LimitOffset | None
 
 
 def filters(
-    id_filter: Optional["CollectionFilter[UUID]"] = Dependency(),
-    created_filter: Optional["BeforeAfter"] = Dependency(),
-    updated_filter: Optional["BeforeAfter"] = Dependency(),
-    limit_offset: Optional["LimitOffset"] = Dependency(),
+    id_filter: CollectionFilter[UUID] | None = Dependency(),
+    created_filter: BeforeAfter | None = Dependency(),
+    updated_filter: BeforeAfter | None = Dependency(),
+    limit_offset: LimitOffset | None = Dependency(),
 ) -> Filters:
     """Aggregates filter dependencies to simplify injection.
 

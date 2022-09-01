@@ -1,18 +1,16 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Generic, Optional, TypeVar, Union
+from datetime import datetime
+from typing import Generic, TypeVar, Union
+from uuid import UUID
 
-if TYPE_CHECKING:
-    from datetime import datetime
-    from uuid import UUID
-
-ParamT = TypeVar("ParamT", bound=Union[float, str, "UUID"])
+ParamT = TypeVar("ParamT", bound=Union[float, str, UUID])
 
 
 @dataclass
 class BeforeAfter:
     field_name: str
-    before: Optional["datetime"]
-    after: Optional["datetime"]
+    before: datetime | None
+    after: datetime | None
 
 
 @dataclass
