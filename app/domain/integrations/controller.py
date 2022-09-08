@@ -5,9 +5,10 @@ from starlite import get
 
 from app.core.handlers import create_pagination_dependencies
 
+from .service import Service
+
 if TYPE_CHECKING:
     from .schema import Integration
-    from .service import Service
 
 
 class Controller(BaseController):
@@ -22,11 +23,11 @@ class Controller(BaseController):
     member_path = "{integration_id:uuid}"
 
     @get(dependencies=create_pagination_dependencies())
-    async def list_all_integrations(self, service: "Service") -> list["Integration"]:
+    async def list_all_integrations(self, service: Service) -> list["Integration"]:
         """Paginated list of all integrations."""
         return await service.list()
 
     @get(path=member_path, cache=True)
-    async def integration_detail(self, service: "Service") -> "Integration":
+    async def integration_detail(self, service: Service) -> "Integration":
         """Integration member view."""
         return await service.show()
