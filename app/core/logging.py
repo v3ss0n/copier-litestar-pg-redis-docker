@@ -48,9 +48,6 @@ log_config = LoggingConfig(
         "app": {
             "propagate": True,
         },
-        "gunicorn.error": {
-            "propagate": True,
-        },
         "uvicorn.access": {
             "propagate": True,
             "filters": ["health_filter"],
