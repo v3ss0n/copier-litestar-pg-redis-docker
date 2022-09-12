@@ -25,21 +25,6 @@ Starlite is a light and flexible ASGI API framework.
 
 [Starlite documentation 📚](https://starlite-api.github.io/starlite/)
 
-### RestartableUvicornWorker
-
-There is a known issue when running gunicorn with uvicorn workers, see
-[here](https://github.com/benoitc/gunicorn/issues/2339).
-
-For convenience an implementation of the workaround
-([this one](https://github.com/benoitc/gunicorn/issues/2339#issuecomment-867481389))
-suggested in that gunicorn issue is included in the application source.
-
-To use the included `RestartableUvicornWorker` set the `GUNICORN_WORKER_CLASS` env var
-to `utils.restartable_worker.RestartableUvicornWorker`.
-
-In production, set the `GUNICORN_WORKER_CLASS` env var to `uvicorn.workers.UvicornWorker`
-as advised [here](https://www.uvicorn.org/deployment/).
-
 ### Setup
 
 - `pre-commit install`

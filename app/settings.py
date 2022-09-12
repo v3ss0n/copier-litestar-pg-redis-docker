@@ -36,22 +36,17 @@ class DatabaseSettings(BaseSettings):
     URL: PostgresDsn
 
 
-class GunicornSettings(BaseSettings):
+class ServerSettings(BaseSettings):
     class Config:
         case_sensitive = True
-        env_prefix = "GUNICORN_"
+        env_prefix = "UVICORN_"
 
-    ACCESS_LOG: str
-    ERROR_LOG: str
     HOST: str
     KEEPALIVE: int
     LOG_LEVEL: str
     PORT: int
     RELOAD: str
-    THREADS: int
     TIMEOUT: int
-    WORKERS: int
-    WORKER_CLASS: str
 
 
 class SentrySettings(BaseSettings):
@@ -66,5 +61,5 @@ class SentrySettings(BaseSettings):
 app_settings = AppSettings()
 cache_settings = CacheSettings()
 db_settings = DatabaseSettings()
-gunicorn_settings = GunicornSettings()
+server_settings = ServerSettings()
 sentry_settings = SentrySettings()

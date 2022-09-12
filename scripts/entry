@@ -1,21 +1,14 @@
 #!/bin/bash
 
-# - validates Gunicorn config
 # - runs Alembic migrations
 # - starts Starlite application
-#
 
 set -o errexit
 set -o pipefail
 set -o nounset
 
-# Check Gunicorn Config
-gunicorn --check-config --config=gunicorn.conf.py app.main:app
-echo "Gunicorn Config OK!"
-echo "Waiting for 5 seconds before application startup"
-
 echo Running migrations...
 alembic upgrade head
 
 echo Starting Starlite App...
-gunicorn app.main:app
+uvicorn app.main:app

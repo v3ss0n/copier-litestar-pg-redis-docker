@@ -28,7 +28,7 @@ RUN apt-get purge -y curl git build-essential \
     && rm -rf /var/cache/apt/*
 
 FROM install as app-image
-COPY gunicorn.conf.py alembic.ini ./
+COPY alembic.ini ./
 COPY alembic alembic
 COPY app app
 
