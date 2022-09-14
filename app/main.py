@@ -3,7 +3,17 @@ from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 from starlite import CompressionConfig, Starlite
 
 from app import domain
-from app.core import cache, client, db, exceptions, openapi, response, routes, sentry
+from app.core import (
+    cache,
+    client,
+    db,
+    exceptions,
+    openapi,
+    response,
+    routes,
+    sentry,
+    static_files,
+)
 from app.core.logging import log_config
 from app.settings import app_settings, server_settings
 
@@ -18,6 +28,7 @@ app = Starlite(
     openapi_config=openapi.config,
     response_class=response.Response,
     route_handlers=[routes.health_check, domain.router],
+    static_files_config=static_files.config,
 )
 
 if __name__ == "__main__":
