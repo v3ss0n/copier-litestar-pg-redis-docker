@@ -49,18 +49,22 @@ log_config = LoggingConfig(
             "propagate": True,
         },
         "uvicorn.access": {
-            "propagate": True,
+            "propagate": False,
             "filters": ["health_filter"],
+            "handlers": ["queue_listener"],
         },
         "uvicorn.error": {
-            "propagate": True,
+            "propagate": False,
+            "handlers": ["queue_listener"],
         },
         "sqlalchemy.engine": {
-            "propagate": True,
+            "propagate": False,
+            "handlers": ["queue_listener"],
         },
         "starlite": {
             "level": "WARNING",
-            "propagate": True,
+            "propagate": False,
+            "handlers": ["queue_listener"],
         },
     },
 )
