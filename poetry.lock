@@ -389,7 +389,7 @@ pyparsing = ">=2.0.2,<3.0.5 || >3.0.5"
 name = "picologging"
 version = "0.8.1"
 description = "A fast and lightweight logging library for Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -720,7 +720,7 @@ typing-extensions = ">=4.1.0"
 
 [package.extras]
 aiomysql = ["aiomysql", "greenlet (!=0.4.17)"]
-aiosqlite = ["aiosqlite", "greenlet (!=0.4.17)", "typing_extensions (!=3.10.0.1)"]
+aiosqlite = ["aiosqlite", "greenlet (!=0.4.17)", "typing-extensions (!=3.10.0.1)"]
 asyncio = ["greenlet (!=0.4.17)"]
 asyncmy = ["asyncmy (>=0.2.3,!=0.2.4)", "greenlet (!=0.4.17)"]
 mariadb_connector = ["mariadb (>=1.0.1,!=1.1.2)"]
@@ -730,7 +730,7 @@ mssql_pyodbc = ["pyodbc"]
 mypy = ["mypy (>=0.910)"]
 mysql = ["mysqlclient (>=1.4.0)"]
 mysql_connector = ["mysql-connector-python"]
-oracle = ["cx_oracle (>=7)"]
+oracle = ["cx-oracle (>=7)"]
 oracle_oracledb = ["oracledb (>=1.0.1)"]
 postgresql = ["psycopg2 (>=2.7)"]
 postgresql_asyncpg = ["asyncpg", "greenlet (!=0.4.17)"]
@@ -739,13 +739,13 @@ postgresql_psycopg = ["psycopg (>=3.0.7)"]
 postgresql_psycopg2binary = ["psycopg2-binary"]
 postgresql_psycopg2cffi = ["psycopg2cffi"]
 pymysql = ["pymysql"]
-sqlcipher = ["sqlcipher3_binary"]
+sqlcipher = ["sqlcipher3-binary"]
 
 [package.source]
 type = "git"
 url = "https://github.com/sqlalchemy/sqlalchemy.git"
 reference = "main"
-resolved_reference = "9ae645d5d1a8cc7732a6d335be6205d0b21e31b1"
+resolved_reference = "86e21c2d6f750f55c5dbe31d6ab8875230d8ecb0"
 
 [[package]]
 name = "starlette"
@@ -763,7 +763,7 @@ full = ["itsdangerous", "jinja2", "python-multipart", "pyyaml", "requests"]
 
 [[package]]
 name = "starlite"
-version = "1.21.0"
+version = "1.21.2"
 description = "Light-weight and flexible ASGI API Framework"
 category = "main"
 optional = false
@@ -773,7 +773,7 @@ python-versions = ">=3.7,<4.0"
 brotli = {version = "*", optional = true, markers = "extra == \"brotli\" or extra == \"full\""}
 cryptography = {version = "*", optional = true, markers = "extra == \"cryptography\" or extra == \"full\""}
 orjson = "*"
-picologging = {version = "*", optional = true, markers = "extra == \"picologging\" or extra == \"full\""}
+picologging = "*"
 pydantic = "*"
 pydantic-factories = "*"
 pydantic-openapi-schema = "*"
@@ -786,8 +786,7 @@ typing-extensions = "*"
 [package.extras]
 brotli = ["brotli"]
 cryptography = ["cryptography"]
-full = ["brotli", "cryptography", "picologging", "requests"]
-picologging = ["picologging"]
+full = ["brotli", "cryptography", "requests"]
 testing = ["requests"]
 
 [[package]]
@@ -1679,8 +1678,8 @@ starlette = [
     {file = "starlette-0.20.4.tar.gz", hash = "sha256:42fcf3122f998fefce3e2c5ad7e5edbf0f02cf685d646a83a08d404726af5084"},
 ]
 starlite = [
-    {file = "starlite-1.21.0-py3-none-any.whl", hash = "sha256:91fbabb9652008240b4a6fda76719c530d2475eaa8061e74f89350802c664868"},
-    {file = "starlite-1.21.0.tar.gz", hash = "sha256:3c382ed0ccd35b91369f2854757695817abe7844e73b385137c5aec7932a0ad7"},
+    {file = "starlite-1.21.2-py3-none-any.whl", hash = "sha256:5d9b26e682b1f9826637e9b35af1e1775337162541e1ca3fd2eccafa008ed619"},
+    {file = "starlite-1.21.2.tar.gz", hash = "sha256:4dc1545a84f827f240779eca0d724723e597dad3327d6332d189a5fe4785d688"},
 ]
 starlite-multipart = [
     {file = "starlite-multipart-1.1.0.tar.gz", hash = "sha256:bd5b25a614fadc237fe4da60f0c43c5e7d045a523d4e3685237047e1e228da87"},
