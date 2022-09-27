@@ -389,7 +389,7 @@ pyparsing = ">=2.0.2,<3.0.5 || >3.0.5"
 name = "picologging"
 version = "0.8.1"
 description = "A fast and lightweight logging library for Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -763,7 +763,7 @@ full = ["itsdangerous", "jinja2", "python-multipart", "pyyaml", "requests"]
 
 [[package]]
 name = "starlite"
-version = "1.21.0"
+version = "1.21.2"
 description = "Light-weight and flexible ASGI API Framework"
 category = "main"
 optional = false
@@ -773,7 +773,7 @@ python-versions = ">=3.7,<4.0"
 brotli = {version = "*", optional = true, markers = "extra == \"brotli\" or extra == \"full\""}
 cryptography = {version = "*", optional = true, markers = "extra == \"cryptography\" or extra == \"full\""}
 orjson = "*"
-picologging = {version = "*", optional = true, markers = "extra == \"picologging\" or extra == \"full\""}
+picologging = "*"
 pydantic = "*"
 pydantic-factories = "*"
 pydantic-openapi-schema = "*"
@@ -786,8 +786,7 @@ typing-extensions = "*"
 [package.extras]
 brotli = ["brotli"]
 cryptography = ["cryptography"]
-full = ["brotli", "cryptography", "picologging", "requests"]
-picologging = ["picologging"]
+full = ["brotli", "cryptography", "requests"]
 testing = ["requests"]
 
 [[package]]
@@ -1679,8 +1678,8 @@ starlette = [
     {file = "starlette-0.20.4.tar.gz", hash = "sha256:42fcf3122f998fefce3e2c5ad7e5edbf0f02cf685d646a83a08d404726af5084"},
 ]
 starlite = [
-    {file = "starlite-1.21.0-py3-none-any.whl", hash = "sha256:91fbabb9652008240b4a6fda76719c530d2475eaa8061e74f89350802c664868"},
-    {file = "starlite-1.21.0.tar.gz", hash = "sha256:3c382ed0ccd35b91369f2854757695817abe7844e73b385137c5aec7932a0ad7"},
+    {file = "starlite-1.21.2-py3-none-any.whl", hash = "sha256:5d9b26e682b1f9826637e9b35af1e1775337162541e1ca3fd2eccafa008ed619"},
+    {file = "starlite-1.21.2.tar.gz", hash = "sha256:4dc1545a84f827f240779eca0d724723e597dad3327d6332d189a5fe4785d688"},
 ]
 starlite-multipart = [
     {file = "starlite-multipart-1.1.0.tar.gz", hash = "sha256:bd5b25a614fadc237fe4da60f0c43c5e7d045a523d4e3685237047e1e228da87"},
