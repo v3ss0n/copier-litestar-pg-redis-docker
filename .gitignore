@@ -9,5 +9,6 @@ __pycache__/
 .coverage
 .dmypy.json
 .DS_Store
+.python-version
 .venv
 venv
