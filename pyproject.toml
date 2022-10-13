@@ -8,26 +8,48 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
+aiosmtplib = "*"
 alembic = "*"
 asyncpg = "*"
 httpx = "*"
 pydantic = "*"
+pydantic-factories = "*"
 redis = "*"
+saq = "*"
 sentry-sdk = "*"
 sqlalchemy = { git = "https://github.com/sqlalchemy/sqlalchemy.git", branch = "main" }
 starlite = "*"
+starlite-jwt = "*"
 uvicorn = { extras = ["standard"], version = "*" }
 uvloop = "*"
 
-[tool.poetry.dev-dependencies]
-pre-commit = "*"
+[tool.poetry.group.testing]
+optional = true
+
+[tool.poetry.group.testing.dependencies]
 pytest = "*"
 pytest-asyncio = "*"
-pytest-cov = "*"
 pytest-dotenv = "*"
-starlite = { extras = ["full"], version = "*" }
-types-redis = "*"
-types-requests = "*"
+starlite = { extras = ["testing"], version = "*" }
+
+[tool.poetry.group.coverage]
+optional = true
+
+[tool.poetry.group.coverage.dependencies]
+pytest-cov = "*"
+
+[tool.poetry.group.integration]
+optional = true
+
+[tool.poetry.group.integration.dependencies]
+pytest-docker = "*"
+docker-compose = "*"
+
+[tool.poetry.group.linting]
+optional = true
+
+[tool.poetry.group.linting.dependencies]
+pre-commit = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -53,21 +75,22 @@ exclude_lines = [
 omit = ["tests/*"]
 
 [tool.pytest.ini_options]
-addopts = "--cov=app -v --doctest-modules --doctest-glob=*.md --ignore=alembic"
 asyncio_mode = "auto"
 env_files = [".env.example"]
+testpaths = ["tests/unit"]
 
 [tool.pylint.MESSAGE_CONTROL]
 disable = [
-    "line-too-long",
+    "cyclic-import",
+    "duplicate-code",
     "invalid-name",
+    "line-too-long",
     "missing-class-docstring",
     "missing-module-docstring",
     "too-few-public-methods",
-    "duplicate-code",
 ]
 enable = "useless-suppression"
-extension-pkg-allow-list = ["pydantic","asyncpg.pgproto.pgproto"]
+extension-pkg-allow-list = ["pydantic", "asyncpg.pgproto.pgproto", "orjson"]
 
 [tool.pylint.VARIABLES]
 ignored-argument-names = "args|kwargs|_|__"
