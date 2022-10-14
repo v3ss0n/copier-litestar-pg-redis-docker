@@ -141,7 +141,7 @@ class SQLAlchemyRepository(AbstractRepository[T_model]):
             case "add":
                 self._session.add(model)
             case "merge":
-                await self._session.merge(model)
+                model = await self._session.merge(model)
         return model
 
     async def _execute(self) -> Result[tuple[T_model, ...]]:
