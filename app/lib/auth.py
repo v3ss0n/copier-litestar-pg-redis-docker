@@ -37,12 +37,7 @@ def login_handler() -> Response[User]:
     # what's important for our purposes is to have an identifier:
     user = User(name="Moishe Zuchmir", email="zuchmir@moishe.com", id=uuid4())
 
-    response = jwt_auth.login(identifier=str(user.id), response_body=user)
-
-    # you can do whatever you want to update the response instance here
-    # e.g. response.set_cookie(...)
-
-    return response
+    return jwt_auth.login(identifier=str(user.id), response_body=user)
 
 
 jwt_auth = JWTAuth(

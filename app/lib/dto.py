@@ -10,7 +10,7 @@ should always be private, or read-only at the model declaration layer.
 from enum import Enum, auto
 from typing import TYPE_CHECKING, Any, cast, get_args, get_origin, get_type_hints
 
-from pydantic import BaseModel, create_model
+from pydantic import BaseConfig, BaseModel, create_model
 from pydantic.fields import FieldInfo
 from sqlalchemy import inspect
 from sqlalchemy.orm import Mapped
@@ -102,5 +102,5 @@ def factory(
         (type_,) = get_args(type_hint)
         dto_fields[key] = (type_, _construct_field_info(column, purpose))
     return create_model(  # type:ignore[no-any-return,call-overload]
-        name, __config__=type("Config", (), {"orm_mode": True}), **dto_fields
+        name, __config__=type("Config", (BaseConfig,), {"orm_mode": True}), **dto_fields
     )

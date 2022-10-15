@@ -9,7 +9,7 @@ being loaded before that mocking has been completed.
 
 When writing tests, always use the `app` fixture, never import the app directly from this module.
 """
-import uvicorn  # type:ignore[import]
+import uvicorn
 from starlite import Provide, Starlite
 from starlite.plugins.sql_alchemy import SQLAlchemyPlugin
 

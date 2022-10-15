@@ -199,11 +199,13 @@ class EmailSettings(BaseSettings):
     SENDER: str
 
 
-api = APISettings()
-app = AppSettings()
-db = DatabaseSettings()
-email = EmailSettings()
-openapi = OpenAPISettings()
-redis = RedisSettings()
-sentry = SentrySettings()
-server = ServerSettings()
+# `.parse_obj()` thing is a workaround for pyright and pydantic interplay, see:
+# https://github.com/pydantic/pydantic/issues/3753#issuecomment-1087417884
+api = APISettings.parse_obj({})
+app = AppSettings.parse_obj({})
+db = DatabaseSettings.parse_obj({})
+email = EmailSettings.parse_obj({})
+openapi = OpenAPISettings.parse_obj({})
+redis = RedisSettings.parse_obj({})
+sentry = SentrySettings.parse_obj({})
+server = ServerSettings.parse_obj({})

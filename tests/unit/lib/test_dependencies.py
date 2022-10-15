@@ -1,5 +1,5 @@
-from collections import abc
 from datetime import datetime
+from typing import TYPE_CHECKING
 from uuid import uuid4
 
 import pytest
@@ -9,6 +9,9 @@ from starlite.testing import RequestFactory
 from app.lib import dependencies
 from app.lib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
 from app.lib.users import User
+
+if TYPE_CHECKING:
+    from collections import abc
 
 
 async def test_provide_user_dependency() -> None:
@@ -25,7 +28,7 @@ def test_id_filter() -> None:
 @pytest.mark.parametrize(
     ("filter_", "field_name"), [(dependencies.created_filter, "created"), (dependencies.updated_filter, "updated")]
 )
-def test_before_after_filters(filter_: abc.Callable[[datetime, datetime], BeforeAfter], field_name: str) -> None:
+def test_before_after_filters(filter_: "abc.Callable[[datetime, datetime], BeforeAfter]", field_name: str) -> None:
     assert filter_(datetime.max, datetime.min) == BeforeAfter(
         field_name=field_name, before=datetime.max, after=datetime.min
     )

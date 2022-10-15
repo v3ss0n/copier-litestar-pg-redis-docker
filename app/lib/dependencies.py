@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
-from uuid import UUID
 
 from starlite import Parameter, Provide
 
@@ -8,6 +7,8 @@ from . import settings
 from .repository.filters import BeforeAfter, CollectionFilter, LimitOffset
 
 if TYPE_CHECKING:
+    from uuid import UUID
+
     from starlite import Request
     from starlite_jwt import Token
 
@@ -28,7 +29,7 @@ async def provide_user(request: "Request[User, Token]") -> "User":
     return request.user
 
 
-def id_filter(ids: list[UUID] = Parameter(query="ids", default=list, required=False)) -> CollectionFilter[UUID]:
+def id_filter(ids: list["UUID"] = Parameter(query="ids", default=list, required=False)) -> CollectionFilter["UUID"]:
     """Return type consumed by ``Repository.filter_in_collection()``.
 
     Parameters

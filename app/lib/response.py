@@ -2,11 +2,12 @@ from typing import Any
 
 import starlite
 from asyncpg.pgproto import pgproto
+from starlite.response import Response as _Response
 
 __all__ = ["Response"]
 
 
-class Response(starlite.response.Response):
+class Response(_Response):
     """Custom [`starlite.Response`][starlite.response.Response] that handles
     serialization of the postgres UUID type used by SQLAlchemy."""
 

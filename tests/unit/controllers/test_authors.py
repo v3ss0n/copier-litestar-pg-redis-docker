@@ -2,12 +2,12 @@ from datetime import date
 from typing import TYPE_CHECKING
 from unittest.mock import ANY, AsyncMock
 
-import pytest
 from starlette.status import HTTP_200_OK
 
 from app.domain import authors
 
 if TYPE_CHECKING:
+    import pytest
     from starlite.testing import TestClient
 
 
@@ -32,7 +32,7 @@ def test_list_authors(client: "TestClient") -> None:
     ]
 
 
-def test_create_author(client: "TestClient", monkeypatch: pytest.MonkeyPatch) -> None:
+def test_create_author(client: "TestClient", monkeypatch: "pytest.MonkeyPatch") -> None:
     enqueue_mock = AsyncMock()
     monkeypatch.setattr(authors.queue, "enqueue", enqueue_mock)  # type:ignore[attr-defined]
     response = client.post("/v1/authors", json={"name": "James Patterson", "dob": "1974-3-22"})

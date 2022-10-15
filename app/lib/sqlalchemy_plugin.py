@@ -95,7 +95,7 @@ async def before_send_handler(message: "Message", _: "State", scope: "Scope") ->
         _:
         scope: ASGI scope
     """
-    session = cast(AsyncSession | None, scope.get(SESSION_SCOPE_KEY))
+    session = cast("AsyncSession | None", scope.get(SESSION_SCOPE_KEY))
     try:
         if session is not None and message["type"] == "http.response.start":
             if 200 <= message["status"] < 300:
