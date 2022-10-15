@@ -1,3 +1,12 @@
+"""Using this implementation instead of the `starlite.SQLAlchemy` plugin DTO as
+a POC for using the SQLAlchemy model type annotations to build the pydantic
+model.
+
+Also experimenting with marking columns for DTO purposes using the
+`SQLAlchemy.Column.info` field, which allows demarcation of fields that
+should always be private, or read-only at the model declaration layer.
+"""
+
 from enum import Enum, auto
 from typing import TYPE_CHECKING, Any, cast, get_args, get_origin, get_type_hints
 
