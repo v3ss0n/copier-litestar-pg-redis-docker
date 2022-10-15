@@ -1,4 +1,3 @@
-from collections import abc
 from datetime import date, datetime
 from typing import TYPE_CHECKING, Any
 from uuid import UUID
@@ -7,6 +6,8 @@ import pytest
 from starlite.testing import TestClient
 
 if TYPE_CHECKING:
+    from collections import abc
+
     from starlite import Starlite
 
 
@@ -27,7 +28,7 @@ def app() -> "Starlite":
 
 
 @pytest.fixture()
-def client(app: "Starlite") -> abc.Iterator[TestClient]:  # pylint: disable=redefined-outer-name
+def client(app: "Starlite") -> "abc.Iterator[TestClient]":  # pylint: disable=redefined-outer-name
     """Client instance attached to app.
 
     Args:

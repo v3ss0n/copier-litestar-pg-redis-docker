@@ -1,19 +1,22 @@
-from collections import abc
 from datetime import datetime
-from typing import Any, Generic, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 from uuid import uuid4
 
 from app.lib.orm import Base
 from app.lib.repository.abc import AbstractRepository
-from app.lib.repository.types import FilterTypes
+
+if TYPE_CHECKING:
+    from collections import abc
+
+    from app.lib.repository.types import FilterTypes
 
 T_base = TypeVar("T_base", bound=Base)
 
 
 class GenericMockRepository(AbstractRepository[T_base], Generic[T_base]):
-    collection: abc.MutableMapping[abc.Hashable, T_base] = {}
+    collection: "abc.MutableMapping[abc.Hashable, T_base]" = {}
 
-    def __init__(self, id_factory: abc.Callable[[], Any] = uuid4, **_: Any) -> None:
+    def __init__(self, id_factory: "abc.Callable[[], Any]" = uuid4, **_: Any) -> None:
         self._id_factory = id_factory
 
     def _find_or_raise_not_found(self, id_: Any) -> T_base:
@@ -29,14 +32,15 @@ class GenericMockRepository(AbstractRepository[T_base], Generic[T_base]):
         return data
 
     async def delete(self, id_: Any) -> T_base:
-        item = self._find_or_raise_not_found(id_)
-        del self.collection[id_]
-        return item
+        try:
+            return self._find_or_raise_not_found(id_)
+        finally:
+            del self.collection[id_]
 
     async def get(self, id_: Any) -> T_base:
         return self._find_or_raise_not_found(id_)
 
-    async def list(self, *filters: FilterTypes, **kwargs: Any) -> list[T_base]:
+    async def list(self, *filters: "FilterTypes", **kwargs: Any) -> list[T_base]:
         # TODO: support filters here  # pylint: disable=fixme
         return list(self.collection.values())
 

@@ -1,7 +1,5 @@
-from collections import abc
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import MagicMock
-from uuid import UUID
 
 import pytest
 
@@ -10,9 +8,13 @@ from app.lib import sqlalchemy_plugin, worker
 
 from .utils import GenericMockRepository
 
+if TYPE_CHECKING:
+    from collections import abc
+    from uuid import UUID
+
 
 @pytest.fixture(scope="session", autouse=True)
-def _patch_sqlalchemy_plugin() -> abc.Iterator:
+def _patch_sqlalchemy_plugin() -> "abc.Iterator":
     monkeypatch = pytest.MonkeyPatch()
     monkeypatch.setattr(
         sqlalchemy_plugin.SQLAlchemyConfig,  # type:ignore[attr-defined]
@@ -24,7 +26,7 @@ def _patch_sqlalchemy_plugin() -> abc.Iterator:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _patch_worker() -> abc.Iterator:
+def _patch_worker() -> "abc.Iterator":
     monkeypatch = pytest.MonkeyPatch()
     monkeypatch.setattr(worker.Worker, "on_app_startup", MagicMock())
     monkeypatch.setattr(worker.Worker, "stop", MagicMock())
@@ -35,7 +37,7 @@ def _patch_worker() -> abc.Iterator:
 @pytest.fixture(autouse=True)
 def _author_repository(raw_authors: list[dict[str, Any]], monkeypatch: pytest.MonkeyPatch) -> None:
     AuthorRepository = GenericMockRepository[authors.Author]
-    collection: dict[UUID, authors.Author] = {}
+    collection: dict["UUID", authors.Author] = {}
     for raw_author in raw_authors:
         author = authors.Author(**raw_author)
         collection[getattr(author, AuthorRepository.id_attribute)] = author

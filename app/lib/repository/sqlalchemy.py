@@ -1,9 +1,7 @@
-from collections import abc
 from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any, Literal, TypeVar
 
 from sqlalchemy import select
-from sqlalchemy.engine import Result
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from .abc import AbstractRepository
@@ -11,9 +9,11 @@ from .exceptions import RepositoryConflictException, RepositoryException
 from .filters import BeforeAfter, CollectionFilter, LimitOffset
 
 if TYPE_CHECKING:
+    from collections import abc
     from datetime import datetime
 
     from sqlalchemy import Select
+    from sqlalchemy.engine import Result
     from sqlalchemy.ext.asyncio import AsyncSession
 
     from .. import orm
@@ -84,11 +84,11 @@ class SQLAlchemyRepository(AbstractRepository[T_model]):
         for f in filters:
             match f:
                 case LimitOffset(limit, offset):
-                    self._apply_limit_offset_pagination(limit, offset)  # noqa: F821
+                    self._apply_limit_offset_pagination(limit, offset)
                 case BeforeAfter(field_name, before, after):
-                    self._filter_on_datetime_field(field_name, before, after)  # noqa: F821
+                    self._filter_on_datetime_field(field_name, before, after)
                 case CollectionFilter(field_name, values):
-                    self._filter_in_collection(field_name, values)  # noqa: F821
+                    self._filter_in_collection(field_name, values)
         self._filter_select_by_kwargs(**kwargs)
 
         with wrap_sqlalchemy_exception():
@@ -137,17 +137,19 @@ class SQLAlchemyRepository(AbstractRepository[T_model]):
         -------
         T_model
         """
-        match strategy:
+        match strategy:  # noqa: R503
             case "add":
                 self._session.add(model)
+                return model
             case "merge":
-                model = await self._session.merge(model)
-        return model
+                return await self._session.merge(model)
+            case _:
+                raise ValueError("Unexpected value for `strategy`, must be `'add'` or `'merge'`")
 
-    async def _execute(self) -> Result[tuple[T_model, ...]]:
+    async def _execute(self) -> "Result[tuple[T_model, ...]]":
         return await self._session.execute(self._select)
 
-    def _filter_in_collection(self, field_name: str, values: abc.Collection[Any]) -> None:
+    def _filter_in_collection(self, field_name: str, values: "abc.Collection[Any]") -> None:
         self._select = self._select.where(getattr(self.model_type, field_name).in_(values))
 
     def _filter_on_datetime_field(self, field_name: str, before: "datetime | None", after: "datetime | None") -> None:

@@ -1,13 +1,11 @@
 # pylint: disable=redefined-outer-name
 import asyncio
 import timeit
-from collections import abc
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import asyncpg
 import pytest
-from pytest_docker.plugin import Services  # type:ignore[import]
 from redis.asyncio import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 from sqlalchemy.engine import URL
@@ -17,6 +15,9 @@ from sqlalchemy.pool import NullPool
 from app.lib import orm, sqlalchemy_plugin, worker
 
 if TYPE_CHECKING:
+    from collections import abc
+
+    from pytest_docker.plugin import Services
     from starlite import Starlite
 
 
@@ -24,7 +25,7 @@ here = Path(__file__).parent
 
 
 @pytest.fixture(scope="session")
-def event_loop() -> abc.Iterator[asyncio.AbstractEventLoop]:
+def event_loop() -> "abc.Iterator[asyncio.AbstractEventLoop]":
     """Need the event loop scoped to the session so that we can use it to check
     containers are ready in session scoped containers fixture."""
     policy = asyncio.get_event_loop_policy()
@@ -43,7 +44,7 @@ def docker_compose_file() -> Path:
 
 
 async def wait_until_responsive(
-    check: abc.Callable[..., abc.Awaitable], timeout: float, pause: float, **kwargs: Any
+    check: "abc.Callable[..., abc.Awaitable]", timeout: float, pause: float, **kwargs: Any
 ) -> None:
     """Wait until a service is responsive.
 
@@ -103,7 +104,7 @@ async def db_responsive(host: str) -> bool:
 
 
 @pytest.fixture(scope="session", autouse=True)
-async def _containers(docker_ip: str, docker_services: Services) -> None:  # pylint: disable=unused-argument
+async def _containers(docker_ip: str, docker_services: "Services") -> None:  # pylint: disable=unused-argument
     """Starts containers for required services, fixture waits until they are
     responsive before returning.
 
@@ -138,7 +139,7 @@ async def engine(docker_ip: str) -> AsyncEngine:
     Returns:
         Async SQLAlchemy engine instance.
     """
-    engine = create_async_engine(
+    return create_async_engine(
         URL(
             drivername="postgresql+asyncpg",
             username="postgres",
@@ -151,11 +152,10 @@ async def engine(docker_ip: str) -> AsyncEngine:
         echo=False,
         poolclass=NullPool,
     )
-    return engine
 
 
 @pytest.fixture(autouse=True)
-async def _seed_db(engine: AsyncEngine, raw_authors: list[dict[str, Any]]) -> abc.AsyncIterator[None]:
+async def _seed_db(engine: AsyncEngine, raw_authors: list[dict[str, Any]]) -> "abc.AsyncIterator[None]":
     """Populate test database with.
 
     Args:

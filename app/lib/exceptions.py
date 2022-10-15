@@ -2,8 +2,6 @@ import logging
 from typing import TYPE_CHECKING
 
 from starlette.middleware.errors import ServerErrorMiddleware
-from starlette.responses import Response
-from starlite.connection import Request
 from starlite.exceptions import (
     HTTPException,
     InternalServerException,
@@ -19,6 +17,8 @@ from .repository.exceptions import (
 from .service import ServiceException, UnauthorizedException
 
 if TYPE_CHECKING:
+    from starlette.responses import Response
+    from starlite.connection import Request
     from starlite.datastructures import State
     from starlite.types import Scope
 
@@ -51,12 +51,12 @@ def after_exception_hook_handler(exc: Exception, scope: "Scope", state: "State")
     )
 
 
-def _create_error_response_from_starlite_middleware(request: Request, exc: Exception) -> Response:
+def _create_error_response_from_starlite_middleware(request: "Request", exc: Exception) -> "Response":
     server_middleware = ServerErrorMiddleware(app=request.app)  # type: ignore[arg-type]
     return server_middleware.debug_response(request=request, exc=exc)  # type: ignore[arg-type]
 
 
-def repository_exception_to_http_response(request: Request, exc: RepositoryException) -> Response:
+def repository_exception_to_http_response(request: "Request", exc: RepositoryException) -> "Response":
     """Transform repository exceptions to HTTP exceptions.
 
     Args:
@@ -78,7 +78,7 @@ def repository_exception_to_http_response(request: Request, exc: RepositoryExcep
     return create_exception_response(http_exc())
 
 
-def service_exception_to_http_response(request: Request, exc: ServiceException) -> Response:
+def service_exception_to_http_response(request: "Request", exc: ServiceException) -> "Response":
     """Transform service exceptions to HTTP exceptions.
 
     Args:

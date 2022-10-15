@@ -1,4 +1,4 @@
-from collections import abc
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
 import pytest
@@ -18,6 +18,9 @@ from app.lib.repository.exceptions import (
     RepositoryNotFoundException,
 )
 from app.lib.service import ServiceException, UnauthorizedException
+
+if TYPE_CHECKING:
+    from collections import abc
 
 
 def test_after_exception_hook_handler_called(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -79,7 +82,9 @@ def test_service_exception_to_http_response(exc: type[ServiceException], status:
         ),
     ],
 )
-def test_exception_serves_debug_middleware_response(exc: Exception, fn: abc.Callable, expected_message: bytes) -> None:
+def test_exception_serves_debug_middleware_response(
+    exc: Exception, fn: "abc.Callable", expected_message: bytes
+) -> None:
     app = Starlite(route_handlers=[], debug=True)
     request = RequestFactory(app=app, server="testserver").get("/wherever")
     response = fn(request, exc)

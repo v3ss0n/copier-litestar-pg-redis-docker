@@ -75,6 +75,7 @@ def test_write_dto_for_model_field_factory_default(base: type[DeclarativeBase]) 
 
     dto_model = dto.factory("DTO", Model, purpose=dto.Purpose.write)
 
+    assert dto_model.__fields__["field"].default_factory is not None
     assert isinstance(dto_model.__fields__["field"].default_factory(), UUID)
 
 

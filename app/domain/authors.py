@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date  # noqa: TC003
 from email.message import EmailMessage
 
 from sqlalchemy.orm import Mapped

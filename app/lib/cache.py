@@ -1,12 +1,16 @@
+from typing import TYPE_CHECKING
+
 from starlite import CacheConfig
 from starlite.config.cache import default_cache_key_builder
-from starlite.connection import Request
 
 from . import settings
 from .redis import redis
 
+if TYPE_CHECKING:
+    from starlite.connection import Request
 
-def cache_key_builder(request: Request) -> str:
+
+def cache_key_builder(request: "Request") -> str:
     """App name prefixed cache key builder.
 
     Parameters
@@ -23,7 +27,7 @@ def cache_key_builder(request: Request) -> str:
 
 
 config = CacheConfig(
-    backend=redis,
+    backend=redis,  # pyright:ignore[reportGeneralTypeIssues]
     expiration=settings.api.CACHE_EXPIRATION,
     cache_key_builder=cache_key_builder,
 )

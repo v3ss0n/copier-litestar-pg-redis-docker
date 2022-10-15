@@ -13,12 +13,12 @@ from starlite import get
 from app.lib import sqlalchemy_plugin
 
 if TYPE_CHECKING:
-    from redis.asyncio import Redis
+    from redis.asyncio import Redis as AsyncRedis
     from sqlalchemy.ext.asyncio import AsyncEngine
     from starlite import Starlite
 
 
-def test_cache_on_app(app: "Starlite", redis: "Redis") -> None:
+def test_cache_on_app(app: "Starlite", redis: "AsyncRedis") -> None:
     """Test that the app's cache is patched.
 
     Args:
