@@ -110,4 +110,4 @@ max-line-length = "120"
 [tool.pylint.LOGGING]
 # Logging modules to check that the string format arguments are in logging
 # function parameter format
-logging-modules=["logging","picologging"]
+logging-modules=["logging"]

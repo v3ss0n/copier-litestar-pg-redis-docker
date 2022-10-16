@@ -35,7 +35,9 @@ from app.lib.worker import create_worker_instance
 
 from .controllers import router
 
-dependencies = {settings.api.USER_DEPENDENCY_KEY: Provide(provide_user)}
+dependencies = {
+    settings.api.USER_DEPENDENCY_KEY: Provide(provide_user),
+}
 dependencies.update(create_collection_dependencies())
 worker_instance = create_worker_instance(worker.functions)
 

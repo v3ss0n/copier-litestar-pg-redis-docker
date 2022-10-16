@@ -1,9 +1,7 @@
+from collections import abc
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Generic, TypeVar
-
-if TYPE_CHECKING:
-    from collections import abc
-    from datetime import datetime
+from datetime import datetime
+from typing import Generic, TypeVar
 
 T = TypeVar("T")
 
@@ -14,9 +12,9 @@ class BeforeAfter:
 
     field_name: str
     """Name of the model attribute to filter on."""
-    before: "datetime | None"
+    before: datetime | None
     """Filter results where field earlier than this [datetime][datetime.datetime]"""
-    after: "datetime | None"
+    after: datetime | None
     """Filter results where field later than this [datetime][datetime.datetime]"""
 
 
@@ -29,7 +27,7 @@ class CollectionFilter(Generic[T]):
 
     field_name: str
     """Name of the model attribute to filter on."""
-    values: "abc.Collection[T]"
+    values: abc.Collection[T]
     """Values for `IN` clause."""
 
 
