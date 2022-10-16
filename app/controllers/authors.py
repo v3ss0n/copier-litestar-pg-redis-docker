@@ -2,9 +2,10 @@ from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_200_OK
-from starlite import Provide, Router, delete, get, post, put
+from starlite import Dependency, Provide, Router, delete, get, post, put
 
 from app.domain.authors import Author, CreateDTO, ReadDTO, Repository, Service, WriteDTO
+from app.lib.repository.types import FilterTypes
 
 DETAIL_ROUTE = "/{author_id:uuid}"
 
@@ -15,9 +16,12 @@ def provides_service(db_session: AsyncSession) -> Service:
 
 
 @get()
-async def get_authors(service: Service) -> list[ReadDTO]:
+async def get_authors(
+    service: Service,
+    filters: list[FilterTypes] = Dependency(skip_validation=True),
+) -> list[ReadDTO]:
     """Get a list of authors."""
-    return [ReadDTO.from_orm(item) for item in await service.list()]
+    return [ReadDTO.from_orm(item) for item in await service.list(*filters)]
 
 
 @post()

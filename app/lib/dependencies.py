@@ -1,13 +1,14 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
+from uuid import UUID
 
-from starlite import Parameter, Provide
+from starlite import Dependency, Parameter, Provide
 
 from . import settings
 from .repository.filters import BeforeAfter, CollectionFilter, LimitOffset
+from .repository.types import FilterTypes
 
 if TYPE_CHECKING:
-    from uuid import UUID
 
     from starlite import Request
     from starlite_jwt import Token
@@ -15,6 +16,12 @@ if TYPE_CHECKING:
     from .users import User
 
 DTorNone = datetime | None
+
+CREATED_FILTER_DEPENDENCY_KEY = "created_filter"
+FILTERS_DEPENDENCY_KEY = "filters"
+ID_FILTER_DEPENDENCY_KEY = "id_filter"
+LIMIT_OFFSET_DEPENDENCY_KEY = "limit_offset"
+UPDATED_FILTER_DEPENDENCY_KEY = "updated_filter"
 
 
 async def provide_user(request: "Request[User, Token]") -> "User":
@@ -29,7 +36,9 @@ async def provide_user(request: "Request[User, Token]") -> "User":
     return request.user
 
 
-def id_filter(ids: list["UUID"] = Parameter(query="ids", default=list, required=False)) -> CollectionFilter["UUID"]:
+def provide_id_filter(
+    ids: list[UUID] | None = Parameter(query="ids", default=None, required=False)
+) -> CollectionFilter[UUID]:
     """Return type consumed by ``Repository.filter_in_collection()``.
 
     Parameters
@@ -41,10 +50,10 @@ def id_filter(ids: list["UUID"] = Parameter(query="ids", default=list, required=
     -------
     CollectionFilter[UUID]
     """
-    return CollectionFilter(field_name="id", values=ids)
+    return CollectionFilter(field_name="id", values=ids or [])
 
 
-def created_filter(
+def provide_created_filter(
     before: DTorNone = Parameter(query="created-before", default=None, required=False),
     after: DTorNone = Parameter(query="created-after", default=None, required=False),
 ) -> BeforeAfter:
@@ -60,7 +69,7 @@ def created_filter(
     return BeforeAfter("created", before, after)
 
 
-def updated_filter(
+def provide_updated_filter(
     before: DTorNone = Parameter(query="updated-before", default=None, required=False),
     after: DTorNone = Parameter(query="updated-after", default=None, required=False),
 ) -> BeforeAfter:
@@ -76,7 +85,7 @@ def updated_filter(
     return BeforeAfter("updated", before, after)
 
 
-def limit_offset_pagination(
+def provide_limit_offset_pagination(
     page: int = Parameter(ge=1, default=1, required=False),
     page_size: int = Parameter(
         query="page-size",
@@ -97,6 +106,44 @@ def limit_offset_pagination(
     return LimitOffset(page_size, page_size * (page - 1))
 
 
+def provide_filter_dependencies(
+    created_filter: BeforeAfter = Dependency(skip_validation=True),
+    updated_filter: BeforeAfter = Dependency(skip_validation=True),
+    id_filter: CollectionFilter = Dependency(skip_validation=True),
+    limit_offset: LimitOffset = Dependency(skip_validation=True),
+) -> list[FilterTypes]:
+    """Common collection route filtering dependencies. Add all filters to any
+    route by including this function as a dependency, e.g:
+
+        @get
+        def get_collection_handler(filters: Filters) -> ...:
+            ...
+    The dependency is provided at the application layer, so only need to inject the dependency where
+    necessary.
+
+    Parameters
+    ----------
+    id_filter : repository.CollectionFilter
+        Filter for scoping query to limited set of identities.
+    created_filter : repository.BeforeAfter
+        Filter for scoping query to instance creation date/time.
+    updated_filter : repository.BeforeAfter
+        Filter for scoping query to instance update date/time.
+    limit_offset : repository.LimitOffset
+        Filter for query pagination.
+    Returns
+    -------
+    list[FilterTypes]
+        List of filters parsed from connection.
+    """
+    return [
+        created_filter,
+        id_filter,
+        limit_offset,
+        updated_filter,
+    ]
+
+
 def create_collection_dependencies() -> dict[str, Provide]:
     """
     Creates a dictionary of provides for pagination endpoints.
@@ -106,8 +153,9 @@ def create_collection_dependencies() -> dict[str, Provide]:
 
     """
     return {
-        settings.api.LIMIT_OFFSET_DEPENDENCY_KEY: Provide(limit_offset_pagination),
-        settings.api.UPDATED_FILTER_DEPENDENCY_KEY: Provide(updated_filter),
-        settings.api.CREATED_FILTER_DEPENDENCY_KEY: Provide(created_filter),
-        settings.api.ID_FILTER_DEPENDENCY_KEY: Provide(id_filter),
+        LIMIT_OFFSET_DEPENDENCY_KEY: Provide(provide_limit_offset_pagination),
+        UPDATED_FILTER_DEPENDENCY_KEY: Provide(provide_updated_filter),
+        CREATED_FILTER_DEPENDENCY_KEY: Provide(provide_created_filter),
+        ID_FILTER_DEPENDENCY_KEY: Provide(provide_id_filter),
+        FILTERS_DEPENDENCY_KEY: Provide(provide_filter_dependencies),
     }

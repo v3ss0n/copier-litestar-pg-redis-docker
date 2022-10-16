@@ -4,8 +4,11 @@ max-line-length = 100
 ignore = E,W,B008
 type-checking-exempt-modules = from sqlalchemy.orm
 per-file-ignores =
-    app/controllers/*:TC002,TC003
-    app/lib/health.py:TC002
-    app/lib/users/controllers.py:TC002,TC003
-    tests/*:SCS108
+    app/controllers/*:TC
+    app/lib/dependencies.py:TC
+    app/lib/health.py:TC
+    app/lib/repository/filters.py:TC
+    app/lib/users/controllers.py:TC
+    tests/*:SCS108,PT013
     tests/integration/test_tests.py:TC002,SCS108
+    tests/unit/lib/test_dependencies.py:TC,SCS108
