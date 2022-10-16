@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any, Literal, TypeVar
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from .abc import AbstractRepository
@@ -117,6 +117,20 @@ class SQLAlchemyRepository(AbstractRepository[T_model]):
             await self._session.refresh(instance)
             self._session.expunge(instance)
             return instance
+
+    @classmethod
+    async def check_health(cls, db_session: "AsyncSession") -> bool:
+        """Perform a health check on the database.
+
+        Args:
+            db_session: through which we runa check statement
+
+        Returns:
+            `True` if healthy.
+        """
+        return (  # type:ignore[no-any-return]  # pragma: no cover
+            await db_session.execute(text("SELECT 1"))
+        ).scalar_one() == 1
 
     # the following is all sqlalchemy implementation detail, and shouldn't be directly accessed
 
