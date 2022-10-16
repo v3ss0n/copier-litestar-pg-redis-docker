@@ -51,17 +51,21 @@ config = LoggingConfig(
     },
     loggers={
         "uvicorn.access": {
-            "propagate": True,
+            "propagate": False,
             "filters": ["health_filter"],
+            "handlers": ["queue_listener"],
         },
         "uvicorn.error": {
-            "propagate": True,
+            "propagate": False,
+            "handlers": ["queue_listener"],
         },
         "saq": {
-            "propagate": True,
+            "propagate": False,
+            "handlers": ["queue_listener"],
         },
         "sqlalchemy.engine": {
-            "propagate": True,
+            "propagate": False,
+            "handlers": ["queue_listener"],
         },
     },
 )
