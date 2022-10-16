@@ -44,16 +44,20 @@ config = LoggingConfig(
             "path_re": f"^{settings.api.HEALTH_PATH}$",
         }
     },
-    formatters={"standard": {"format": "%(levelname)s - %(asctime)s - %(name)s - %(funcName)s - %(message)s"}},
+    formatters={
+        "standard": {
+            "format": "%(asctime)s loglevel=%(levelname)-6s logger=%(name)s %(funcName)s() L%(lineno)-4d %(message)s"
+        }
+    },
     loggers={
-        "app": {
-            "propagate": True,
-        },
         "uvicorn.access": {
             "propagate": True,
             "filters": ["health_filter"],
         },
         "uvicorn.error": {
+            "propagate": True,
+        },
+        "saq": {
             "propagate": True,
         },
         "sqlalchemy.engine": {
