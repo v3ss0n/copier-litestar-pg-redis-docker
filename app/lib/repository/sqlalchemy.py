@@ -164,6 +164,8 @@ class SQLAlchemyRepository(AbstractRepository[T_model]):
         return await self._session.execute(self._select)
 
     def _filter_in_collection(self, field_name: str, values: "abc.Collection[Any]") -> None:
+        if not values:
+            return
         self._select = self._select.where(getattr(self.model_type, field_name).in_(values))
 
     def _filter_on_datetime_field(self, field_name: str, before: "datetime | None", after: "datetime | None") -> None:
