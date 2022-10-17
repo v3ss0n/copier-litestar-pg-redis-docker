@@ -167,3 +167,8 @@ async def test_attach_to_session_unexpected_strategy_raises_valueerror(mock_repo
 async def test_execute(mock_repo: SQLAlchemyRepository) -> None:
     await mock_repo._execute()
     mock_repo._session.execute.assert_called_once_with(mock_repo._select)
+
+
+def test_filter_in_collection_noop_if_collection_empty(mock_repo: SQLAlchemyRepository) -> None:
+    mock_repo._filter_in_collection("id", [])
+    mock_repo._select.where.assert_not_called()
