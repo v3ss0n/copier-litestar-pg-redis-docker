@@ -48,8 +48,8 @@ app = Starlite(
     compression_config=compression.config,
     dependencies=dependencies,
     exception_handlers={
-        RepositoryException: exceptions.repository_exception_to_http_response,  # type:ignore[dict-item]
-        ServiceException: exceptions.service_exception_to_http_response,  # type:ignore[dict-item]
+        RepositoryException: exceptions.repository_exception_to_http_response,
+        ServiceException: exceptions.service_exception_to_http_response,
     },
     logging_config=logging.config,
     openapi_config=openapi.config,
