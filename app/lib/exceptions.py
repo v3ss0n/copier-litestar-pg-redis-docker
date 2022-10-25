@@ -17,9 +17,9 @@ from .repository.exceptions import (
 from .service import ServiceException, UnauthorizedException
 
 if TYPE_CHECKING:
-    from starlette.responses import Response
     from starlite.connection import Request
     from starlite.datastructures import State
+    from starlite.response import Response
     from starlite.types import Scope
 
 __all__ = ["after_exception_hook_handler"]
@@ -53,7 +53,9 @@ def after_exception_hook_handler(exc: Exception, scope: "Scope", state: "State")
 
 def _create_error_response_from_starlite_middleware(request: "Request", exc: Exception) -> "Response":
     server_middleware = ServerErrorMiddleware(app=request.app)  # type: ignore[arg-type]
-    return server_middleware.debug_response(request=request, exc=exc)  # type: ignore[arg-type]
+    return server_middleware.debug_response(  # type:ignore[return-value]
+        request=request, exc=exc  # type: ignore[arg-type]
+    )
 
 
 def repository_exception_to_http_response(request: "Request", exc: RepositoryException) -> "Response":

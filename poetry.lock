@@ -887,7 +887,7 @@ web = ["aiohttp", "aiohttp-basicauth"]
 
 [[package]]
 name = "sentry-sdk"
-version = "1.10.0"
+version = "1.10.1"
 description = "Python client for Sentry (https://sentry.io)"
 category = "main"
 optional = false
@@ -948,7 +948,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "SQLAlchemy"
-version = "2.0.0b2.dev0"
+version = "2.0.0b3.dev0"
 description = "Database Abstraction Library"
 category = "main"
 optional = false
@@ -986,7 +986,7 @@ sqlcipher = ["sqlcipher3_binary"]
 type = "git"
 url = "https://github.com/sqlalchemy/sqlalchemy.git"
 reference = "main"
-resolved_reference = "2fc5cf56a4b146b94b5dd14239a791e354d7ebe4"
+resolved_reference = "5e8fd3239394a7737ae859b0b3b1b7ce3d821564"
 
 [[package]]
 name = "starlette"
@@ -1004,13 +1004,14 @@ full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart", "pyyam
 
 [[package]]
 name = "starlite"
-version = "1.30.0"
+version = "1.32.0"
 description = "Light-weight and flexible ASGI API Framework"
 category = "main"
 optional = false
 python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
+anyio = ">=3"
 cryptography = {version = "*", optional = true, markers = "extra == \"testing\" or extra == \"cryptography\" or extra == \"full\""}
 httpx = {version = ">=0.22", optional = true, markers = "extra == \"testing\" or extra == \"full\""}
 orjson = "*"
@@ -1202,7 +1203,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "a816addaf9e13096c5a6f9fcda9eb240d7cae6ce1c770af5523e7051399e489d"
+content-hash = "b43ff63084b2c49387b47225e25f2dab3a697895e5c65d80f29c5d2ff057ba0d"
 
 [metadata.files]
 aiosmtplib = [
@@ -1942,8 +1943,8 @@ saq = [
     {file = "saq-0.9.0.tar.gz", hash = "sha256:73c316c3e7b90e6e4546dec3c4d15926d85b70a71b2fd23df78723ae6a2803e8"},
 ]
 sentry-sdk = [
-    {file = "sentry-sdk-1.10.0.tar.gz", hash = "sha256:1b965bcdbfe52321bb1307c7c93c74035afdbfceb5f585f01a963327c5befc4e"},
-    {file = "sentry_sdk-1.10.0-py2.py3-none-any.whl", hash = "sha256:8c648e96e0e2ec5e17ca75a28c442e2f523453fa7cf761ec093f4a656153490e"},
+    {file = "sentry-sdk-1.10.1.tar.gz", hash = "sha256:105faf7bd7b7fa25653404619ee261527266b14103fe1389e0ce077bd23a9691"},
+    {file = "sentry_sdk-1.10.1-py2.py3-none-any.whl", hash = "sha256:06c0fa9ccfdc80d7e3b5d2021978d6eb9351fa49db9b5847cf4d1f2a473414ad"},
 ]
 setuptools = [
     {file = "setuptools-65.5.0-py3-none-any.whl", hash = "sha256:f62ea9da9ed6289bfe868cd6845968a2c854d1427f8548d52cae02a42b4f0356"},
@@ -1963,8 +1964,8 @@ starlette = [
     {file = "starlette-0.21.0.tar.gz", hash = "sha256:b1b52305ee8f7cfc48cde383496f7c11ab897cd7112b33d998b1317dc8ef9027"},
 ]
 starlite = [
-    {file = "starlite-1.30.0-py3-none-any.whl", hash = "sha256:9914f74c72dff57dc859511b7ba474958d34632625e7cd4921f5cf615b011048"},
-    {file = "starlite-1.30.0.tar.gz", hash = "sha256:45eb5c8c214711946cb055abe361ba2bf57bfdef8c137b1f3f3c8ad772f757ae"},
+    {file = "starlite-1.32.0-py3-none-any.whl", hash = "sha256:0ea3c80e5837fbd0ead9ed5fa4ec57479b1090ef8c4c7e28153ea1fa99f6c8d1"},
+    {file = "starlite-1.32.0.tar.gz", hash = "sha256:634c571c3dd25344ac7088e4927d1580b478e42fe5d7f7714f1d8c9ca21124ba"},
 ]
 starlite-jwt = [
     {file = "starlite-jwt-1.4.0.tar.gz", hash = "sha256:3756c194d98bd19bf1f7d9fa050b8046b0e6338a1d8fc6e075f60b5a30475925"},
