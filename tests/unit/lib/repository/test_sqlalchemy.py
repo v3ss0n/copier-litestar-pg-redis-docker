@@ -160,7 +160,7 @@ async def test_sqlalchemy_repo_upsert(mock_repo: SQLAlchemyRepository) -> None:
 
 
 async def test_attach_to_session_unexpected_strategy_raises_valueerror(mock_repo: SQLAlchemyRepository) -> None:
-    with pytest.raises(ValueError):  # noqa: PT011
+    with pytest.raises(ValueError):
         await mock_repo._attach_to_session(MagicMock(), strategy="t-rex")  # type:ignore[arg-type]
 
 

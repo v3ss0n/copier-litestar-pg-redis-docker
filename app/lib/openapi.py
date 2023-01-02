@@ -12,4 +12,7 @@ config = OpenAPIConfig(
     security=[jwt_auth.security_requirement],
     use_handler_docstrings=True,
 )
-"""OpenAPI config for app, see [OpenAPISettings][starlite_saqpg.config.OpenAPISettings]"""
+"""OpenAPI config for app, see.
+
+[OpenAPISettings][starlite_saqpg.config.OpenAPISettings]
+"""

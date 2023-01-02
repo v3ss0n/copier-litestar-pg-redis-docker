@@ -94,7 +94,7 @@ def test_read_dto_for_model_field_unsupported_default(base: type[DeclarativeBase
         __tablename__ = "smth"
         field: Mapped[datetime] = mapped_column(default=func.now())
 
-    with pytest.raises(ValueError):  # noqa: PT011
+    with pytest.raises(ValueError):
         dto.factory("DTO", Model, purpose=dto.Purpose.write)
 
 

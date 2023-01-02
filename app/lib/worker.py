@@ -50,9 +50,9 @@ class Worker(saq.Worker):
 
 
 queue = Queue(redis)
-"""
-[Queue][app.lib.worker.Queue] instance instantiated with [redis][app.lib.redis.redis]
-instance.
+"""[Queue][app.lib.worker.Queue] instance instantiated with.
+
+[redis][app.lib.redis.redis] instance.
 """
 
 
