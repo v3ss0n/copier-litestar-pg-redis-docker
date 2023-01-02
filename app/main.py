@@ -20,7 +20,6 @@ from app.lib import (
     exceptions,
     logging,
     openapi,
-    response,
     sentry,
     settings,
     sqlalchemy_plugin,
@@ -31,6 +30,7 @@ from app.lib.health import health_check
 from app.lib.redis import redis
 from app.lib.repository.exceptions import RepositoryException
 from app.lib.service import ServiceException
+from app.lib.type_encoders import type_encoders_map
 from app.lib.worker import create_worker_instance
 
 from .controllers import router
@@ -53,12 +53,12 @@ app = Starlite(
     },
     logging_config=logging.config,
     openapi_config=openapi.config,
-    response_class=response.Response,
     route_handlers=[health_check, router],
     plugins=[SQLAlchemyPlugin(config=sqlalchemy_plugin.config)],
     on_shutdown=[worker_instance.stop, redis.close],
     on_startup=[worker_instance.on_app_startup, sentry.configure],
     static_files_config=static_files.config,
+    type_encoders=type_encoders_map,
 )
 
 if __name__ == "__main__":
