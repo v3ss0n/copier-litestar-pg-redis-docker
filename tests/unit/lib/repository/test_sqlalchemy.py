@@ -32,12 +32,12 @@ def mock_repo() -> SQLAlchemyRepository:
 
 
 def test_wrap_sqlalchemy_integrity_error() -> None:
-    with (pytest.raises(RepositoryConflictException), wrap_sqlalchemy_exception()):
+    with pytest.raises(RepositoryConflictException), wrap_sqlalchemy_exception():
         raise IntegrityError(None, None, Exception())
 
 
 def test_wrap_sqlalchemy_generic_error() -> None:
-    with (pytest.raises(RepositoryException), wrap_sqlalchemy_exception()):
+    with pytest.raises(RepositoryException), wrap_sqlalchemy_exception():
         raise SQLAlchemyError
 
 

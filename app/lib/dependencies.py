@@ -9,7 +9,6 @@ from .repository.filters import BeforeAfter, CollectionFilter, LimitOffset
 from .repository.types import FilterTypes
 
 if TYPE_CHECKING:
-
     from starlite import Request
     from starlite_jwt import Token
 

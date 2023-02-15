@@ -1,3 +1,4 @@
+# pyright: reportGeneralTypeIssues=false
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession

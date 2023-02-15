@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 
 
 async def test_update_author(app: "Starlite") -> None:
-
     async with AsyncClient(app=app, base_url="http://testserver") as client:
         response = await client.put(
             "/v1/authors/97108ac1-ffcb-411d-8b1e-d9183399f63b", json={"name": "TEST UPDATE", "dob": "1890-9-15"}
