@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 from uuid import uuid4
 
 from starlite import Response, get
-from starlite_jwt import JWTAuth
+from starlite.contrib.jwt import JWTAuth
 
 from . import settings
 from .users import User
@@ -40,7 +40,7 @@ def login_handler() -> Response[User]:
     return jwt_auth.login(identifier=str(user.id), response_body=user)
 
 
-jwt_auth = JWTAuth(
+jwt_auth = JWTAuth[User](
     retrieve_user_handler=retrieve_user_handler,
     token_secret=settings.api.SECRET_KEY,
     exclude=["/schema", settings.api.HEALTH_PATH],
