@@ -9,4 +9,8 @@ from starlite.utils.serialization import DEFAULT_TYPE_ENCODERS
 if TYPE_CHECKING:
     from starlite.types import TypeEncodersMap
 
-type_encoders_map: TypeEncodersMap = {**DEFAULT_TYPE_ENCODERS, pgproto.UUID: str}
+def _uuid_encoder(value: pgproto.UUID) -> str:
+    return str(value)
+
+
+type_encoders_map: TypeEncodersMap = {pgproto.UUID: _uuid_encoder}
