@@ -1,3 +1,5 @@
+default_language_version:
+  python: "3.11"
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -100,14 +102,14 @@ repos:
             pytest-docker,
             saq,
             sentry-sdk,
-            sqlalchemy==2.0.0b4,
-            starlite,
+            sqlalchemy,
+            git+https://github.com/starlite-api/starlite@main#egg=starlite,
             starlite-jwt,
             types-redis,
             uvicorn,
           ]
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.0.0"
+    rev: "v1.0.1"
     hooks:
       - id: mypy
         exclude: "alembic"
@@ -122,14 +124,14 @@ repos:
             pytest-docker,
             saq,
             sentry-sdk,
-            sqlalchemy==2.0.0b4,
-            starlite,
+            sqlalchemy,
+            git+https://github.com/starlite-api/starlite@main#egg=starlite,
             starlite-jwt,
             types-redis,
             uvicorn,
           ]
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.294
+    rev: v1.1.295
     hooks:
       - id: pyright
         exclude: "alembic"
@@ -144,8 +146,8 @@ repos:
             pytest-docker,
             saq,
             sentry-sdk,
-            sqlalchemy==2.0.0b4,
-            starlite,
+            sqlalchemy,
+            git+https://github.com/starlite-api/starlite@main#egg=starlite,
             starlite-jwt,
             types-redis,
             uvicorn,
