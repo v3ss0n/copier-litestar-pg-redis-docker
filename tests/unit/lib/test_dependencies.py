@@ -4,23 +4,16 @@ from uuid import uuid4
 
 import pytest
 from starlite import Starlite, get
-from starlite.testing import RequestFactory
+from starlite.contrib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
 
 from app.lib import dependencies
-from app.lib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
-from app.lib.repository.types import FilterTypes
-from app.lib.users import User
 
 if TYPE_CHECKING:
     from collections import abc
 
     from starlite.testing import TestClient
 
-
-async def test_provide_user_dependency() -> None:
-    user = User()
-    request = RequestFactory(app=Starlite(route_handlers=[])).get("/", user=user)
-    assert await dependencies.provide_user(request) is user
+    from app.controllers.authors import FilterTypes
 
 
 def test_id_filter() -> None:

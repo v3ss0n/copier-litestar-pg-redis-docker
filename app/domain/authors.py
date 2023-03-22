@@ -1,14 +1,21 @@
-from datetime import date  # noqa: TC003
+from datetime import date
 from email.message import EmailMessage
+from typing import Annotated
 
 from sqlalchemy.orm import Mapped
+from starlite.contrib.sqlalchemy.base import AuditBase
+from starlite.contrib.sqlalchemy.dto import SQLAlchemyDTO
+from starlite.contrib.sqlalchemy.repository import SQLAlchemyRepository
+from starlite.dto.config import DTOConfig
+from starlite.enums import MediaType
 
-from app.lib import dto, email, orm, service, settings
-from app.lib.repository.sqlalchemy import SQLAlchemyRepository
+from app.lib import email, service, settings
 from app.lib.worker import queue
 
+__all__ = ["Author", "Repository", "Service"]
 
-class Author(orm.Base):
+
+class Author(AuditBase):
     name: Mapped[str]
     dob: Mapped[date]
 
@@ -20,7 +27,7 @@ class Repository(SQLAlchemyRepository[Author]):
 class Service(service.Service[Author]):
     async def create(self, data: Author) -> Author:
         created = await super().create(data)
-        await queue.enqueue("author_created", data=ReadDTO.from_orm(created).dict())
+        await queue.enqueue("author_created", data=ReadDTO(created).to_encodable_type(media_type=MediaType.MESSAGEPACK))
         return data
 
     @staticmethod
@@ -39,6 +46,6 @@ class Service(service.Service[Author]):
             await email.client.send_message(message)
 
 
-CreateDTO = dto.factory("AuthorCreateDTO", Author, purpose=dto.Purpose.write, exclude={"id"})
-ReadDTO = dto.factory("AuthorReadDTO", Author, purpose=dto.Purpose.read)
-WriteDTO = dto.factory("AuthorWriteDTO", Author, purpose=dto.Purpose.write)
+WriteDTO = SQLAlchemyDTO[Annotated[Author, DTOConfig(exclude={"id"})]]
+ListDTO = SQLAlchemyDTO[list[Author]]
+ReadDTO = SQLAlchemyDTO[Author]

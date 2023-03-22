@@ -2,11 +2,13 @@ import contextlib
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlite import get
+from starlite.contrib.sqlalchemy.repository import SQLAlchemyRepository
 from starlite.exceptions import ServiceUnavailableException
 
 from . import settings
-from .repository.sqlalchemy import SQLAlchemyRepository
 from .settings import AppSettings
+
+__all__ = ["HealthCheckFailure", "health_check"]
 
 
 class HealthCheckFailure(ServiceUnavailableException):

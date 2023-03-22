@@ -1,16 +1,21 @@
-# pyright: reportGeneralTypeIssues=false
+# ruff: noqa: B008
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlite import Router, delete, get, post, put
+from starlite.contrib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
 from starlite.di import Provide
 from starlite.params import Dependency
 from starlite.status_codes import HTTP_200_OK
 
-from app.domain.authors import Author, CreateDTO, ReadDTO, Repository, Service, WriteDTO
-from app.lib.repository.types import FilterTypes
+from app.domain.authors import Author, ListDTO, ReadDTO, Repository, Service, WriteDTO
+
+__all__ = ["create_author", "delete_author", "get_author", "get_authors", "provides_service", "update_author"]
+
 
 DETAIL_ROUTE = "/{author_id:uuid}"
+
+FilterTypes = BeforeAfter | CollectionFilter | LimitOffset
 
 
 def provides_service(db_session: AsyncSession) -> Service:
@@ -18,37 +23,34 @@ def provides_service(db_session: AsyncSession) -> Service:
     return Service(Repository(session=db_session))
 
 
-@get()
-async def get_authors(
-    service: Service,
-    filters: list[FilterTypes] = Dependency(skip_validation=True),
-) -> list[ReadDTO]:
+@get(return_dto=ListDTO)
+async def get_authors(service: Service, filters: list[FilterTypes] = Dependency(skip_validation=True)) -> list[Author]:
     """Get a list of authors."""
-    return [ReadDTO.from_orm(item) for item in await service.list(*filters)]
+    return await service.list(*filters)
 
 
-@post()
-async def create_author(data: CreateDTO, service: Service) -> ReadDTO:
+@post(data_dto=WriteDTO, return_dto=ReadDTO)
+async def create_author(data: Author, service: Service) -> Author:
     """Create an `Author`."""
-    return ReadDTO.from_orm(await service.create(Author.from_dto(data)))
+    return await service.create(data)
 
 
-@get(DETAIL_ROUTE)
-async def get_author(service: Service, author_id: UUID) -> ReadDTO:
+@get(DETAIL_ROUTE, return_dto=ReadDTO)
+async def get_author(service: Service, author_id: UUID) -> Author:
     """Get Author by ID."""
-    return ReadDTO.from_orm(await service.get(author_id))
+    return await service.get(author_id)
 
 
-@put(DETAIL_ROUTE)
-async def update_author(data: WriteDTO, service: Service, author_id: UUID) -> ReadDTO:
+@put(DETAIL_ROUTE, data_dto=WriteDTO, return_dto=ReadDTO)
+async def update_author(data: Author, service: Service, author_id: UUID) -> Author:
     """Update an author."""
-    return ReadDTO.from_orm(await service.update(author_id, Author.from_dto(data)))
+    return await service.update(author_id, data)
 
 
-@delete(DETAIL_ROUTE, status_code=HTTP_200_OK)
-async def delete_author(service: Service, author_id: UUID) -> ReadDTO:
+@delete(DETAIL_ROUTE, status_code=HTTP_200_OK, return_dto=ReadDTO)
+async def delete_author(service: Service, author_id: UUID) -> Author:
     """Delete Author by ID."""
-    return ReadDTO.from_orm(await service.delete(author_id))
+    return await service.delete(author_id)
 
 
 router = Router(

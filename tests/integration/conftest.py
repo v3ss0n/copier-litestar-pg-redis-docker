@@ -11,8 +11,9 @@ from redis.exceptions import ConnectionError as RedisConnectionError
 from sqlalchemy.engine import URL
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
+from starlite.contrib.sqlalchemy.base import Base
 
-from app.lib import orm, sqlalchemy_plugin, worker
+from app.lib import sqlalchemy_plugin, worker
 
 if TYPE_CHECKING:
     from collections import abc
@@ -27,7 +28,8 @@ here = Path(__file__).parent
 @pytest.fixture(scope="session")
 def event_loop() -> "abc.Iterator[asyncio.AbstractEventLoop]":
     """Need the event loop scoped to the session so that we can use it to check
-    containers are ready in session scoped containers fixture."""
+    containers are ready in session scoped containers fixture.
+    """
     policy = asyncio.get_event_loop_policy()
     loop = policy.new_event_loop()
     yield loop
@@ -36,9 +38,8 @@ def event_loop() -> "abc.Iterator[asyncio.AbstractEventLoop]":
 
 @pytest.fixture(scope="session")
 def docker_compose_file() -> Path:
-    """
-    Returns:
-        Path to the docker-compose file for end-to-end test environment.
+    """Returns:
+    Path to the docker-compose file for end-to-end test environment.
     """
     return here / "docker-compose.yml"
 
@@ -66,8 +67,7 @@ async def wait_until_responsive(
 
 
 async def redis_responsive(host: str) -> bool:
-    """
-    Args:
+    """Args:
         host: docker IP address.
 
     Returns:
@@ -83,8 +83,7 @@ async def redis_responsive(host: str) -> bool:
 
 
 async def db_responsive(host: str) -> bool:
-    """
-    Args:
+    """Args:
         host: docker IP address.
 
     Returns:
@@ -92,7 +91,7 @@ async def db_responsive(host: str) -> bool:
     """
     try:
         conn = await asyncpg.connect(
-            host=host, port=5423, user="postgres", database="postgres", password="super-secret"
+            host=host, port=5423, user="postgres", database="postgres", password="super-secret"  # noqa: S106
         )
     except (ConnectionError, asyncpg.CannotConnectNowError):
         return False
@@ -104,13 +103,9 @@ async def db_responsive(host: str) -> bool:
 
 
 @pytest.fixture(scope="session", autouse=True)
-async def _containers(docker_ip: str, docker_services: "Services") -> None:  # pylint: disable=unused-argument
+async def _containers(docker_ip: str, _: "Services") -> None:
     """Starts containers for required services, fixture waits until they are
     responsive before returning.
-
-    Args:
-        docker_ip:
-        docker_services:
     """
     await wait_until_responsive(timeout=30.0, pause=0.1, check=db_responsive, host=docker_ip)
     await wait_until_responsive(timeout=30.0, pause=0.1, check=redis_responsive, host=docker_ip)
@@ -118,9 +113,7 @@ async def _containers(docker_ip: str, docker_services: "Services") -> None:  # p
 
 @pytest.fixture()
 async def redis(docker_ip: str) -> Redis:
-    """
-
-    Args:
+    """Args:
         docker_ip: IP of docker host.
 
     Returns:
@@ -143,7 +136,7 @@ async def engine(docker_ip: str) -> AsyncEngine:
         URL(
             drivername="postgresql+asyncpg",
             username="postgres",
-            password="super-secret",
+            password="super-secret",  # noqa: S106
             host=docker_ip,
             port=5432,
             database="postgres",
@@ -156,17 +149,13 @@ async def engine(docker_ip: str) -> AsyncEngine:
 
 @pytest.fixture(autouse=True)
 async def _seed_db(engine: AsyncEngine, raw_authors: list[dict[str, Any]]) -> "abc.AsyncIterator[None]":
-    """Populate test database with.
-
-    Args:
-        engine: The SQLAlchemy engine instance.
-    """
+    """Populate test database."""
     # get models into metadata
     from app import (  # pylint: disable=[import-outside-toplevel,unused-import] # noqa:F401
         domain,
     )
 
-    metadata = orm.Base.registry.metadata
+    metadata = Base.registry.metadata
     author_table = metadata.tables["author"]
     async with engine.begin() as conn:
         await conn.run_sync(metadata.create_all)
@@ -187,5 +176,7 @@ def _patch_db(app: "Starlite", engine: AsyncEngine, monkeypatch: pytest.MonkeyPa
 
 @pytest.fixture(autouse=True)
 def _patch_redis(app: "Starlite", redis: Redis, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(app.cache, "backend", redis)
+    cache_config = app.response_cache_config
+    assert cache_config is not None
+    monkeypatch.setattr(app.stores.get(cache_config.store), "_redis", redis)
     monkeypatch.setattr(worker.queue, "redis", redis)

@@ -7,6 +7,17 @@ from typing import Literal
 
 from pydantic import AnyUrl, BaseSettings, PostgresDsn
 
+__all__ = [
+    "APISettings",
+    "AppSettings",
+    "DatabaseSettings",
+    "EmailSettings",
+    "OpenAPISettings",
+    "RedisSettings",
+    "SentrySettings",
+    "ServerSettings",
+]
+
 
 # noinspection PyUnresolvedReferences
 class AppSettings(BaseSettings):
@@ -14,7 +25,7 @@ class AppSettings(BaseSettings):
     healthcheck endpoint, so do not include any sensitive values here, or if
     you do ensure to exclude them from serialization in the `Config` object.
 
-    Attributes
+    Attributes:
     ----------
     BUILD_NUMBER : str
         Identity of the CI build of current app instance.
@@ -41,7 +52,7 @@ class AppSettings(BaseSettings):
     def slug(self) -> str:
         """A slugified name.
 
-        Returns
+        Returns:
         -------
         str
             `self.NAME`, all lowercase and hyphens instead of spaces.
@@ -55,7 +66,7 @@ class APISettings(BaseSettings):
 
     Prefix all environment variables with `API_`, e.g., `API_CACHE_EXPIRATION`.
 
-    Attributes
+    Attributes:
     ----------
     CACHE_EXPIRATION : int
         Default cache key expiration in seconds.
@@ -82,7 +93,7 @@ class OpenAPISettings(BaseSettings):
 
     Prefix all environment variables with `OPENAPI_`, e.g., `OPENAPI_TITLE`.
 
-    Attributes
+    Attributes:
     ----------
     TITLE : str
         OpenAPI document title.
@@ -110,7 +121,7 @@ class DatabaseSettings(BaseSettings):
 
     Prefix all environment variables with `DB_`, e.g., `DB_URL`.
 
-    Attributes
+    Attributes:
     ----------
     ECHO : bool
         Enables SQLAlchemy engine logs.
@@ -137,7 +148,7 @@ class RedisSettings(BaseSettings):
 
     Prefix all environment variables with `REDIS_`, e.g., `REDIS_URL`.
 
-    Attributes
+    Attributes:
     ----------
     URL : AnyUrl
         A redis connection URL.
@@ -154,7 +165,7 @@ class RedisSettings(BaseSettings):
 class SentrySettings(BaseSettings):
     """Configures sentry for the application.
 
-    Attributes
+    Attributes:
     ----------
     DSN : str
         The sentry DSN. Set as empty string to disable sentry reporting.

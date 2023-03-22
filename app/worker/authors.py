@@ -2,6 +2,8 @@ import json
 
 from app.domain import authors
 
+__all__ = ["author_created"]
+
 
 async def author_created(_: dict, *, data: dict) -> None:
     """Send an email when a new Author is created.

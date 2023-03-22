@@ -1,15 +1,17 @@
 import asyncio
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from alembic import context
-
 # ensure domain in scope
 from app import domain  # noqa: F401 # pylint: disable=unused-import
 from app.lib import orm, settings
+
+__all__ = ["do_run_migrations", "run_migrations_offline", "run_migrations_online"]
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -25,7 +27,6 @@ target_metadata = orm.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
 

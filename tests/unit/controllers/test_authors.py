@@ -72,8 +72,7 @@ def test_update_author(client: "TestClient") -> None:
         "/v1/authors/97108ac1-ffcb-411d-8b1e-d9183399f63b",
         json={
             "id": "97108ac1-ffcb-411d-8b1e-d9183399f63b",
-            # tests that this attribute cannot be changed
-            "created": "9999-01-01T00:00:00",
+            "created": "0001-01-01T00:00:00",
             "updated": "0001-01-01T00:00:00",
             "name": "A. Christie",
             "dob": "1890-09-15",

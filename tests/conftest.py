@@ -43,11 +43,9 @@ def client(app: "Starlite") -> "abc.Iterator[TestClient]":  # pylint: disable=re
 
 @pytest.fixture()
 def raw_authors() -> list[dict[str, Any]]:
-    """
-
-    Returns:
-        Raw set of author data that can either be inserted into tables for integration tests, or
-        used to create `Author` instances for unit tests.
+    """Returns:
+    Raw set of author data that can either be inserted into tables for integration tests, or
+    used to create `Author` instances for unit tests.
     """
     return [
         {
