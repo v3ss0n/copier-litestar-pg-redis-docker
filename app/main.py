@@ -9,9 +9,14 @@ being loaded before that mocking has been completed.
 
 When writing tests, always use the `app` fixture, never import the app directly from this module.
 """
+from uuid import UUID
+
 import uvicorn
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlite import Starlite
+from starlite.contrib.repository.abc import FilterTypes
 from starlite.contrib.repository.exceptions import RepositoryError as RepositoryException
+from starlite.contrib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
 from starlite.stores.registry import StoreRegistry
 
 from app import worker
@@ -54,6 +59,14 @@ app = Starlite(
     on_app_init=[sqlalchemy_plugin.plugin],
     on_shutdown=[worker_instance.stop, redis.close],
     on_startup=[worker_instance.on_app_startup, sentry.configure],
+    signature_namespace={
+        "AsyncSession": AsyncSession,
+        "FilterTypes": FilterTypes,
+        "BeforeAfter": BeforeAfter,
+        "CollectionFilter": CollectionFilter,
+        "LimitOffset": LimitOffset,
+        "UUID": UUID,
+    },
     static_files_config=[static_files.config],
     type_encoders=type_encoders_map,
 )

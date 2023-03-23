@@ -4,12 +4,12 @@ from unittest.mock import MagicMock
 import pytest
 from starlite.contrib.repository.testing.generic_mock_repository import GenericMockRepository
 
+from app import controllers
 from app.domain import authors
 from app.lib import sqlalchemy_plugin, worker
 
 if TYPE_CHECKING:
     from collections import abc
-    from uuid import UUID
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -36,9 +36,7 @@ def _patch_worker() -> "abc.Iterator":
 @pytest.fixture(autouse=True)
 def _author_repository(raw_authors: list[dict[str, Any]], monkeypatch: pytest.MonkeyPatch) -> None:
     repo_type = GenericMockRepository[authors.Author]
-    collection: dict["UUID", authors.Author] = {}
-    for raw_author in raw_authors:
-        author = authors.Author(**raw_author)
-        collection[getattr(author, repo_type.id_attribute)] = author
-    monkeypatch.setattr(repo_type, "collection", collection)
+    repo_type.clear_collection()
+    repo_type.seed_collection(authors.Author(**raw) for raw in raw_authors)
     monkeypatch.setattr(authors, "Repository", repo_type)
+    monkeypatch.setattr(controllers.authors, "Repository", repo_type)

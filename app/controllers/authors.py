@@ -1,21 +1,25 @@
 # ruff: noqa: B008
-from uuid import UUID
+from __future__ import annotations
 
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import TYPE_CHECKING
+
 from starlite import Router, delete, get, post, put
-from starlite.contrib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
 from starlite.di import Provide
 from starlite.params import Dependency
 from starlite.status_codes import HTTP_200_OK
 
 from app.domain.authors import Author, ListDTO, ReadDTO, Repository, Service, WriteDTO
 
+if TYPE_CHECKING:
+    from uuid import UUID
+
+    from sqlalchemy.ext.asyncio import AsyncSession
+    from starlite.contrib.repository.abc import FilterTypes
+
 __all__ = ["create_author", "delete_author", "get_author", "get_authors", "provides_service", "update_author"]
 
 
 DETAIL_ROUTE = "/{author_id:uuid}"
-
-FilterTypes = BeforeAfter | CollectionFilter | LimitOffset
 
 
 def provides_service(db_session: AsyncSession) -> Service:

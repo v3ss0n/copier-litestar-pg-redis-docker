@@ -19,7 +19,6 @@ from . import (
 )
 
 __all__ = [
-    "auth",
     "cache",
     "compression",
     "dependencies",
