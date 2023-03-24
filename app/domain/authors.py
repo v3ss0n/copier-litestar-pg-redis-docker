@@ -12,7 +12,14 @@ from starlite.enums import MediaType
 from app.lib import email, service, settings
 from app.lib.worker import queue
 
-__all__ = ["Author", "Repository", "Service"]
+__all__ = [
+    "Author",
+    "ListDTO",
+    "ReadDTO",
+    "Repository",
+    "Service",
+    "WriteDTO",
+]
 
 
 class Author(AuditBase):

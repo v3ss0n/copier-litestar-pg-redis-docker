@@ -133,7 +133,7 @@ ignore = [
 ]
 line-length = 100
 src = ["src", "tests"]
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.pydocstyle]
 convention = "google"
@@ -150,5 +150,4 @@ classmethod-decorators = [
 [tool.ruff.per-file-ignores]
 "examples/tests/**/*.*" = ["S101"]
 "app/lib/dependencies.py" = ["B008"]
-"src/starlite_saqlalchemy/testing/**.*" = ["DTZ", "S101"]
 "tests/**/*.*" = ["S101", "DTZ"]

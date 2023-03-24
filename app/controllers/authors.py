@@ -8,13 +8,15 @@ from starlite.di import Provide
 from starlite.params import Dependency
 from starlite.status_codes import HTTP_200_OK
 
-from app.domain.authors import Author, ListDTO, ReadDTO, Repository, Service, WriteDTO
+from app.domain.authors import ListDTO, ReadDTO, Repository, Service, WriteDTO
 
 if TYPE_CHECKING:
     from uuid import UUID
 
     from sqlalchemy.ext.asyncio import AsyncSession
     from starlite.contrib.repository.abc import FilterTypes
+
+    from app.domain.authors import Author
 
 __all__ = ["create_author", "delete_author", "get_author", "get_authors", "provides_service", "update_author"]
 
