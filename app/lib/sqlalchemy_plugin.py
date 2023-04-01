@@ -5,8 +5,8 @@ import msgspec
 from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
-from starlite.contrib.sqlalchemy.init import SQLAlchemyInit
-from starlite.contrib.sqlalchemy.init.config import SQLAlchemyConfig
+from starlite.contrib.sqlalchemy.init_plugin import SQLAlchemyInitPlugin
+from starlite.contrib.sqlalchemy.init_plugin.config import SQLAlchemyAsyncConfig
 
 from . import settings
 
@@ -81,10 +81,10 @@ def _sqla_on_connect(dbapi_connection: Any, _: Any) -> Any:
     )
 
 
-config = SQLAlchemyConfig(
-    dependency_key=settings.api.DB_SESSION_DEPENDENCY_KEY,
+config = SQLAlchemyAsyncConfig(
+    session_dependency_key=settings.api.DB_SESSION_DEPENDENCY_KEY,
     engine_instance=engine,
-    session_maker_instance=async_session_factory,
+    session_maker=async_session_factory,
 )
 
-plugin = SQLAlchemyInit(config)
+plugin = SQLAlchemyInitPlugin(config=config)

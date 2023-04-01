@@ -6,8 +6,7 @@ from sqlalchemy.orm import Mapped
 from starlite.contrib.sqlalchemy.base import AuditBase
 from starlite.contrib.sqlalchemy.dto import SQLAlchemyDTO
 from starlite.contrib.sqlalchemy.repository import SQLAlchemyRepository
-from starlite.dto.config import DTOConfig
-from starlite.enums import MediaType
+from starlite.dto.factory.config import DTOConfig
 
 from app.lib import email, service, settings
 from app.lib.worker import queue
@@ -34,7 +33,7 @@ class Repository(SQLAlchemyRepository[Author]):
 class Service(service.Service[Author]):
     async def create(self, data: Author) -> Author:
         created = await super().create(data)
-        await queue.enqueue("author_created", data=ReadDTO(created).to_encodable_type(media_type=MediaType.MESSAGEPACK))
+        await queue.enqueue("author_created", data={"id": created.id})
         return data
 
     @staticmethod

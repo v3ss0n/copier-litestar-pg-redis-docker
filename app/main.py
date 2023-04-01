@@ -56,9 +56,9 @@ app = Starlite(
     logging_config=logging.config,
     openapi_config=openapi.config,
     route_handlers=[health_check, router],
-    on_app_init=[sqlalchemy_plugin.plugin],
     on_shutdown=[worker_instance.stop, redis.close],
     on_startup=[worker_instance.on_app_startup, sentry.configure],
+    plugins=[sqlalchemy_plugin.plugin],
     signature_namespace={
         "AsyncSession": AsyncSession,
         "FilterTypes": FilterTypes,

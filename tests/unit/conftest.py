@@ -6,22 +6,10 @@ from starlite.contrib.repository.testing.generic_mock_repository import GenericM
 
 from app import controllers
 from app.domain import authors
-from app.lib import sqlalchemy_plugin, worker
+from app.lib import worker
 
 if TYPE_CHECKING:
     from collections import abc
-
-
-@pytest.fixture(scope="session", autouse=True)
-def _patch_sqlalchemy_plugin() -> "abc.Iterator":
-    monkeypatch = pytest.MonkeyPatch()
-    monkeypatch.setattr(
-        sqlalchemy_plugin.SQLAlchemyConfig,  # type:ignore[attr-defined]
-        "on_shutdown",
-        MagicMock(),
-    )
-    yield
-    monkeypatch.undo()
 
 
 @pytest.fixture(scope="session", autouse=True)
