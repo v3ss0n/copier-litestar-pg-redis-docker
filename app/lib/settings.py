@@ -10,7 +10,7 @@ from pydantic import AnyUrl, BaseSettings, PostgresDsn
 __all__ = [
     "APISettings",
     "AppSettings",
-    "DataBaseSettings",
+    "DatabaseSettings",
     "EmailSettings",
     "OpenAPISettings",
     "RedisSettings",
@@ -21,11 +21,13 @@ __all__ = [
 
 # noinspection PyUnresolvedReferences
 
+
 class BaseEnvSettings(BaseSettings):
-        class Config:
-            env_file = ".env"
-            env_file_encoding = "utf-8"
-            
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+
 class AppSettings(BaseEnvSettings):
     """Generic application settings. These settings are returned as json by the
     healthcheck endpoint, so do not include any sensitive values here, or if
@@ -122,7 +124,7 @@ class OpenAPISettings(BaseEnvSettings):
 
 
 # noinspection PyUnresolvedReferences
-class DataBaseSettings(BaseEnvSettings):
+class DatabaseSettings(BaseEnvSettings):
     """Configures the database for the application.
 
     Prefix all environment variables with `DB_`, e.g., `DB_URL`.
@@ -216,7 +218,7 @@ class EmailSettings(BaseEnvSettings):
 # https://github.com/pydantic/pydantic/issues/3753#issuecomment-1087417884
 api = APISettings.parse_obj({})
 app = AppSettings.parse_obj({})
-db = DataBaseSettings.parse_obj({})
+db = DatabaseSettings.parse_obj({})
 email = EmailSettings.parse_obj({})
 openapi = OpenAPISettings.parse_obj({})
 redis = RedisSettings.parse_obj({})
