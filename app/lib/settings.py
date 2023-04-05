@@ -20,7 +20,15 @@ __all__ = [
 
 
 # noinspection PyUnresolvedReferences
-class AppSettings(BaseSettings):
+
+
+class BaseEnvSettings(BaseSettings):
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+
+class AppSettings(BaseEnvSettings):
     """Generic application settings. These settings are returned as json by the
     healthcheck endpoint, so do not include any sensitive values here, or if
     you do ensure to exclude them from serialization in the `Config` object.
@@ -61,7 +69,7 @@ class AppSettings(BaseSettings):
 
 
 # noinspection PyUnresolvedReferences
-class APISettings(BaseSettings):
+class APISettings(BaseEnvSettings):
     """API specific configuration.
 
     Prefix all environment variables with `API_`, e.g., `API_CACHE_EXPIRATION`.
@@ -88,7 +96,7 @@ class APISettings(BaseSettings):
 
 
 # noinspection PyUnresolvedReferences
-class OpenAPISettings(BaseSettings):
+class OpenAPISettings(BaseEnvSettings):
     """Configures OpenAPI for the application.
 
     Prefix all environment variables with `OPENAPI_`, e.g., `OPENAPI_TITLE`.
@@ -116,7 +124,7 @@ class OpenAPISettings(BaseSettings):
 
 
 # noinspection PyUnresolvedReferences
-class DatabaseSettings(BaseSettings):
+class DatabaseSettings(BaseEnvSettings):
     """Configures the database for the application.
 
     Prefix all environment variables with `DB_`, e.g., `DB_URL`.
@@ -143,7 +151,7 @@ class DatabaseSettings(BaseSettings):
 
 
 # noinspection PyUnresolvedReferences
-class RedisSettings(BaseSettings):
+class RedisSettings(BaseEnvSettings):
     """Cache settings for the application.
 
     Prefix all environment variables with `REDIS_`, e.g., `REDIS_URL`.
@@ -162,7 +170,7 @@ class RedisSettings(BaseSettings):
 
 
 # noinspection PyUnresolvedReferences
-class SentrySettings(BaseSettings):
+class SentrySettings(BaseEnvSettings):
     """Configures sentry for the application.
 
     Attributes:
@@ -182,7 +190,7 @@ class SentrySettings(BaseSettings):
 
 
 # noinspection PyUnresolvedReferences
-class ServerSettings(BaseSettings):
+class ServerSettings(BaseEnvSettings):
     class Config:
         env_prefix = "UVICORN_"
         case_sensitive = True
@@ -194,7 +202,7 @@ class ServerSettings(BaseSettings):
     KEEPALIVE: int
 
 
-class EmailSettings(BaseSettings):
+class EmailSettings(BaseEnvSettings):
     class Config:
         env_prefix = "EMAIL_"
         case_sensitive = True
