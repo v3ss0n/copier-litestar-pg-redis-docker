@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING
 from unittest.mock import AsyncMock
 
-from starlite.contrib.sqlalchemy.repository import SQLAlchemyRepository
-from starlite.status_codes import HTTP_200_OK, HTTP_503_SERVICE_UNAVAILABLE
+from litestar.contrib.sqlalchemy.repository import SQLAlchemyRepository
+from litestar.status_codes import HTTP_200_OK, HTTP_503_SERVICE_UNAVAILABLE
 
 from app.lib import settings
 
 if TYPE_CHECKING:
+    from litestar.testing import TestClient
     from pytest import MonkeyPatch
-    from starlite.testing import TestClient
 
 
 def test_health_check(client: "TestClient", monkeypatch: "MonkeyPatch") -> None:

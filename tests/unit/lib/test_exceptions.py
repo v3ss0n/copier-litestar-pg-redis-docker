@@ -1,7 +1,7 @@
 import pytest
-from starlite import Starlite
-from starlite.status_codes import HTTP_500_INTERNAL_SERVER_ERROR
-from starlite.testing import RequestFactory
+from litestar import Litestar
+from litestar.status_codes import HTTP_500_INTERNAL_SERVER_ERROR
+from litestar.testing import RequestFactory
 
 from app.lib import exceptions
 from app.lib.service import ServiceError
@@ -14,7 +14,7 @@ from app.lib.service import ServiceError
     ],
 )
 def test_service_exception_to_http_response(exc: type[ServiceError], status: int) -> None:
-    app = Starlite(route_handlers=[])
+    app = Litestar(route_handlers=[])
     request = RequestFactory(app=app, server="testserver").get("/wherever")
     response = exceptions.service_exception_to_http_response(request, exc())
     assert response.status_code == status

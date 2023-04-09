@@ -1,9 +1,9 @@
 import contextlib
 
+from litestar import get
+from litestar.contrib.sqlalchemy.repository import SQLAlchemyRepository
+from litestar.exceptions import ServiceUnavailableException
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlite import get
-from starlite.contrib.sqlalchemy.repository import SQLAlchemyRepository
-from starlite.exceptions import ServiceUnavailableException
 
 from . import settings
 from .settings import AppSettings

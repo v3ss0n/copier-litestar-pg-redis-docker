@@ -2,8 +2,8 @@ import logging
 import re
 from typing import Any
 
-from starlite.logging.config import LoggingConfig
-from starlite.status_codes import HTTP_200_OK
+from litestar.logging.config import LoggingConfig
+from litestar.status_codes import HTTP_200_OK
 
 from . import settings
 

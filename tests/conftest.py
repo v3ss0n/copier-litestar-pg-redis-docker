@@ -3,16 +3,16 @@ from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 import pytest
-from starlite.testing import TestClient
+from litestar.testing import TestClient
 
 if TYPE_CHECKING:
     from collections import abc
 
-    from starlite import Starlite
+    from litestar import Litestar
 
 
 @pytest.fixture()
-def app() -> "Starlite":
+def app() -> "Litestar":
     """Always use this `app` fixture and never do `from app.main import app`
     inside a test module. We need to delay import of the `app.main` module
     until as late as possible to ensure we can mock everything necessary before
@@ -28,7 +28,7 @@ def app() -> "Starlite":
 
 
 @pytest.fixture()
-def client(app: "Starlite") -> "abc.Iterator[TestClient]":  # pylint: disable=redefined-outer-name
+def client(app: "Litestar") -> "abc.Iterator[TestClient]":  # pylint: disable=redefined-outer-name
     """Client instance attached to app.
 
     Args:

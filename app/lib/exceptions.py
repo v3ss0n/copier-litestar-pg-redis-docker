@@ -1,27 +1,27 @@
 import logging
 from typing import TYPE_CHECKING
 
-from starlite.contrib.repository.exceptions import (
+from litestar.contrib.repository.exceptions import (
     ConflictError as RepositoryConflictException,
 )
-from starlite.contrib.repository.exceptions import (
+from litestar.contrib.repository.exceptions import (
     NotFoundError as RepositoryNotFoundException,
 )
-from starlite.contrib.repository.exceptions import (
+from litestar.contrib.repository.exceptions import (
     RepositoryError as RepositoryException,
 )
-from starlite.exceptions import (
+from litestar.exceptions import (
     HTTPException,
     InternalServerException,
     NotFoundException,
 )
-from starlite.middleware.exceptions.middleware import create_exception_response
+from litestar.middleware.exceptions.middleware import create_exception_response
 
 from .service import ServiceError
 
 if TYPE_CHECKING:
-    from starlite.connection import Request
-    from starlite.response import Response
+    from litestar.connection import Request
+    from litestar.response import Response
 
 __all__ = [
     "repository_exception_to_http_response",

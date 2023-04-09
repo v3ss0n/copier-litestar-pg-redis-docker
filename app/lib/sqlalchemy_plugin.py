@@ -2,11 +2,11 @@ from typing import Any
 from uuid import UUID
 
 import msgspec
+from litestar.contrib.sqlalchemy.init_plugin import SQLAlchemyInitPlugin
+from litestar.contrib.sqlalchemy.init_plugin.config import SQLAlchemyAsyncConfig
 from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
-from starlite.contrib.sqlalchemy.init_plugin import SQLAlchemyInitPlugin
-from starlite.contrib.sqlalchemy.init_plugin.config import SQLAlchemyAsyncConfig
 
 from . import settings
 
@@ -34,10 +34,10 @@ engine = create_async_engine(
     pool_timeout=settings.db.POOL_TIMEOUT,
     poolclass=NullPool if settings.db.POOL_DISABLE else None,
 )
-"""Configure via [DatabaseSettings][starlite_saqpg.settings.DatabaseSettings].
+"""Configure via DatabaseSettings.
 
 Overrides default JSON
-serializer to use `orjson`. See [`create_async_engine()`][sqlalchemy.ext.asyncio.create_async_engine]
+serializer to use `msgspec`. See [`create_async_engine()`][sqlalchemy.ext.asyncio.create_async_engine]
 for detailed instructions.
 """
 async_session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)

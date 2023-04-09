@@ -1,10 +1,10 @@
 from datetime import datetime
 from uuid import UUID
 
-from starlite.contrib.repository.abc import FilterTypes
-from starlite.contrib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
-from starlite.di import Provide
-from starlite.params import Dependency, Parameter
+from litestar.contrib.repository.abc import FilterTypes
+from litestar.contrib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
+from litestar.di import Provide
+from litestar.params import Dependency, Parameter
 
 from . import settings
 

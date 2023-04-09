@@ -1,4 +1,4 @@
-from starlite import Router
+from litestar import Router
 
 from app.domain.authors import Author
 

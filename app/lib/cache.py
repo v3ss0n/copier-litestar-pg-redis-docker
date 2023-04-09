@@ -1,5 +1,5 @@
-from starlite.config.response_cache import ResponseCacheConfig
-from starlite.stores.redis import RedisStore
+from litestar.config.response_cache import ResponseCacheConfig
+from litestar.stores.redis import RedisStore
 
 from app.lib.redis import redis
 

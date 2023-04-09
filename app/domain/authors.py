@@ -2,11 +2,11 @@ from datetime import date
 from email.message import EmailMessage
 from typing import Annotated
 
+from litestar.contrib.sqlalchemy.base import AuditBase
+from litestar.contrib.sqlalchemy.dto import SQLAlchemyDTO
+from litestar.contrib.sqlalchemy.repository import SQLAlchemyRepository
+from litestar.dto.factory.config import DTOConfig
 from sqlalchemy.orm import Mapped
-from starlite.contrib.sqlalchemy.base import AuditBase
-from starlite.contrib.sqlalchemy.dto import SQLAlchemyDTO
-from starlite.contrib.sqlalchemy.repository import SQLAlchemyRepository
-from starlite.dto.factory.config import DTOConfig
 
 from app.lib import email, service, settings
 from app.lib.worker import queue
@@ -52,6 +52,6 @@ class Service(service.Service[Author]):
             await email.client.send_message(message)
 
 
-WriteDTO = SQLAlchemyDTO[Annotated[Author, DTOConfig(exclude={"id"})]]
+WriteDTO = SQLAlchemyDTO[Annotated[Author, DTOConfig(exclude={"id", "created", "updated"})]]
 ListDTO = SQLAlchemyDTO[list[Author]]
 ReadDTO = SQLAlchemyDTO[Author]

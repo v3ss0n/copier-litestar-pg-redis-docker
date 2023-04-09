@@ -17,7 +17,7 @@ redis = "*"
 saq = "*"
 sentry-sdk = "*"
 sqlalchemy = ">=2.0.0"
-starlite = { git = "https://github.com/starlite-api/starlite.git", branch = "dto-refactor", extras = ["redis", "jwt", "cli"]}
+litestar = { git = "https://github.com/litestar-org/litestar.git", branch = "dto-factory", extras = ["redis", "jwt", "cli"]}
 uvicorn = { extras = ["standard"], version = "*" }
 uvloop = "*"
 
@@ -28,7 +28,7 @@ optional = true
 pytest = "*"
 pytest-asyncio = "*"
 pytest-dotenv = "*"
-starlite = { git = "https://github.com/starlite-api/starlite.git", branch = "dto-refactor", extras = ["testing"]}
+litestar = { git = "https://github.com/litestar-org/litestar.git", branch = "dto-factory", extras = ["testing"]}
 
 [tool.poetry.group.coverage]
 optional = true

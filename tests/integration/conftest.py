@@ -6,20 +6,20 @@ from typing import TYPE_CHECKING, Any
 
 import asyncpg
 import pytest
+from litestar.contrib.sqlalchemy.base import Base
 from redis.asyncio import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 from sqlalchemy.engine import URL
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
-from starlite.contrib.sqlalchemy.base import Base
 
 from app.lib import sqlalchemy_plugin, worker
 
 if TYPE_CHECKING:
     from collections import abc
 
+    from litestar import Litestar
     from pytest_docker.plugin import Services
-    from starlite import Starlite
 
 
 here = Path(__file__).parent
@@ -167,7 +167,7 @@ async def _seed_db(engine: AsyncEngine, raw_authors: list[dict[str, Any]]) -> "a
 
 
 @pytest.fixture(autouse=True)
-def _patch_db(app: "Starlite", engine: AsyncEngine, monkeypatch: pytest.MonkeyPatch) -> None:
+def _patch_db(app: "Litestar", engine: AsyncEngine, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setitem(app.state, sqlalchemy_plugin.config.engine_app_state_key, engine)
     monkeypatch.setitem(
         app.state, sqlalchemy_plugin.config.session_maker_app_state_key, async_sessionmaker(bind=engine)
@@ -175,7 +175,7 @@ def _patch_db(app: "Starlite", engine: AsyncEngine, monkeypatch: pytest.MonkeyPa
 
 
 @pytest.fixture(autouse=True)
-def _patch_redis(app: "Starlite", redis: Redis, monkeypatch: pytest.MonkeyPatch) -> None:
+def _patch_redis(app: "Litestar", redis: Redis, monkeypatch: pytest.MonkeyPatch) -> None:
     cache_config = app.response_cache_config
     assert cache_config is not None
     monkeypatch.setattr(app.stores.get(cache_config.store), "_redis", redis)

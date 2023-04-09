@@ -1,13 +1,13 @@
 from typing import TYPE_CHECKING
 from unittest.mock import ANY, AsyncMock
 
-from starlite.status_codes import HTTP_200_OK
+from litestar.status_codes import HTTP_200_OK
 
 from app.domain import authors
 
 if TYPE_CHECKING:
     import pytest
-    from starlite.testing import TestClient
+    from litestar.testing import TestClient
 
 
 def test_list_authors(client: "TestClient") -> None:

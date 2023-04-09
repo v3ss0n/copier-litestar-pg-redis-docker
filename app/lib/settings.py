@@ -38,7 +38,7 @@ class AppSettings(BaseEnvSettings):
     BUILD_NUMBER : str
         Identity of the CI build of current app instance.
     DEBUG : bool
-        If `True` runs `Starlite` in debug mode.
+        If `True` runs `Litestar` in debug mode.
     ENVIRONMENT : str
         "dev", "prod", etc.
     LOG_LEVEL : str

@@ -12,12 +12,12 @@ When writing tests, always use the `app` fixture, never import the app directly 
 from uuid import UUID
 
 import uvicorn
+from litestar import Litestar
+from litestar.contrib.repository.abc import FilterTypes
+from litestar.contrib.repository.exceptions import RepositoryError as RepositoryException
+from litestar.contrib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
+from litestar.stores.registry import StoreRegistry
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlite import Starlite
-from starlite.contrib.repository.abc import FilterTypes
-from starlite.contrib.repository.exceptions import RepositoryError as RepositoryException
-from starlite.contrib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
-from starlite.stores.registry import StoreRegistry
 
 from app import worker
 from app.lib import (
@@ -44,7 +44,7 @@ dependencies = create_collection_dependencies()
 worker_instance = create_worker_instance(worker.functions)
 
 
-app = Starlite(
+app = Litestar(
     response_cache_config=cache.config,
     stores=StoreRegistry(default_factory=cache.redis_store_factory),
     compression_config=compression.config,
@@ -59,6 +59,7 @@ app = Starlite(
     on_shutdown=[worker_instance.stop, redis.close],
     on_startup=[worker_instance.on_app_startup, sentry.configure],
     plugins=[sqlalchemy_plugin.plugin],
+    preferred_validation_backend="pydantic",
     signature_namespace={
         "AsyncSession": AsyncSession,
         "FilterTypes": FilterTypes,

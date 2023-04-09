@@ -7,27 +7,27 @@ tests in due course.
 from typing import TYPE_CHECKING
 
 from httpx import AsyncClient
-from starlite import get
+from litestar import get
 
 from app.lib import sqlalchemy_plugin
 
 if TYPE_CHECKING:
+    from litestar import Litestar
     from redis.asyncio import Redis as AsyncRedis
     from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
-    from starlite import Starlite
 
 
-def test_cache_on_app(app: "Starlite", redis: "AsyncRedis") -> None:
+def test_cache_on_app(app: "Litestar", redis: "AsyncRedis") -> None:
     """Test that the app's cache is patched."""
     assert app.cache.backend._redis is redis  # type:ignore[attr-defined]  # pylint: disable=protected-access
 
 
-def test_engine_on_app(app: "Starlite", engine: "AsyncEngine") -> None:
+def test_engine_on_app(app: "Litestar", engine: "AsyncEngine") -> None:
     """Test that the app's engine is patched."""
     assert app.state[sqlalchemy_plugin.config.engine_app_state_key] is engine
 
 
-async def test_db_session_dependency(app: "Starlite", engine: "AsyncEngine") -> None:
+async def test_db_session_dependency(app: "Litestar", engine: "AsyncEngine") -> None:
     """Test that handlers receive session attached to patched engine."""
 
     @get("/db-session-test", opt={"exclude_from_auth": True})

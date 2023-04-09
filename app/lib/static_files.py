@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from starlite.static_files.config import StaticFilesConfig
+from litestar.static_files.config import StaticFilesConfig
 
 from .constants import STATIC_DIR, STATIC_PATH
 

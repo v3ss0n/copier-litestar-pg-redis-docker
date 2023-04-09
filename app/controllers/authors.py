@@ -3,18 +3,18 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from starlite import Router, delete, get, post, put
-from starlite.di import Provide
-from starlite.params import Dependency
-from starlite.status_codes import HTTP_200_OK
+from litestar import Router, delete, get, post, put
+from litestar.di import Provide
+from litestar.params import Dependency
+from litestar.status_codes import HTTP_200_OK
 
 from app.domain.authors import ListDTO, ReadDTO, Repository, Service, WriteDTO
 
 if TYPE_CHECKING:
     from uuid import UUID
 
+    from litestar.contrib.repository.abc import FilterTypes
     from sqlalchemy.ext.asyncio import AsyncSession
-    from starlite.contrib.repository.abc import FilterTypes
 
     from app.domain.authors import Author
 

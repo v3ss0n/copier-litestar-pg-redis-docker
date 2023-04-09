@@ -7,10 +7,7 @@ __all__ = ["configure"]
 
 
 def configure() -> None:
-    """Callback to configure sentry on app startup.
-
-    See [SentrySettings][starlite_saqpg.config.SentrySettings].
-    """
+    """Callback to configure sentry on app startup."""
     sentry_sdk.init(
         dsn=settings.sentry.DSN,
         environment=settings.app.ENVIRONMENT,

@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 import msgspec
 import saq
-from starlite.serialization import default_serializer
+from litestar.serialization import default_serializer
 
 from . import settings, type_encoders
 from .redis import redis

@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING, Any, Generic
 
-from starlite.contrib.sqlalchemy.repository import ModelT
+from litestar.contrib.sqlalchemy.repository import ModelT
 
 __all__ = ["Service", "ServiceError"]
 
 
 if TYPE_CHECKING:
-    from starlite.contrib.repository.abc import AbstractRepository, FilterTypes
+    from litestar.contrib.repository.abc import AbstractRepository, FilterTypes
 
 
 class ServiceError(Exception):

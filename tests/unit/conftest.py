@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Any
 from unittest.mock import MagicMock
 
 import pytest
-from starlite.contrib.repository.testing.generic_mock_repository import GenericMockRepository
+from litestar.contrib.repository.testing.generic_mock_repository import GenericMockRepository
 
 from app import controllers
 from app.domain import authors
