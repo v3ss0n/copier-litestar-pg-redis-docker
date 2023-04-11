@@ -38,43 +38,48 @@ from app.lib.service import ServiceError
 from app.lib.type_encoders import type_encoders_map
 from app.lib.worker import create_worker_instance
 
-from .controllers import router
+from .controllers import create_router
+
+__all__ = ["create_app"]
+
 
 dependencies = create_collection_dependencies()
 worker_instance = create_worker_instance(worker.functions)
 
 
-app = Litestar(
-    response_cache_config=cache.config,
-    stores=StoreRegistry(default_factory=cache.redis_store_factory),
-    compression_config=compression.config,
-    dependencies=dependencies,
-    exception_handlers={
-        RepositoryException: exceptions.repository_exception_to_http_response,
-        ServiceError: exceptions.service_exception_to_http_response,
-    },
-    logging_config=logging.config,
-    openapi_config=openapi.config,
-    route_handlers=[health_check, router],
-    on_shutdown=[worker_instance.stop, redis.close],
-    on_startup=[worker_instance.on_app_startup, sentry.configure],
-    plugins=[sqlalchemy_plugin.plugin],
-    preferred_validation_backend="pydantic",
-    signature_namespace={
-        "AsyncSession": AsyncSession,
-        "FilterTypes": FilterTypes,
-        "BeforeAfter": BeforeAfter,
-        "CollectionFilter": CollectionFilter,
-        "LimitOffset": LimitOffset,
-        "UUID": UUID,
-    },
-    static_files_config=[static_files.config],
-    type_encoders=type_encoders_map,
-)
+def create_app() -> Litestar:
+    return Litestar(
+        response_cache_config=cache.config,
+        stores=StoreRegistry(default_factory=cache.redis_store_factory),
+        compression_config=compression.config,
+        dependencies=dependencies,
+        exception_handlers={
+            RepositoryException: exceptions.repository_exception_to_http_response,
+            ServiceError: exceptions.service_exception_to_http_response,
+        },
+        logging_config=logging.config,
+        openapi_config=openapi.config,
+        route_handlers=[health_check, create_router()],
+        on_shutdown=[worker_instance.stop, redis.close],
+        on_startup=[worker_instance.on_app_startup, sentry.configure],
+        plugins=[sqlalchemy_plugin.plugin],
+        preferred_validation_backend="pydantic",
+        signature_namespace={
+            "AsyncSession": AsyncSession,
+            "FilterTypes": FilterTypes,
+            "BeforeAfter": BeforeAfter,
+            "CollectionFilter": CollectionFilter,
+            "LimitOffset": LimitOffset,
+            "UUID": UUID,
+        },
+        static_files_config=[static_files.config],
+        type_encoders=type_encoders_map,
+    )
+
 
 if __name__ == "__main__":
     uvicorn.run(
-        app,
+        create_app(),
         host=settings.server.HOST,
         log_level=settings.server.LOG_LEVEL,
         port=settings.server.PORT,

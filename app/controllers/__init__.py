@@ -4,6 +4,8 @@ from app.domain.authors import Author
 
 from . import authors
 
-__all__ = ["router"]
+__all__ = ["create_router"]
 
-router = Router(path="/v1", route_handlers=[authors.router], signature_namespace={"Author": Author})
+
+def create_router() -> Router:
+    return Router(path="/v1", route_handlers=[authors.AuthorController], signature_namespace={"Author": Author})
