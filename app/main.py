@@ -21,6 +21,7 @@ from litestar.stores.registry import StoreRegistry
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import worker
+from app.controllers import create_router
 from app.lib import (
     cache,
     compression,
@@ -38,8 +39,6 @@ from app.lib.redis import redis
 from app.lib.service import ServiceError
 from app.lib.type_encoders import type_encoders_map
 from app.lib.worker import create_worker_instance
-
-from .controllers import create_router
 
 __all__ = ["create_app"]
 
@@ -79,9 +78,11 @@ def create_app(**kwargs: Any) -> Litestar:
     )
 
 
+app = create_app()
+
 if __name__ == "__main__":
     uvicorn.run(
-        create_app(),
+        app,
         host=settings.server.HOST,
         log_level=settings.server.LOG_LEVEL,
         port=settings.server.PORT,
