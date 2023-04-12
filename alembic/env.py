@@ -2,10 +2,10 @@ import asyncio
 from logging.config import fileConfig
 
 from alembic import context
+from litestar.contrib.sqlalchemy.base import AuditBase
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-from starlite.contrib.sqlalchemy.base import AuditBase
 
 # ensure domain in scope
 from app import domain  # noqa: F401 # pylint: disable=unused-import
