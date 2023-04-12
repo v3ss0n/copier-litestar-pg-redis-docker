@@ -18,6 +18,7 @@ redis = "*"
 saq = "*"
 sentry-sdk = "*"
 sqlalchemy = ">=2.0.0"
+# litestar = { path = "../litestar", extras = ["redis", "jwt", "cli"], develop = true }
 litestar = { git = "https://github.com/litestar-org/litestar.git", branch = "dto-factory", extras = ["redis", "jwt", "cli"]}
 uvicorn = { extras = ["standard"], version = "*" }
 uvloop = "*"
@@ -29,6 +30,7 @@ optional = true
 pytest = "*"
 pytest-asyncio = "*"
 pytest-dotenv = "*"
+# litestar = { path = "../litestar", extras = ["testing"], develop = true}
 litestar = { git = "https://github.com/litestar-org/litestar.git", branch = "dto-factory", extras = ["testing"]}
 
 [tool.poetry.group.coverage]

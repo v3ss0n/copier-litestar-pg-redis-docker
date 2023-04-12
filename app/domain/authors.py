@@ -1,15 +1,19 @@
 from datetime import date
 from email.message import EmailMessage
 from typing import Annotated
+from uuid import UUID
 
 from litestar.contrib.sqlalchemy.base import AuditBase
 from litestar.contrib.sqlalchemy.dto import SQLAlchemyDTO
 from litestar.contrib.sqlalchemy.repository import SQLAlchemyRepository
-from litestar.dto.factory.config import DTOConfig
-from sqlalchemy.orm import Mapped
+from litestar.dto.factory import DTOConfig, Mark, dto_field
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.lib import email, service, settings
 from app.lib.worker import queue
+
+from .country import Country
 
 __all__ = [
     "Author",
@@ -24,6 +28,8 @@ __all__ = [
 class Author(AuditBase):
     name: Mapped[str]
     dob: Mapped[date]
+    country_id: Mapped[UUID | None] = mapped_column(ForeignKey("country.id"), info=dto_field(Mark.PRIVATE))
+    nationality: Mapped[Country | None] = relationship()
 
 
 class Repository(SQLAlchemyRepository[Author]):

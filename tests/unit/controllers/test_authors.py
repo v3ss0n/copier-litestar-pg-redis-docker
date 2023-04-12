@@ -20,6 +20,7 @@ def test_list_authors(client: "TestClient") -> None:
             "id": "97108ac1-ffcb-411d-8b1e-d9183399f63b",
             "created": "0001-01-01T00:00:00",
             "updated": "0001-01-01T00:00:00",
+            "nationality": None,
         },
         {
             "name": "Leo Tolstoy",
@@ -27,6 +28,7 @@ def test_list_authors(client: "TestClient") -> None:
             "id": "5ef29f3c-3560-4d15-ba6b-a2e5c721e4d2",
             "created": "0001-01-01T00:00:00",
             "updated": "0001-01-01T00:00:00",
+            "nationality": None,
         },
     ]
 
@@ -34,7 +36,7 @@ def test_list_authors(client: "TestClient") -> None:
 def test_create_author(client: "TestClient", monkeypatch: "pytest.MonkeyPatch") -> None:
     enqueue_mock = AsyncMock()
     monkeypatch.setattr(authors.queue, "enqueue", enqueue_mock)  # type:ignore[attr-defined]
-    response = client.post("/v1/authors", json={"name": "James Patterson", "dob": "1974-03-22"})
+    response = client.post("/v1/authors", json={"name": "James Patterson", "dob": "1974-03-22", "nationality": None})
     response_json = response.json()
     assert response_json == {
         "id": ANY,
@@ -42,6 +44,7 @@ def test_create_author(client: "TestClient", monkeypatch: "pytest.MonkeyPatch") 
         "updated": ANY,
         "name": "James Patterson",
         "dob": "1974-03-22",
+        "nationality": None,
     }
     enqueue_mock.assert_called_once()
 
@@ -54,6 +57,7 @@ def test_get_author(client: "TestClient") -> None:
         "updated": "0001-01-01T00:00:00",
         "name": "Agatha Christie",
         "dob": "1890-09-15",
+        "nationality": None,
     }
 
 
@@ -66,6 +70,7 @@ def test_update_author(client: "TestClient") -> None:
             "updated": "0001-01-01T00:00:00",
             "name": "A. Christie",
             "dob": "1890-09-15",
+            "nationality": None,
         },
     )
     assert response.json() == {
@@ -74,6 +79,7 @@ def test_update_author(client: "TestClient") -> None:
         "updated": ANY,
         "name": "A. Christie",
         "dob": "1890-09-15",
+        "nationality": None,
     }
 
 
@@ -86,4 +92,5 @@ def test_delete_author(client: "TestClient") -> None:
         "updated": "0001-01-01T00:00:00",
         "name": "Agatha Christie",
         "dob": "1890-09-15",
+        "nationality": None,
     }

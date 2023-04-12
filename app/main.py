@@ -9,6 +9,7 @@ being loaded before that mocking has been completed.
 
 When writing tests, always use the `app` fixture, never import the app directly from this module.
 """
+from typing import Any
 from uuid import UUID
 
 import uvicorn
@@ -47,7 +48,7 @@ dependencies = create_collection_dependencies()
 worker_instance = create_worker_instance(worker.functions)
 
 
-def create_app() -> Litestar:
+def create_app(**kwargs: Any) -> Litestar:
     return Litestar(
         response_cache_config=cache.config,
         stores=StoreRegistry(default_factory=cache.redis_store_factory),
@@ -74,6 +75,7 @@ def create_app() -> Litestar:
         },
         static_files_config=[static_files.config],
         type_encoders=type_encoders_map,
+        **kwargs,
     )
 
 

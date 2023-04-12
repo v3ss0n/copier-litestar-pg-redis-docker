@@ -24,7 +24,7 @@ def app() -> "Litestar":
     # don't want main imported until everything patched.
     from app.main import create_app  # pylint: disable=import-outside-toplevel
 
-    return create_app()
+    return create_app(debug=True)
 
 
 @pytest.fixture()
