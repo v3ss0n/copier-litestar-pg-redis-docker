@@ -29,7 +29,7 @@ class Author(AuditBase):
     name: Mapped[str]
     dob: Mapped[date]
     country_id: Mapped[UUID | None] = mapped_column(ForeignKey("country.id"), info=dto_field(Mark.PRIVATE))
-    nationality: Mapped[Country | None] = relationship()
+    nationality: Mapped[Country | None] = relationship(lazy="joined")
 
 
 class Repository(SQLAlchemyRepository[Author]):
