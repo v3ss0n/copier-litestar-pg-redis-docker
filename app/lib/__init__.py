@@ -21,7 +21,6 @@ __all__ = [
     "cache",
     "compression",
     "dependencies",
-    "email",
     "exceptions",
     "health",
     "logging",

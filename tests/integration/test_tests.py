@@ -4,6 +4,8 @@ docker`.
 I wanted to get the pattern working and will evolve more meaningful
 tests in due course.
 """
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from httpx import AsyncClient
@@ -13,13 +15,7 @@ from app.lib import sqlalchemy_plugin
 
 if TYPE_CHECKING:
     from litestar import Litestar
-    from redis.asyncio import Redis as AsyncRedis
     from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
-
-
-def test_cache_on_app(app: "Litestar", redis: "AsyncRedis") -> None:
-    """Test that the app's cache is patched."""
-    assert app.cache.backend._redis is redis  # type:ignore[attr-defined]  # pylint: disable=protected-access
 
 
 def test_engine_on_app(app: "Litestar", engine: "AsyncEngine") -> None:

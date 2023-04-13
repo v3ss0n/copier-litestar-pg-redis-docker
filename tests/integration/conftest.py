@@ -1,11 +1,13 @@
-# pylint: disable=redefined-outer-name
+from __future__ import annotations
+
 import asyncio
 import timeit
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import asyncpg
 import pytest
+from httpx import AsyncClient
 from litestar.contrib.sqlalchemy.base import Base
 from redis.asyncio import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
@@ -16,7 +18,8 @@ from sqlalchemy.pool import NullPool
 from app.lib import sqlalchemy_plugin, worker
 
 if TYPE_CHECKING:
-    from collections import abc
+    from collections.abc import AsyncIterator, Awaitable, Callable, Iterator
+    from typing import Any
 
     from litestar import Litestar
     from pytest_docker.plugin import Services
@@ -26,7 +29,7 @@ here = Path(__file__).parent
 
 
 @pytest.fixture(scope="session")
-def event_loop() -> "abc.Iterator[asyncio.AbstractEventLoop]":
+def event_loop() -> Iterator[asyncio.AbstractEventLoop]:
     """Need the event loop scoped to the session so that we can use it to check
     containers are ready in session scoped containers fixture.
     """
@@ -44,9 +47,7 @@ def docker_compose_file() -> Path:
     return here / "docker-compose.yml"
 
 
-async def wait_until_responsive(
-    check: "abc.Callable[..., abc.Awaitable]", timeout: float, pause: float, **kwargs: Any
-) -> None:
+async def wait_until_responsive(check: Callable[..., Awaitable], timeout: float, pause: float, **kwargs: Any) -> None:
     """Wait until a service is responsive.
 
     Args:
@@ -103,7 +104,7 @@ async def db_responsive(host: str) -> bool:
 
 
 @pytest.fixture(scope="session", autouse=True)
-async def _containers(docker_ip: str, _: "Services") -> None:
+async def _containers(docker_ip: str, docker_services: Services) -> None:
     """Starts containers for required services, fixture waits until they are
     responsive before returning.
     """
@@ -138,7 +139,7 @@ async def engine(docker_ip: str) -> AsyncEngine:
             username="postgres",
             password="super-secret",  # noqa: S106
             host=docker_ip,
-            port=5432,
+            port=5423,
             database="postgres",
             query={},  # type:ignore[arg-type]
         ),
@@ -148,20 +149,26 @@ async def engine(docker_ip: str) -> AsyncEngine:
 
 
 @pytest.fixture(autouse=True)
-async def _seed_db(engine: AsyncEngine, raw_authors: list[dict[str, Any]]) -> "abc.AsyncIterator[None]":
+async def _seed_db(
+    engine: AsyncEngine, raw_countries: list[dict[str, Any]], raw_authors: list[dict[str, Any]]
+) -> AsyncIterator[None]:
     """Populate test database."""
     # get models into metadata
-    from app import (  # pylint: disable=[import-outside-toplevel,unused-import] # noqa:F401
-        domain,
-    )
 
     metadata = Base.registry.metadata
-    author_table = metadata.tables["author"]
     async with engine.begin() as conn:
         await conn.run_sync(metadata.create_all)
+
+    country_table = metadata.tables["country"]
+    async with engine.begin() as conn:
+        await conn.execute(country_table.insert(), raw_countries)
+
+    author_table = metadata.tables["author"]
     async with engine.begin() as conn:
         await conn.execute(author_table.insert(), raw_authors)
+
     yield
+
     async with engine.begin() as conn:
         await conn.run_sync(metadata.drop_all)
 
@@ -180,3 +187,23 @@ def _patch_redis(app: "Litestar", redis: Redis, monkeypatch: pytest.MonkeyPatch)
     assert cache_config is not None
     monkeypatch.setattr(app.stores.get(cache_config.store), "_redis", redis)
     monkeypatch.setattr(worker.queue, "redis", redis)
+
+
+@pytest.fixture(name="client")
+async def fx_client(app: Litestar) -> AsyncIterator[AsyncClient]:
+    """Async client that calls requests on the app.
+
+    We need to use `httpx.AsyncClient` here, as `starlite.TestClient` creates its own event loop to
+    run async calls to the underlying app in a sync context, resulting in errors like:
+
+    ```text
+    ValueError: The future belongs to a different loop than the one specified as the loop argument
+    ```
+
+    Related: https://www.starlette.io/testclient/#asynchronous-tests
+
+    The httpx async client will call the app, but not trigger lifecycle events. However, we need
+    the lifecycle events to be called to configure the logging, hence `LifespanManager`.
+    """
+    async with AsyncClient(app=app, base_url="http://testserver") as client:
+        yield client
