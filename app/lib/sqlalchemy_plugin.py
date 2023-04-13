@@ -1,14 +1,27 @@
-from typing import Any
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, cast
 from uuid import UUID
 
 import msgspec
 from litestar.contrib.sqlalchemy.init_plugin import SQLAlchemyInitPlugin
 from litestar.contrib.sqlalchemy.init_plugin.config import SQLAlchemyAsyncConfig
+from litestar.contrib.sqlalchemy.init_plugin.config.common import (
+    SESSION_SCOPE_KEY,
+    SESSION_TERMINUS_ASGI_EVENTS,
+)
+from litestar.utils import delete_litestar_scope_state, get_litestar_scope_state
 from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
 from . import settings
+
+if TYPE_CHECKING:
+    from typing import Any
+
+    from litestar.datastructures.state import State
+    from litestar.types.asgi_types import Message, Scope
 
 __all__ = [
     "async_session_factory",
@@ -81,10 +94,33 @@ def _sqla_on_connect(dbapi_connection: Any, _: Any) -> Any:
     )
 
 
+async def before_send_handler(message: Message, _: State, scope: Scope) -> None:
+    """Custom `before_send_handler` for SQLAlchemy plugin that inspects the
+    status of response and commits, or rolls back the database.
+
+    Args:
+        message: ASGI message
+        _:
+        scope: ASGI scope
+    """
+    session = cast("AsyncSession | None", get_litestar_scope_state(scope, SESSION_SCOPE_KEY))
+    try:
+        if session is not None and message["type"] == "http.response.start":
+            if 200 <= message["status"] < 300:
+                await session.commit()
+            else:
+                await session.rollback()
+    finally:
+        if session is not None and message["type"] in SESSION_TERMINUS_ASGI_EVENTS:
+            await session.close()
+            delete_litestar_scope_state(scope, SESSION_SCOPE_KEY)
+
+
 config = SQLAlchemyAsyncConfig(
     session_dependency_key=settings.api.DB_SESSION_DEPENDENCY_KEY,
     engine_instance=engine,
     session_maker=async_session_factory,
+    before_send_handler=before_send_handler,
 )
 
 plugin = SQLAlchemyInitPlugin(config=config)
