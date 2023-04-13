@@ -11,7 +11,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.lib import service
 
-from .country import Country
+from .countries import Country
 
 __all__ = [
     "Author",

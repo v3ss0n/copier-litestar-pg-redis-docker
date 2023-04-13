@@ -1,3 +1,3 @@
-from . import authors, country
+from . import authors, countries
 
-__all__ = ["authors", "country"]
+__all__ = ["authors", "countries"]

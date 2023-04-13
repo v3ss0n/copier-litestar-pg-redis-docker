@@ -8,7 +8,7 @@ from litestar.di import Provide
 from litestar.params import Dependency
 from litestar.status_codes import HTTP_200_OK
 
-from app.domain.country import ListDTO, ReadDTO, Repository, Service, WriteDTO
+from app.domain.countries import ListDTO, ReadDTO, Repository, Service, WriteDTO
 
 if TYPE_CHECKING:
     from uuid import UUID
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from litestar.contrib.repository.abc import FilterTypes
     from sqlalchemy.ext.asyncio import AsyncSession
 
-    from app.domain.country import Country
+    from app.domain.countries import Country
 
 __all__ = [
     "CountryController",
@@ -33,9 +33,9 @@ def provides_service(db_session: AsyncSession) -> Service:
 class CountryController(Controller):
     dto = WriteDTO
     return_dto = ReadDTO
-    path = "/country"
+    path = "/countries"
     dependencies = {"service": Provide(provides_service)}
-    tags = ["Countrys"]
+    tags = ["Countries"]
 
     @get(return_dto=ListDTO)
     async def get_countries(
