@@ -52,6 +52,7 @@ def raw_authors() -> list[dict[str, Any]]:
             "id": UUID("97108ac1-ffcb-411d-8b1e-d9183399f63b"),
             "name": "Agatha Christie",
             "dob": date(1890, 9, 15),
+            "nationality": None,
             "created": datetime.min,
             "updated": datetime.min,
         },
@@ -59,6 +60,31 @@ def raw_authors() -> list[dict[str, Any]]:
             "id": UUID("5ef29f3c-3560-4d15-ba6b-a2e5c721e4d2"),
             "name": "Leo Tolstoy",
             "dob": date(1828, 9, 9),
+            "nationality": None,
+            "created": datetime.min,
+            "updated": datetime.min,
+        },
+    ]
+
+
+@pytest.fixture()
+def raw_countries() -> list[dict[str, Any]]:
+    """Returns:
+    Raw set of country data that can either be inserted into tables for integration tests, or
+    used to create `Country` instances for unit tests.
+    """
+    return [
+        {
+            "id": UUID("9a225673-202f-4156-8f12-a6e7dd081718"),
+            "name": "United Kingdom",
+            "population": 67000000,
+            "created": datetime.min,
+            "updated": datetime.min,
+        },
+        {
+            "id": UUID("c0e5b0a1-0b1f-4b0e-8b1a-5e1b0e5e1b0e"),
+            "name": "Russia",
+            "population": 145000000,
             "created": datetime.min,
             "updated": datetime.min,
         },
