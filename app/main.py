@@ -20,7 +20,6 @@ from litestar.contrib.repository.filters import BeforeAfter, CollectionFilter, L
 from litestar.stores.registry import StoreRegistry
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app import worker
 from app.controllers import create_router
 from app.lib import (
     cache,
@@ -38,13 +37,11 @@ from app.lib.health import health_check
 from app.lib.redis import redis
 from app.lib.service import ServiceError
 from app.lib.type_encoders import type_encoders_map
-from app.lib.worker import create_worker_instance
 
 __all__ = ["create_app"]
 
 
 dependencies = create_collection_dependencies()
-worker_instance = create_worker_instance(worker.functions)
 
 
 def create_app(**kwargs: Any) -> Litestar:
@@ -60,8 +57,8 @@ def create_app(**kwargs: Any) -> Litestar:
         logging_config=logging.config,
         openapi_config=openapi.config,
         route_handlers=[health_check, create_router()],
-        on_shutdown=[worker_instance.stop, redis.close],
-        on_startup=[worker_instance.on_app_startup, sentry.configure],
+        on_shutdown=[redis.close],
+        on_startup=[sentry.configure],
         plugins=[sqlalchemy_plugin.plugin],
         preferred_validation_backend="pydantic",
         signature_namespace={

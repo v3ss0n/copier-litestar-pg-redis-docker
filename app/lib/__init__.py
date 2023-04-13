@@ -4,7 +4,6 @@ from . import (
     cache,
     compression,
     dependencies,
-    email,
     exceptions,
     health,
     logging,

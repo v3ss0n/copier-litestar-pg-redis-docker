@@ -23,20 +23,12 @@ services:
       retries: 10
       start_period: 3s
 
-  mailhog:
-    image: mailhog/mailhog
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-
   app:
     build:
       context: .
       args:
         INSTALL_DEPENDENCIES: dev
     depends_on:
-      mailhog:
-        condition: service_started
       redis:
         condition: service_started
       db:
