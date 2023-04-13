@@ -45,6 +45,7 @@ dependencies = create_collection_dependencies()
 
 
 def create_app(**kwargs: Any) -> Litestar:
+    kwargs.setdefault("debug", settings.app.DEBUG)
     return Litestar(
         response_cache_config=cache.config,
         stores=StoreRegistry(default_factory=cache.redis_store_factory),
