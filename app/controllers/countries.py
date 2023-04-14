@@ -8,7 +8,7 @@ from litestar.di import Provide
 from litestar.params import Dependency
 from litestar.status_codes import HTTP_200_OK
 
-from app.domain.countries import ListDTO, ReadDTO, Repository, Service, WriteDTO
+from app.domain.countries import ReadDTO, Repository, Service, WriteDTO
 
 if TYPE_CHECKING:
     from uuid import UUID
@@ -37,7 +37,7 @@ class CountryController(Controller):
     dependencies = {"service": Provide(provides_service)}
     tags = ["Countries"]
 
-    @get(return_dto=ListDTO)
+    @get()
     async def get_countries(
         self, service: Service, filters: list[FilterTypes] = Dependency(skip_validation=True)
     ) -> list[Country]:

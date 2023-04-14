@@ -1105,7 +1105,7 @@ tortoise-orm = []
 type = "git"
 url = "https://github.com/litestar-org/litestar.git"
 reference = "dto-factory"
-resolved_reference = "463e65cb02c103ca8321bbb76e4830e63be0d56a"
+resolved_reference = "b4831bd868284305cbdc202dc31f5a6371e17ea8"
 
 [[package]]
 name = "mako"

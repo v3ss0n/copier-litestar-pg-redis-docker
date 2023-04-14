@@ -10,7 +10,6 @@ from app.lib import service
 
 __all__ = [
     "Country",
-    "ListDTO",
     "ReadDTO",
     "Repository",
     "Service",
@@ -30,5 +29,4 @@ class Repository(SQLAlchemyRepository[Country]):
 Service = service.Service[Country]
 
 WriteDTO = SQLAlchemyDTO[Annotated[Country, DTOConfig(exclude={"id", "created", "updated"})]]
-ListDTO = SQLAlchemyDTO[list[Country]]
 ReadDTO = SQLAlchemyDTO[Country]
