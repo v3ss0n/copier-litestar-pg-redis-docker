@@ -16,7 +16,13 @@ import uvicorn
 from litestar import Litestar
 from litestar.contrib.repository.abc import FilterTypes
 from litestar.contrib.repository.exceptions import RepositoryError as RepositoryException
-from litestar.contrib.repository.filters import BeforeAfter, CollectionFilter, LimitOffset
+from litestar.contrib.repository.filters import (
+    BeforeAfter,
+    CollectionFilter,
+    LimitOffset,
+    OrderBy,
+    SearchFilter,
+)
 from litestar.stores.registry import StoreRegistry
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -69,6 +75,8 @@ def create_app(**kwargs: Any) -> Litestar:
             "CollectionFilter": CollectionFilter,
             "LimitOffset": LimitOffset,
             "UUID": UUID,
+            "OrderBy": OrderBy,
+            "SearchFilter": SearchFilter,
         },
         static_files_config=[static_files.config],
         type_encoders=type_encoders_map,

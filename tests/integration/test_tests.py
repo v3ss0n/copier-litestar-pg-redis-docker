@@ -18,12 +18,12 @@ if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 
-def test_engine_on_app(app: "Litestar", engine: "AsyncEngine") -> None:
+def test_engine_on_app(app: Litestar, engine: AsyncEngine) -> None:
     """Test that the app's engine is patched."""
     assert app.state[sqlalchemy_plugin.config.engine_app_state_key] is engine
 
 
-async def test_db_session_dependency(app: "Litestar", engine: "AsyncEngine") -> None:
+async def test_db_session_dependency(app: Litestar, engine: AsyncEngine) -> None:
     """Test that handlers receive session attached to patched engine."""
 
     @get("/db-session-test", opt={"exclude_from_auth": True})

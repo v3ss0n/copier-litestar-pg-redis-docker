@@ -38,7 +38,7 @@ async def test_list_countries(client: AsyncClient) -> None:
     ]
 
 
-async def test_create_country(client: AsyncClient, monkeypatch: "pytest.MonkeyPatch") -> None:
+async def test_create_country(client: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
     response = await client.post("/v1/countries", json={"name": "Australia", "population": 25000000})
     response_json = response.json()
     assert response_json == {

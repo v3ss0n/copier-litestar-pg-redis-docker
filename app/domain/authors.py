@@ -4,7 +4,7 @@ from uuid import UUID
 
 from litestar.contrib.sqlalchemy.base import AuditBase
 from litestar.contrib.sqlalchemy.dto import SQLAlchemyDTO
-from litestar.contrib.sqlalchemy.repository import SQLAlchemyRepository
+from litestar.contrib.sqlalchemy.repository import SQLAlchemyAsyncRepository
 from litestar.dto.factory import DTOConfig, Mark, dto_field
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -29,7 +29,7 @@ class Author(AuditBase):
     nationality: Mapped[countries.Country | None] = relationship(lazy="joined", info=dto_field(Mark.READ_ONLY))
 
 
-class Repository(SQLAlchemyRepository[Author]):
+class Repository(SQLAlchemyAsyncRepository[Author]):
     model_type = Author
 
 
@@ -37,5 +37,6 @@ class Service(service.Service[Author]):
     repository_type = Repository
 
 
-WriteDTO = SQLAlchemyDTO[Annotated[Author, DTOConfig(exclude={"id", "created", "updated", "nationality"})]]
+write_config = DTOConfig(exclude={"created", "updated", "nationality"})
+WriteDTO = SQLAlchemyDTO[Annotated[Author, write_config]]
 ReadDTO = SQLAlchemyDTO[Author]

@@ -19,8 +19,7 @@ saq = "*"
 sentry-sdk = "*"
 sqlalchemy = ">=2.0.0"
 # litestar = { path = "../litestar", extras = ["redis", "jwt", "cli"], develop = true }
-litestar = { git = "https://github.com/litestar-org/litestar.git", branch = "dto-factory", extras = ["redis", "jwt", "cli"]}
-uvicorn = { extras = ["standard"], version = "*" }
+litestar = { version = "==2.0.0a5" , extras = ["redis", "cli"] }
 uvloop = "*"
 
 [tool.poetry.group.testing]
@@ -31,7 +30,7 @@ pytest = "*"
 pytest-asyncio = "*"
 pytest-dotenv = "*"
 # litestar = { path = "../litestar", extras = ["testing"], develop = true}
-litestar = { git = "https://github.com/litestar-org/litestar.git", branch = "dto-factory", extras = ["testing"]}
+litestar = { version = "==2.0.0a5" , extras = ["redis", "cli"] }
 
 [tool.poetry.group.coverage]
 optional = true
@@ -130,7 +129,6 @@ ignore = [
     "D202", # pydocstyle - no blank lines allowed after function docstring
     "D205", # pydocstyle - 1 blank line required between summary line and description
     "D415", # pydocstyle - first line should end with a period, question mark, or exclamation point
-    "UP037", # pyupgrade - removes quotes from type annotation
     "A003", # flake8-builtins - class attribute {name} is shadowing a python builtin
     "B010" # flake8-bugbear - do not call setattr with a constant attribute value
 ]

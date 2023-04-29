@@ -174,7 +174,7 @@ async def _seed_db(
 
 
 @pytest.fixture(autouse=True)
-def _patch_db(app: "Litestar", engine: AsyncEngine, monkeypatch: pytest.MonkeyPatch) -> None:
+def _patch_db(app: Litestar, engine: AsyncEngine, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setitem(app.state, sqlalchemy_plugin.config.engine_app_state_key, engine)
     monkeypatch.setitem(
         app.state, sqlalchemy_plugin.config.session_maker_app_state_key, async_sessionmaker(bind=engine)
@@ -182,7 +182,7 @@ def _patch_db(app: "Litestar", engine: AsyncEngine, monkeypatch: pytest.MonkeyPa
 
 
 @pytest.fixture(autouse=True)
-def _patch_redis(app: "Litestar", redis: Redis, monkeypatch: pytest.MonkeyPatch) -> None:
+def _patch_redis(app: Litestar, redis: Redis, monkeypatch: pytest.MonkeyPatch) -> None:
     cache_config = app.response_cache_config
     assert cache_config is not None
     monkeypatch.setattr(app.stores.get(cache_config.store), "_redis", redis)

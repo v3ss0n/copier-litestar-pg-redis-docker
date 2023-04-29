@@ -2,7 +2,7 @@ from typing import Annotated
 
 from litestar.contrib.sqlalchemy.base import AuditBase
 from litestar.contrib.sqlalchemy.dto import SQLAlchemyDTO
-from litestar.contrib.sqlalchemy.repository import SQLAlchemyRepository
+from litestar.contrib.sqlalchemy.repository import SQLAlchemyAsyncRepository
 from litestar.dto.factory.config import DTOConfig
 from sqlalchemy.orm import Mapped
 
@@ -22,11 +22,11 @@ class Country(AuditBase):
     population: Mapped[int]
 
 
-class Repository(SQLAlchemyRepository[Country]):
+class Repository(SQLAlchemyAsyncRepository[Country]):
     model_type = Country
 
 
 Service = service.Service[Country]
 
-WriteDTO = SQLAlchemyDTO[Annotated[Country, DTOConfig(exclude={"id", "created", "updated"})]]
+WriteDTO = SQLAlchemyDTO[Annotated[Country, DTOConfig(exclude={"created", "updated"})]]
 ReadDTO = SQLAlchemyDTO[Country]
