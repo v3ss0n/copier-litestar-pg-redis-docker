@@ -20,7 +20,7 @@ sentry-sdk = "*"
 sqlalchemy = ">=2.0.0"
 #litestar = { path = "../litestar", extras = ["redis", "jwt", "cli"], develop = true }
 #litestar = { version = "==2.0.0a6" , extras = ["redis", "cli"] }
-litestar = { git = "https://github.com/v3ss0n/litestar.git", branch = "fqn-random-dtoid",  extras = ["redis", "cli"]}
+litestar = { git = "https://github.com/v3ss0n/litestar.git", branch = "fqn-random-dtoid",  extras = ["redis","sqlalchemy","cli"]}
 
 uvloop = "*"
 
