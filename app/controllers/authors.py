@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 
 from litestar import Controller, delete, get, post, put
 from litestar.di import Provide
-from litestar.params import Dependency
 from litestar.status_codes import HTTP_200_OK
 
 from app.domain.authors import ReadDTO, Repository, Service, WriteDTO
@@ -34,13 +33,11 @@ class AuthorController(Controller):
     dto = WriteDTO
     return_dto = ReadDTO
     path = "/authors"
-    dependencies = {"service": Provide(provides_service)}
+    dependencies = {"service": Provide(provides_service, sync_to_thread=False)}
     tags = ["Authors"]
 
     @get()
-    async def get_authors(
-        self, service: Service, filters: list[FilterTypes] = Dependency(skip_validation=True)
-    ) -> list[Author]:
+    async def get_authors(self, service: Service, filters: list[FilterTypes]) -> list[Author]:
         """Get a list of authors."""
         return await service.list(*filters)
 

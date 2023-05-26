@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 import asyncpg
 import pytest
 from httpx import AsyncClient
-from litestar.contrib.sqlalchemy.base import Base
+from litestar.contrib.sqlalchemy.base import UUIDBase
 from redis.asyncio import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 from sqlalchemy.engine import URL
@@ -155,7 +155,7 @@ async def _seed_db(
     """Populate test database."""
     # get models into metadata
 
-    metadata = Base.registry.metadata
+    metadata = UUIDBase.registry.metadata
     async with engine.begin() as conn:
         await conn.run_sync(metadata.create_all)
 

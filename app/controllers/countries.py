@@ -34,7 +34,7 @@ class CountryController(Controller):
     dto = WriteDTO
     return_dto = ReadDTO
     path = "/countries"
-    dependencies = {"service": Provide(provides_service)}
+    dependencies = {"service": Provide(provides_service, sync_to_thread=False)}
     tags = ["Countries"]
 
     @get()
