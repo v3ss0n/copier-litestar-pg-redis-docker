@@ -85,16 +85,12 @@ def _sqla_on_connect(dbapi_connection: Any, _: Any) -> Any:
 
     dbapi_connection.await_(
         dbapi_connection.driver_connection.set_type_codec(
-            "jsonb",
-            encoder=encoder,
-            decoder=decoder,
-            schema="pg_catalog",
-            format="binary",
+            "jsonb", encoder=encoder, decoder=decoder, schema="pg_catalog", format="binary",
         )
     )
 
 
-async def before_send_handler(message: Message, _: State, scope: Scope) -> None:
+async def before_send_handler(message: Message, scope: Scope) -> None:
     """Custom `before_send_handler` for SQLAlchemy plugin that inspects the
     status of response and commits, or rolls back the database.
 

@@ -2,7 +2,7 @@ import asyncio
 from logging.config import fileConfig
 
 from alembic import context
-from litestar.contrib.sqlalchemy.base import AuditBase
+from litestar.contrib.sqlalchemy.base import UUIDAuditBase as AuditBase
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
@@ -43,10 +43,7 @@ def run_migrations_offline() -> None:
     script output.
     """
     context.configure(
-        url=settings.db.URL,
-        target_metadata=target_metadata,
-        literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
+        url=settings.db.URL, target_metadata=target_metadata, literal_binds=True, dialect_opts={"paramstyle": "named"},
     )
 
     with context.begin_transaction():
@@ -68,11 +65,7 @@ async def run_migrations_online() -> None:
     """
     configuration = config.get_section(config.config_ini_section)
     configuration["sqlalchemy.url"] = settings.db.URL
-    connectable = async_engine_from_config(
-        configuration,
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    connectable = async_engine_from_config(configuration, prefix="sqlalchemy.", poolclass=pool.NullPool,)
 
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)
