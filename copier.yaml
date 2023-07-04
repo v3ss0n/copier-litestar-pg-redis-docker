@@ -1,0 +1,14 @@
+project_name:
+  type: str
+  help: 'Project Name:'
+author_name:
+  type: str
+  help: 'Author Name:'
+project_descr:
+  type: str
+  default: ""
+  help: 'Description:'
+donains:
+  type: str
+  default: ""
+  help: "Domain to add"

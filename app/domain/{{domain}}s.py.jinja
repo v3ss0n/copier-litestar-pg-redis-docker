@@ -1,0 +1,32 @@
+from typing import Annotated
+
+from litestar.contrib.sqlalchemy.base import UUIDAuditBase
+from litestar.contrib.sqlalchemy.dto import SQLAlchemyDTO
+from litestar.contrib.sqlalchemy.repository import SQLAlchemyAsyncRepository
+from litestar.dto.factory.config import DTOConfig
+from sqlalchemy.orm import Mapped
+
+from app.lib import service
+
+__all__ = [
+    "{{domain|capitalize}}",
+    "ReadDTO",
+    "Repository",
+    "Service",
+    "WriteDTO",
+]
+
+
+class {{domain|capitalize}}(UUIDAuditBase):
+    name: Mapped[str]
+    population: Mapped[int]
+
+
+class Repository(SQLAlchemyAsyncRepository[{{domain|capitalize}}]):
+    model_type = {{domain|capitalize}}
+
+
+Service = service.Service[{{domain|capitalize}}]
+
+WriteDTO = SQLAlchemyDTO[Annotated[{{domain|capitalize}}, DTOConfig(exclude={"created", "updated"})]]
+ReadDTO = SQLAlchemyDTO[{{domain|capitalize}}]
