@@ -2,7 +2,7 @@ from litestar import Router
 
 from app.domain.authors import Author
 from app.domain.countries import Country
-from app.domain.{{domain|lower}}s import {{domain|capfirst}}
+from app.domain.{{domain|lower}}s import {{domain|capitalize}}
 
 from . import authors, countries, {{domain|lower}}s
 
@@ -13,5 +13,5 @@ def create_router() -> Router:
     return Router(
         path="/v1",
         route_handlers=[authors.AuthorController, countries.CountryController , {{domain|lower}}s.Controller],
-        signature_namespace={"Author": Author, "Country": Country , "{{domain|capfirst}}":{{domain|capfirst}}},
+        signature_namespace={"Author": Author, "Country": Country , "{{domain|capitalize}}":{{domain|capitalize}}},
     )

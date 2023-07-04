@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from litestar.contrib.repository import FilterTypes
     from sqlalchemy.ext.asyncio import AsyncSession
 
-    from app.domain.{{domain|lower}}s import {{domain|capfirst}} 
+    from app.domain.{{domain|lower}}s import {{domain|capitalize}} 
 
 __all__ = [
     "Controller",
@@ -40,26 +40,26 @@ class Controller(Controller):
     @get()
     async def list(
         self, service: Service, filters: list[FilterTypes] = Dependency(skip_validation=True)
-    ) -> list[{{domain|capfirst}}]:
-        """Get a list of {{domain|capfirst}}."""
+    ) -> list[{{domain|capitalize}}]:
+        """Get a list of {{domain|capitalize}}."""
         return await service.list(*filters)
 
     @post()
-    async def create(self, data: {{domain|capfirst}}, service: Service) -> {{domain|capfirst}}:
-        """Create an `{{domain|capfirst}}`."""
+    async def create(self, data: {{domain|capitalize}}, service: Service) -> {{domain|capitalize}}:
+        """Create an `{{domain|capitalize}}`."""
         return await service.create(data)
 
     @get(DETAIL_ROUTE)
-    async def retrive(self, service: Service, item_id: UUID) -> {{domain|capfirst}}:
-        """Get {{domain|capfirst}} by ID."""
+    async def retrive(self, service: Service, item_id: UUID) -> {{domain|capitalize}}:
+        """Get {{domain|capitalize}} by ID."""
         return await service.get(item_id)
 
     @put(DETAIL_ROUTE)
-    async def update(self, data: {{domain|capfirst}}, service: Service, item_id: UUID) -> {{domain|capfirst}}:
-        """Update an {{domain|capfirst}}."""
+    async def update(self, data: {{domain|capitalize}}, service: Service, item_id: UUID) -> {{domain|capitalize}}:
+        """Update an {{domain|capitalize}}."""
         return await service.update(item_id, data)
 
     @delete(DETAIL_ROUTE, status_code=HTTP_200_OK)
-    async def delete(self, service: Service, item_id: UUID) -> {{domain|capfirst}}:
-        """Delete {{domain|capfirst}} by ID."""
+    async def delete(self, service: Service, item_id: UUID) -> {{domain|capitalize}}:
+        """Delete {{domain|capitalize}} by ID."""
         return await service.delete(item_id)
