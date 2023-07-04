@@ -29,6 +29,7 @@ pytest-asyncio = "*"
 pre-commit = "*"
 pytest-dotenv = "*"
 greenlet = "*"
+sourcery = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

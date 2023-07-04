@@ -30,12 +30,7 @@ class AccessLogFilter(logging.Filter):
 
     def filter(self, record: logging.LogRecord) -> bool:
         *_, req_path, _, status_code = record.args  # type:ignore[misc]
-        if (
-            self.path_filter.match(req_path)  # type:ignore[arg-type]
-            and status_code == HTTP_200_OK
-        ):
-            return False
-        return True
+        return not self.path_filter.match(req_path) or status_code != HTTP_200_OK  # type:ignore[arg-type]
 
 
 config = LoggingConfig(

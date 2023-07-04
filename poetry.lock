@@ -1909,6 +1909,18 @@ files = [
 ]
 
 [[package]]
+name = "sourcery"
+version = "1.5.0"
+description = "Magically refactor Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "sourcery-1.5.0-py2.py3-none-macosx_10_9_universal2.whl", hash = "sha256:7e30ad51560fa0a89895097f4f7eb8e82aa2a58443fbbc7f3de6a2718403e8d0"},
+    {file = "sourcery-1.5.0-py2.py3-none-manylinux1_x86_64.whl", hash = "sha256:928b637694475e0a144bf568179f178639f8596bfa627921512f9150ac819063"},
+    {file = "sourcery-1.5.0-py2.py3-none-win_amd64.whl", hash = "sha256:a28ef9f00922b11993e730718cdd60f8cecc45762d0e80b7d9a94f27c46dbc3b"},
+]
+
+[[package]]
 name = "sqlalchemy"
 version = "2.0.17"
 description = "Database Abstraction Library"
@@ -2244,4 +2256,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11.0,<4.0"
-content-hash = "f6df9975f78ce7066d0d1783b725b358da490d0b38efdea3e073375718ec782d"
+content-hash = "d3e0039de62b66a0120c6a96e2e3592444f6e7952c8f522887288048d3eb7ca2"
