@@ -54,7 +54,7 @@ class AppSettings(BaseEnvSettings):
     DEBUG: bool = False
     ENVIRONMENT: str = "local"
     LOG_LEVEL: str = "INFO"
-    NAME: str = "litestar-pg-redis-docker"
+    NAME: str = "{{project_name}}"
 
     @property
     def slug(self) -> str:
