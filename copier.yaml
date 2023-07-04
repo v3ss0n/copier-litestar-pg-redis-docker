@@ -8,7 +8,7 @@ project_descr:
   type: str
   default: ""
   help: 'Description:'
-donains:
+domain:
   type: str
   default: ""
   help: "Domain to add"
