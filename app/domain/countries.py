@@ -28,5 +28,5 @@ class Repository(SQLAlchemyAsyncRepository[Country]):
 
 Service = service.Service[Country]
 
-WriteDTO = SQLAlchemyDTO[Annotated[Country, DTOConfig(exclude={"created", "updated"})]]
+WriteDTO = SQLAlchemyDTO[Annotated[Country, DTOConfig(exclude={"created_at", "updated_at"})]]
 ReadDTO = SQLAlchemyDTO[Country]
