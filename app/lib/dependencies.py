@@ -60,8 +60,8 @@ def provide_created_filter(
 
 
 def provide_updated_filter(
-    before: DTorNone = Parameter(query="updated_at-before", default=None, required=False),
-    after: DTorNone = Parameter(query="updated_at-after", default=None, required=False),
+    before: DTorNone = Parameter(query="updated-before", default=None, required=False),
+    after: DTorNone = Parameter(query="updated-after", default=None, required=False),
 ) -> BeforeAfter:
     """Return type consumed by `Repository.filter_on_datetime_field()`.
     Parameters
