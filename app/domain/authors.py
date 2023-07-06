@@ -37,6 +37,6 @@ class Service(service.Service[Author]):
     repository_type = Repository
 
 
-write_config = DTOConfig(exclude={"created", "updated", "nationality"})
+write_config = DTOConfig(exclude={"created_at", "updated_at", "nationality"})
 WriteDTO = SQLAlchemyDTO[Annotated[Author, write_config]]
 ReadDTO = SQLAlchemyDTO[Author]

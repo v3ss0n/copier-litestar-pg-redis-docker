@@ -56,12 +56,12 @@ def provide_created_filter(
     after : datetime | None
         Filter for records updated after this date/time.
     """
-    return BeforeAfter("created", before, after)
+    return BeforeAfter("created_at", before, after)
 
 
 def provide_updated_filter(
-    before: DTorNone = Parameter(query="updated-before", default=None, required=False),
-    after: DTorNone = Parameter(query="updated-after", default=None, required=False),
+    before: DTorNone = Parameter(query="updated_at-before", default=None, required=False),
+    after: DTorNone = Parameter(query="updated_at-after", default=None, required=False),
 ) -> BeforeAfter:
     """Return type consumed by `Repository.filter_on_datetime_field()`.
     Parameters
@@ -71,7 +71,7 @@ def provide_updated_filter(
     after : datetime | None
         Filter for records updated after this date/time.
     """
-    return BeforeAfter("updated", before, after)
+    return BeforeAfter("updated_at", before, after)
 
 
 def provide_limit_offset_pagination(
